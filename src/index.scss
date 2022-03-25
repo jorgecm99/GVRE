@@ -1,0 +1,40 @@
+body{
+    margin: 0;
+}
+.control-dots{
+    display: none!important;
+}
+.loader{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+        width: 200px;
+    }
+}
+.dot{
+    display: none!important;
+}
+.control-arrow:before{
+    border-top: none!important;
+    border-bottom: none!important;
+    border: none!important;
+    display: initial!important;
+}
+.control-arrow{
+    background-image: url('./assets/SVG/web/comunes/flechaCarousel.svg')!important;
+    background-repeat: no-repeat;
+    background-size:cover!important;
+    height: 50px;
+    width: 50px;
+    top: 40%!important;
+    border-radius: 50%;
+    margin-right: 5px;
+    opacity: 1!important;
+    background-color: rgba(128, 128, 128, 0.466)!important;
+}
+.control-prev{
+    transform: rotate(180deg);
+    margin-left: 5px;
+}
