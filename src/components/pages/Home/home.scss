@@ -107,9 +107,6 @@
                     @include categoriesLinkMobile;
                     display: flex;
                     justify-content: space-between;
-                    span{
-                        margin-right: 15px;
-                    }
                 }
             }
         }
@@ -280,9 +277,6 @@
                     p{
                         @include textMobile;
 
-                    }
-                    span{
-                        margin-right: 10px;
                     }
                 }
             }
@@ -595,8 +589,8 @@
                         text-decoration: none;
                     }
                     &__image{
-                        width: 664px;
-                        height: 450px;
+                        width: 450px;
+                        height: 300px;
                     }
                     &__text{
                         text-align: center;

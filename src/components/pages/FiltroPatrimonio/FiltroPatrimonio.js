@@ -102,19 +102,36 @@ const FiltroPatrimonio = () => {
 
     useEffect(() => {
         let label = document.getElementsByClassName('MuiSlider-valueLabelLabel')
-        if (label[0].innerHTML==='0.1'){
+        if (saleOrRent[0]==='Alquiler'){
+            if (label[0].innerHTML==='0,1 €/mes'){
+                label[0].innerHTML='min'
+            }
+            if (label[1].innerHTML==='99.999.999,9 €/mes'){
+                label[1].innerHTML='max'
+            }
+        }
+        if (saleOrRent[0]==='Venta'){
+            if (label[0].innerHTML==='0,1 €'){
+                label[0].innerHTML='min'
+            }
+            if (label[1].innerHTML==='99.999.999,9 €'){
+                label[1].innerHTML='max'
+            }
+        }
+        if (label[0].innerHTML==='0,1 €/mes'){
             label[0].innerHTML='min'
         }
-        if (label[1].innerHTML==='99999999.9'){
+        if (label[1].innerHTML==='99.999.999,9 €/mes'){
             label[1].innerHTML='max'
         }
-        if (label[3].innerHTML==='99999999.9'){
+        if (label[3].innerHTML==='99.999.999,9 m2'){
             label[3].innerHTML='max'
         }
-        if (label[2].innerHTML==='0.1'){
+        if (label[2].innerHTML==='0,1 m2'){
             label[2].innerHTML='min'
         }
-    },[price, surface])
+
+    },[price, surface, saleOrRent])
 
     const toggleActive = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
@@ -488,6 +505,7 @@ const FiltroPatrimonio = () => {
                                     min={0}
                                     max={maxPrice}
                                     step={saleOrRent[0]==='Venta' ? 500000 : 500}
+                                    valueLabelFormat={saleOrRent[0] === 'Venta' ? value => `${new Intl.NumberFormat('de-DE').format(value)} €` : value => `${new Intl.NumberFormat('de-DE').format(value)} €/mes`}
                                 />
                                 <p className={disableSliders === true ? 'filtroPatrimonio__filterPosition__selectors__sliders__surface' : 'filtroPatrimonio__filterPosition__selectors__sliders__surfaceDisabled'}>Superficie m<sup>2</sup></p>
                                 <Slider
@@ -500,6 +518,7 @@ const FiltroPatrimonio = () => {
                                     min={0}
                                     max={maxSurface}
                                     step={50}
+                                    valueLabelFormat={value => `${new Intl.NumberFormat('de-DE').format(value)} m2`}
                                 />
                             </div>
                             <div className='filtroPatrimonio__filterPosition__selectors__buscar'>

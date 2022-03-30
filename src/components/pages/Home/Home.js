@@ -98,7 +98,7 @@ const Home = () => {
             <div id='top' className='home__top'>
                 <div className='home__top__text'>
                     <h1 className='home__top__text__title'>GV Real Estate</h1>
-                    <h2 className='home__top__text__content'>Expertos en inmobiliarias de lujo</h2>
+                    <h2 className='home__top__text__content'>Expertos en gestión inmobiliaria de lujo</h2>
                 </div>
                 <div className='home__top__buttons'>
                     <Link to={generatePath(routes.Residential, {page:1})} className='home__top__buttons__residencial'>Residencial</Link>
@@ -188,27 +188,27 @@ const Home = () => {
                                 <img className='home__outstanding__position__images__image' key={item._id} src={item.images.main} alt={item.title}/>
                                 <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemResidential, {id:item._id})}>
                                     <div className='home__outstanding__position__images__text'>
-                                        <h2 className='home__outstanding__position__images__text__price'>{item.sale.saleValue}€</h2>
+                                        <h2 className='home__outstanding__position__images__text__price'>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</h2>
                                         <h2 className='home__outstanding__position__images__text__title'>{item.title}</h2>
                                         <h3 className='home__outstanding__position__images__text__street'>{item.webSubtitle}</h3>
                                         <ul className='home__outstanding__position__images__item__text__characteristics'>
                                             {item.buildSurface !== 0 ? 
                                             <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
                                             :null}
-                                            {item.quality.outdoorPool !== 0 ?
-                                                <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
-                                            :null}
-                                            {item.quality.bathrooms !== 0 ?
-                                                <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
+                                            {item.plotSurface !== 0 ?
+                                            <li><span><img src={supP} alt='superficie'/></span>{item.plotdSurface}m<sup>2</sup></li>
                                             :null}
                                             {item.quality.bedrooms !== 0 ?
                                                 <li><span><img src={habit} alt='habitaciones'/></span>{item.quality.bedrooms}</li>
                                             :null}
+                                            {item.quality.bathrooms !== 0 ?
+                                                <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
+                                            :null}
+                                            {item.quality.outdoorPool !== 0 ?
+                                                <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
+                                                :null}
                                             {item.adReference !== 0 ? 
                                                 <li><span><img src={ref} alt='referencia'/></span><p>Ref {item.adReference}</p></li>
-                                            :null}
-                                            {item.buildSurface !== 0 ?
-                                                <li><span><img src={supP} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
                                             :null}
                                         </ul>
                                     </div>

@@ -232,10 +232,7 @@
             }
         }
         &__numbers{
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 20px;
+            margin: 30px;
             margin-top: 0px;
             margin-bottom: -50px;
             p{
@@ -247,6 +244,10 @@
             sup{
                 font-size: 9px;
                 margin-top: 8px;
+            }
+            div{
+                display: flex;
+                flex-wrap: wrap;
             }
             &__build{
                 display: flex;
@@ -436,7 +437,7 @@
             div{
                 @include litleTextMobile;
                 margin-top: 5px;
-                color: red;
+                color: #2B363D!important;
             }
         }
     }
@@ -511,15 +512,15 @@
                 }
             }
             &__numbers{
-                margin:0 200px;
+                justify-content: space-around;
                 margin-bottom: 50px;
-                display: flex;
+                div{
+                    display: flex;
+                    justify-content: space-around;
+                }
                 p{
                     @include textMobile;
-                    margin-left: 40px;
-                    margin-right: 40px;
                 }
-
             }
             &__surfaceTable{
                 display: flex;
@@ -662,6 +663,7 @@
                 }
             }
             &__rentEmpty{
+                display: none;
                 width: 70%;
                 margin: 0 auto;
                 margin-bottom: -100px;
@@ -696,16 +698,16 @@
             &__principal{
                 position: absolute;
                 width: 100%;
-                top: -105px;
+                top: -110px;
                 margin: 0;
                 border: none;
                 background-color: rgba(255, 255, 255, 0.39);
                 padding-bottom: 0;
                 &__price{
                     @include subSubTitle;
-                    font-size: 30px!important;
+                    font-size: 35px!important;
                     padding-top: 0px;
-                    margin-bottom: 0;
+                    margin-bottom: 0px;
                 }
                 &__prices{
                     @include subSubTitle;
@@ -738,7 +740,7 @@
             &__principalEmpty{
                 position: absolute;
                 width: 100%;
-                top: -275px;
+                top: -280px;
                 margin: 0;
                 background-color: rgba(255, 255, 255, 0.39);
                 padding-bottom: 0;
@@ -768,9 +770,6 @@
                     font-size: 18px!important;
                     margin: 0 268px;
                     margin-top: 9px;
-                    padding-bottom: 17px;
-                    border-bottom: solid;
-                    border-width: 2px;
                 }
                 img{
                     display: none;
@@ -826,7 +825,6 @@
                 margin-right: 150px;
                 margin-top: 0;
                 padding: 20px 0;
-                padding-top: 120px;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: initial;
@@ -839,7 +837,11 @@
                     @include text;
                 }
                 div{
-                    height: auto;
+                    display: flex;
+                    justify-content: space-around;
+                    flex-wrap: initial;
+                    width: 100%;
+                    margin-top: 40px;                
                 }
                 &__build{
                     display: flex;
@@ -926,11 +928,12 @@
                 font-size: 14px!important;
                 line-height: 24px!important;
                 align-items: flex-end;
+                margin-bottom: 120px;
                 p{
                     margin-bottom: 1%;
                 }
                 img{
-                    width: 250px;
+                    width: 200px;
                 }
             }
             &__form{
@@ -1022,6 +1025,7 @@
         }
         &__wrapper{
             display: flex;
+            align-items: center;
         }
     }
     .carouselImages{

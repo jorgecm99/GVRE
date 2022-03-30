@@ -193,22 +193,22 @@ const Residential = () => {
                                 <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
                                 <ul className='residential__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ? 
-                                        <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
+                                    <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
                                     :null}
-                                    {item.quality.outdoorPool !== 0 ?
-                                        <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
-                                    :null}
-                                    {item.quality.bathrooms !== 0 ?
-                                        <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
+                                    {item.plotSurface !== 0 ?
+                                    <li><span><img src={supP} alt='superficie'/></span>{item.plotdSurface}m<sup>2</sup></li>
                                     :null}
                                     {item.quality.bedrooms !== 0 ?
                                         <li><span><img src={habit} alt='habitaciones'/></span>{item.quality.bedrooms}</li>
                                     :null}
-                                    {item.adReference !== 0 ? 
-                                        <li><span><img src={refer} alt='referencia'/></span><p>Ref {item.adReference}</p></li>
+                                    {item.quality.bathrooms !== 0 ?
+                                        <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
                                     :null}
-                                    {item.buildSurface !== 0 ?
-                                        <li><span><img src={supP} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
+                                    {item.quality.outdoorPool !== 0 ?
+                                        <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
+                                        :null}
+                                    {item.adReference !== 0 ? 
+                                        <li><span><img src={refer} alt='referencia'/></span><p> Ref {item.adReference}</p></li>
                                     :null}
                                 </ul>
                                 <div className='residential__list__item__text__clickable'></div>
@@ -257,7 +257,7 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className='residential__pagination__list__item'><a href={`https://modest-darwin-2e96d1.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li className='residential__pagination__list__item'><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -297,20 +297,36 @@ const Residential = () => {
     useEffect(() => {
         if(filter===true){
             let label = document.getElementsByClassName('MuiSlider-valueLabelLabel')
-            if (label[0].innerHTML==='0.1'){
+            if (saleOrRent[0]==='Alquiler'){
+                if (label[0].innerHTML==='0,1 €/mes'){
+                    label[0].innerHTML='min'
+                }
+                if (label[1].innerHTML==='99.999.999,9 €/mes'){
+                    label[1].innerHTML='max'
+                }
+            }
+            if (saleOrRent[0]==='Venta'){
+                if (label[0].innerHTML==='0,1 €'){
+                    label[0].innerHTML='min'
+                }
+                if (label[1].innerHTML==='99.999.999,9 €'){
+                    label[1].innerHTML='max'
+                }
+            }
+            if (label[0].innerHTML==='0,1 €/mes'){
                 label[0].innerHTML='min'
             }
-            if (label[1].innerHTML==='99999999.9'){
+            if (label[1].innerHTML==='99.999.999,9 €/mes'){
                 label[1].innerHTML='max'
             }
-            if (label[3].innerHTML==='99999999.9'){
+            if (label[3].innerHTML==='99.999.999,9 m2'){
                 label[3].innerHTML='max'
             }
-            if (label[2].innerHTML==='0.1'){
+            if (label[2].innerHTML==='0,1 m2'){
                 label[2].innerHTML='min'
             }
         }
-    },[price, surface, filter])
+    },[price, surface, filter, saleOrRent])
 
     useEffect(() => {
         setTimeout(function(){
@@ -510,7 +526,7 @@ const Residential = () => {
             state2.map(itemState => 
                 selected.map(itemType => 
                     itemState.zone.map(itemAd => {
-                        if (itemAd.zone !== 'Residencial' && itemAd !== 'Patrimonial'){
+                        if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
                             if (itemType === itemAd.zone) {
                                 actualizeState3.push(itemState)
                             }
@@ -723,7 +739,7 @@ const Residential = () => {
                         <div className='residential__filter'>
                             <div className='residential__filter__position'>
                                 <h2 className='residential__filter__position__title'>Zonas <span onClick={toggleFilter}><img src={cerrarFiltro} alt='cerrar'/></span></h2>
-                                <h3 className='residential__filter__position__subTitle'>Seleccione varias zonas</h3>
+                                <h3 className='residential__filter__position__subTitle'>Seleccione una o varias zonas</h3>
                                 <div className='residential__filter__position__mapContainer'>
                                     <div className='residential__filter__position__mapContainer__mapa'>
                                         <input type='image' className='c1' src={carretera1} alt='componente mapa' />
@@ -875,6 +891,7 @@ const Residential = () => {
                                             min={0}
                                             max={maxPrice}
                                             step={saleOrRent[0]==='Venta' ? 500000 : 500}
+                                            valueLabelFormat={saleOrRent[0] === 'Venta' ? value => `${new Intl.NumberFormat('de-DE').format(value)} €` : value => `${new Intl.NumberFormat('de-DE').format(value)} €/mes`}
                                         />
                                         <p className={disableSliders === true ? 'residential__filter__selectors__sliders__surface' : 'residential__filter__selectors__sliders__surfaceDisabled'}>Superficie m<sup>2</sup></p>
                                         <Slider
@@ -887,6 +904,7 @@ const Residential = () => {
                                             min={0}
                                             max={maxSurface}
                                             step={50}
+                                            valueLabelFormat={value => `${new Intl.NumberFormat('de-DE').format(value)} m2`}
                                         />
                                     </div>
                                     <div className='residential__filter__selectors__buscar'>
@@ -930,9 +948,9 @@ const Residential = () => {
                     </div>
                     <div className='residential__pagination'>
                         <ul className='residential__pagination__list'>
-                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`https://modest-darwin-2e96d1.netlify.app/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}
-                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__next' href={`https://modest-darwin-2e96d1.netlify.app/residential/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                         </ul>
                     </div>
                     <div className='residential__zoneMap'>

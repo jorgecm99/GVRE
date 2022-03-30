@@ -15,8 +15,9 @@ import MapItem from '../../common/MapItem/MapItem';
 import Geocode from "react-geocode";
 import googleKey from '../../../Keys.js';
 import emailjs from 'emailjs-com';
+import { getResidential } from '../../../api-requests/requests';
 
-Geocode.setApiKey({googleKey});
+Geocode.setApiKey(googleKey.googleKey);
 Geocode.setLanguage("es");
 Geocode.setRegion("es");
 Geocode.setLocationType("ROOFTOP");
@@ -29,6 +30,7 @@ const PatrimonioItem = () => {
     const [viewMap, setViewMap] = useState(false);
     const form = useRef();
     const [viewForm, setViewForm] = useState(true)
+    const [list, setList] = useState([])
 
     useState(() => {
         setState(state)
@@ -50,22 +52,20 @@ const PatrimonioItem = () => {
     },[])
 
     useEffect(() => {
-        if (Object.keys(state).length!==0){
-            window.localStorage.setItem(
-                'storedState2', JSON.stringify(state)
-            )
-        }
-    },[state])
+        getResidential().then(items=> {
+            setList(items)
+        })        
+    },[])
 
     useEffect(()=> {
-            const local = window.localStorage.getItem('storedState2')
-            const item = JSON.parse(local)
-            setState(item)
-    },[setState])
-    
-    useState(() => {
-        setState(state)
-    },[])
+        let id = window.location.href.split('/')[4]
+        list.map(item => {
+            if(item._id === id){
+                setState(item)
+            }
+            return item
+        })
+    },[list, setState])
 
     useEffect (() => {
         getConsultants().then(itemConsultants => {
@@ -124,7 +124,7 @@ const PatrimonioItem = () => {
 
     return (
         <div className='patrimonialItem'>
-            {state.item?
+            {state.images?
             <div>
                 <Header/>
                 <Carousel 
@@ -136,9 +136,9 @@ const PatrimonioItem = () => {
                     useKeyboardArrows={true}
                     autoFocus={true}
                 >
-                    <img className='patrimonialItem__carousel__images' src={state.item.images.main} alt={state.item.title}/>
-                    {state.item.images.others.map((image)=> (
-                        <img className='patrimonialItem__carousel__images' key={state.item._id} src={image} alt={state.item.title}/>
+                    <img className='patrimonialItem__carousel__images' src={state.images.main} alt={state.title}/>
+                    {state.images.others.map((image)=> (
+                        <img className='patrimonialItem__carousel__images' key={state._id} src={image} alt={state.title}/>
                     ))}
                 </Carousel>
                 {viewFullScreen === true ? 
@@ -153,9 +153,9 @@ const PatrimonioItem = () => {
                             useKeyboardArrows={true}
                             autoFocus={true}
                         >
-                            <img className='carouselImages' src={state.item.images.main} alt={state.item.title}/>
-                            {state.item.images.others.map((image)=> (
-                                <img className='carouselImages' key={state.item._id} src={image} alt={state.item.title}/>
+                            <img className='carouselImages' src={state.images.main} alt={state.title}/>
+                            {state.images.others.map((image)=> (
+                                <img className='carouselImages' key={state._id} src={image} alt={state.title}/>
                             ))}
                         </Carousel>
                     </div>
@@ -173,54 +173,54 @@ const PatrimonioItem = () => {
                             useKeyboardArrows={true}
                             autoFocus={true}
                         >
-                            {state.item.images.blueprint.map((image)=> (
-                                <img className='carouselImages' key={state.item.name} src={image} alt={state.item.title}/>
+                            {state.images.blueprint.map((image)=> (
+                                <img className='carouselImages' key={state.name} src={image} alt={state.title}/>
                             ))}
                         </Carousel>
                     </div>
                 :null
                 }
-                <p className='patrimonialItem__ref'>Ref. {state.item.adReference}</p>
+                <p className='patrimonialItem__ref'>Ref. {state.adReference}</p>
                 <div className='patrimonialItem__description'>
-                    <div className={state.item.expensesIncluded !== 0 && state.item.monthlyRent !== 0 && state.item.expenses !== 0 ?'patrimonialItem__description__principal' : 'patrimonialItem__description__principalEmpty'}>
+                    <div className={state.expensesIncluded !== 0 && state.monthlyRent !== 0 && state.expenses !== 0 ?'patrimonialItem__description__principal' : 'patrimonialItem__description__principalEmpty'}>
                         <img onClick={toggleFullScreen} src={fullScreen} alt='full screen'/>
-                            {state.item.adType.length === 1 ? 
-                                <h2 className='patrimonialItem__description__principal__price'>{state.item.adType.map(type => 
-                                    type==='Venta' && state.item.sale.saleShowOnWeb ? 
-                                    `${new Intl.NumberFormat('de-DE').format(state.item.sale.saleValue)} €`:
-                                    type==='Alquiler' && state.item.rent.rentShowOnWeb ?
-                                    `${new Intl.NumberFormat('de-DE').format(state.item.rent.rentValue)} € mes` : null)}
+                            {state.adType.length === 1 ? 
+                                <h2 className='patrimonialItem__description__principal__price'>{state.adType.map(type => 
+                                    type==='Venta' && state.sale.saleShowOnWeb ? 
+                                    `${new Intl.NumberFormat('de-DE').format(state.sale.saleValue)} €`:
+                                    type==='Alquiler' && state.rent.rentShowOnWeb ?
+                                    `${new Intl.NumberFormat('de-DE').format(state.rent.rentValue)} € mes` : null)}
                                 </h2>
                                 :
                                 <h2 className='patrimonialItem__description__principal__prices'>
-                                {state.item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(state.item.sale.saleValue)} €`}</p>:null}
-                                {state.item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(state.item.rent.rentValue)} € mes`}</p>:null}
+                                {state.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(state.sale.saleValue)} €`}</p>:null}
+                                {state.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(state.rent.rentValue)} € mes`}</p>:null}
                                 </h2>
                             }              
-                        <h1 className='patrimonialItem__description__principal__title'>{state.item.title}</h1>
-                        <h3>{state.item.webSubtitle}</h3>
+                        <h1 className='patrimonialItem__description__principal__title'>{state.title}</h1>
+                        <h3>{state.webSubtitle}</h3>
                     </div>
-                    {state.item.adType.map(item => 
+                    {state.adType.map(item => 
                         item === 'Alquiler' ? 
-                        <div className={state.item.expensesIncluded !== 0 && state.item.monthlyRent !== 0 && state.item.expenses !== 0 ?'patrimonialItem__description__rent' : 'patrimonialItem__description__rentEmpty'}>
+                        <div className={state.expensesIncluded !== 0 && state.monthlyRent !== 0 && state.expenses !== 0 ?'patrimonialItem__description__rent' : 'patrimonialItem__description__rentEmpty'}>
                             <h3 className='patrimonialItem__description__rent__title'>Alquiler</h3>
-                            <div className={state.item.expensesIncluded !== 0 && state.item.monthlyRent !== 0 && state.item.expenses !== 0 ?'patrimonialItem__description__rent__numbers' : 'patrimonialItem__description__rentEmpty__numbers'}>
-                                {state.item.expensesIncluded !== 0 ? 
+                            <div className={state.expensesIncluded !== 0 && state.monthlyRent !== 0 && state.expenses !== 0 ?'patrimonialItem__description__rent__numbers' : 'patrimonialItem__description__rentEmpty__numbers'}>
+                                {state.expensesIncluded !== 0 ? 
                                     <div>
-                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.item.expensesIncluded)}`}</h4>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.expensesIncluded)}`}</h4>
                                         <p>Renta €/m<sup>2</sup>/mes</p>
                                         <p>gastos incluidos</p>
                                     </div>:null
                                 }
-                                {state.item.monthlyRent !== 0 ? 
+                                {state.monthlyRent !== 0 ? 
                                     <div>
-                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.item.monthlyRent)}`}</h4>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.monthlyRent)}`}</h4>
                                         <p>Renta €/m<sup>2</sup></p>
                                     </div>:null
                                 }
-                                {state.item.expenses !== 0 ?
+                                {state.expenses !== 0 ?
                                     <div>
-                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.item.expenses)}`}</h4>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.expenses)}`}</h4>
                                         <p>Gastos €/m<sup>2</sup>/mes</p>
                                     </div>:null
                                 }
@@ -228,69 +228,89 @@ const PatrimonioItem = () => {
                         </div>
                         :null
                     )}
-                    {state.item.description.web !== '' ? 
+                    {state.description.web !== '' ? 
                         <div className='patrimonialItem__description__web'>
                             <h2>Descripción</h2>
-                            <p>{state.item.description.web}</p>
+                            <p>{state.description.web}</p>
                         </div>:null
                     }
                     <div className='patrimonialItem__description__distribution'>
-                        {state.item.images.blueprint.length!== 0 ?
+                        {state.images.blueprint.length!== 0 ?
                             <button onClick={toggleMap}>Ver plano</button>
                             :null
                         }                   
                     </div>
                     <div className='patrimonialItem__description__numbers'>
-                        {state.item.plotSurface!==0 ? 
-                            <div className='patrimonialItem__description__numbers__build'>
-                                <p className='patrimonialItem__description__numbers__build__data'>{state.item.plotSurface}</p>
-                                <p>m<sup>2</sup> de parcela.</p>
-                            </div>
-                        :null}
-                        {state.item.buildSurface !== 0 ? 
-                            <div className='patrimonialItem__description__numbers__build'>
-                                <p className='patrimonialItem__description__numbers__build__data'>{state.item.buildSurface}</p>
-                                <p>m<sup>2</sup> construidos</p>
-                            </div>
-                        : null}
-                        {state.item.quality.parking !== 0 ? 
-                            <div className='patrimonialItem__description__numbers__bed'>
-                                <p className='patrimonialItem__description__numbers__bed__data'>{state.item.quality.parking}</p>
-                                <p>Plazas de garaje</p>
-                            </div>
-                        : null}
-                        {state.item.quality.jobPositions !== 0 ? 
-                            <div className='patrimonialItem__description__numbers__bed'>
-                                <p className='patrimonialItem__description__numbers__bed__data'>{state.item.quality.jobPositions}</p>
-                                <p>Puestos de trabajo</p>
-                            </div>
-                        : null}
-                        {state.item.ibi.ibiValue!==0 && state.item.ibi.ibiShowOnWeb===true ? 
-                            <div className='patrimonialItem__description__numbers__bed'>
-                                <p className='patrimonialItem__description__numbers__bed__data'>{state.item.ibi.ibiValue}</p>
-                                <p>IBI €/año</p>
-                            </div>
-                        :null}
-                        {state.item.communityExpenses.expensesValue!==0 && state.item.ibi.expensesShowOnWeb===true ? 
-                            <div className='patrimonialItem__description__numbers__bed'>
-                                <p className='patrimonialItem__description__numbers__bed__data'>{state.item.communityExpenses.expensesValue}</p>
-                                <p>Gastos de comunidad €/mes</p>
-                            </div>
-                        :null}
-                        {state.item.floor!=='' ? 
-                            <div className='patrimonialItem__description__numbers__bed'>
-                                <p className='patrimonialItem__description__numbers__bed__data'>{state.item.floor}</p>
-                                <p>Planta</p>
-                            </div>
-                        :null}
-                        {state.item.disponibility!=='' ? 
-                            <div className='patrimonialItem__description__numbers__bath'>
-                                <p className='patrimonialItem__description__numbers__bath__data'>{state.item.disponibility}</p>
-                                <p>Disponibilidad</p>
-                            </div>
-                        :null}
+                        <div>
+                            {state.plotSurface!==0 ? 
+                                <div className='patrimonialItem__description__numbers__build'>
+                                    <p className='patrimonialItem__description__numbers__build__data'>{state.plotSurface}</p>
+                                    <p>m<sup>2</sup> de parcela.</p>
+                                </div>
+                            :null}
+                            {state.buildSurface !== 0 ? 
+                                <div className='patrimonialItem__description__numbers__build'>
+                                    <p className='patrimonialItem__description__numbers__build__data'>{state.buildSurface}</p>
+                                    <p>m<sup>2</sup> construidos</p>
+                                </div>
+                            : null}
+                            {state.quality.parking !== 0 ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.quality.parking}</p>
+                                    <p>Plazas de garaje</p>
+                                </div>
+                            : null}
+                            {state.quality.jobPositions !== 0 ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.quality.jobPositions}</p>
+                                    <p>Puestos de trabajo</p>
+                                </div>
+                            : null}
+                        </div>
+                        <div>
+                            {state.floor!=='' ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.floor}</p>
+                                    <p>Planta</p>
+                                </div>
+                            :null}
+                            {state.disponibility!=='' ? 
+                                <div className='patrimonialItem__description__numbers__bath'>
+                                    <p className='patrimonialItem__description__numbers__bath__data'>{state.disponibility}</p>
+                                    <p>Disponibilidad</p>
+                                </div>
+                            :null}
+                        </div>
+                        <div>
+                            {state.ibi.ibiValue!==0 && state.ibi.ibiShowOnWeb===true ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.ibi.ibiValue}</p>
+                                    <p>IBI €/año</p>
+                                </div>
+                            :null}
+                            {state.communityExpenses.expensesValue!==0 && state.ibi.expensesShowOnWeb===true ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.communityExpenses.expensesValue}</p>
+                                    <p>Gastos de comunidad €/mes</p>
+                                </div>
+                            :null}
+                        </div>
+                        <div>
+                            {state.quality.subway!=='' ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.quality.subway}</p>
+                                    <p>Metro</p>
+                                </div>
+                            :null}
+                            {state.quality.bus!=='' ? 
+                                <div className='patrimonialItem__description__numbers__bed'>
+                                    <p className='patrimonialItem__description__numbers__bed__data'>{state.quality.bus}</p>
+                                    <p>Autobús</p>
+                                </div>
+                            :null}
+                        </div>
                     </div>
-                    {state.item.surfacesBox.length !== 0 ?
+                    {state.surfacesBox.length !== 0 ?
                         <div className='patrimonialItem__description__surfaceTable'>
                             <h3>Cuadro de superficies</h3>
                             <div className='patrimonialItem__description__surfaceTable__table'>
@@ -302,7 +322,7 @@ const PatrimonioItem = () => {
                                         <td>Precio</td>
                                         <td>Disponibilidad</td>
                                     </tr>
-                                    {state.item.surfacesBox.map(item => 
+                                    {state.surfacesBox.map(item => 
                                         <tr>
                                             <td>{item.surfaceFloor}</td>
                                             <td>{item.surfaceUse}</td>
@@ -316,43 +336,37 @@ const PatrimonioItem = () => {
                         </div>
                     : null}
                     <div className='patrimonialItem__description__extras'>
-                        {state.item.quality.others.accessControl === true ? <p> <img src={check} alt='check'/> Control de accesos</p> : null}
-                        {state.item.quality.others.airConditioning === true ? <p> <img src={check} alt='check'/> Aire acondicionado</p> : null}
-                        {state.item.quality.others.centralHeating === true ? <p> <img src={check} alt='check'/> Calefacción central</p> : null}
-                        {state.item.quality.others.centralVacuum === true ? <p> <img src={check} alt='check'/> Aspiración centralizada</p> : null}
-                        {state.item.quality.others.dumbwaiter === true ? <p> <img src={check} alt='check'/> Montaplatos</p> : null}
-                        {state.item.quality.others.falseCeiling === true ? <p> <img src={check} alt='check'/> Falso techo</p> : null}
-                        {state.item.quality.others.freeHeight === true ? <p> <img src={check} alt='check'/> Altura libre 2.5m</p> : null}
-                        {state.item.quality.others.fullHoursSecurity === true ? <p> <img src={check} alt='check'/> Seguridad 24h</p> : null}
-                        {state.item.quality.others.garage === true ? <p> <img src={check} alt='check'/> Garaje</p> : null}
-                        {state.item.quality.others.gunRack === true ? <p> <img src={check} alt='check'/> Armero</p> : null}
-                        {state.item.quality.others.homeAutomation === true ? <p> <img src={check} alt='check'/> Domótica</p> : null}
-                        {state.item.quality.others.indoorAlarm === true ? <p> <img src={check} alt='check'/> Alarma interior</p> : null}
-                        {state.item.quality.others.lift === true ? <p> <img src={check} alt='check'/> Ascensor</p> : null}
-                        {state.item.quality.others.liftTruck === true ? <p> <img src={check} alt='check'/> Montacargas</p> : null}
-                        {state.item.quality.others.outdoorAlarm === true ? <p> <img src={check} alt='check'/> Alarma perimetral</p> : null}
-                        {state.item.quality.others.padelCourt === true ? <p> <img src={check} alt='check'/> Pista de pádel</p> : null}
-                        {state.item.quality.others.qualityBathrooms === true ? <p> <img src={check} alt='check'/> Baños</p> : null}
-                        {state.item.quality.others.smokeOutlet === true ? <p> <img src={check} alt='check'/> Salida de humos</p> : null}
-                        {state.item.quality.others.storage === true ? <p> <img src={check} alt='check'/> Trastero</p> : null}
-                        {state.item.quality.others.strongBox === true ? <p> <img src={check} alt='check'/> Caja fuerte</p> : null}
-                        {state.item.quality.others.subFloorHeating === true ? <p> <img src={check} alt='check'/> Suelo radiante</p> : null}
-                        {state.item.quality.others.swimmingPool === true ? <p> <img src={check} alt='check'/> Piscina</p> : null}
-                        {state.item.quality.others.tennisCourt === true ? <p> <img src={check} alt='check'/> Pista de tenis</p> : null}
-                        {state.item.quality.others.terrace === true ? <p> <img src={check} alt='check'/> Terraza</p> : null}
-                        {state.item.quality.others.well === true ? <p> <img src={check} alt='check'/> Pozo</p> : null}
-                        {state.item.quality.others.raisedFloor === true ? <p> <img src={check} alt='check'/> Tarima flotante</p> : null}
-                        {state.item.quality.subway!=='' ? 
-                            <p><img src={check} alt='check'/> Metro: {state.item.quality.subway}</p>
-                        :null}
-                        {state.item.quality.subway!=='' ? 
-                            <p><img src={check} alt='check'/> Bus: {state.item.quality.bus}</p>
-                        :null}
+                        {state.quality.others.accessControl === true ? <p> <img src={check} alt='check'/> Control de accesos</p> : null}
+                        {state.quality.others.airConditioning === true ? <p> <img src={check} alt='check'/> Aire acondicionado</p> : null}
+                        {state.quality.others.centralHeating === true ? <p> <img src={check} alt='check'/> Calefacción central</p> : null}
+                        {state.quality.others.centralVacuum === true ? <p> <img src={check} alt='check'/> Aspiración centralizada</p> : null}
+                        {state.quality.others.dumbwaiter === true ? <p> <img src={check} alt='check'/> Montaplatos</p> : null}
+                        {state.quality.others.falseCeiling === true ? <p> <img src={check} alt='check'/> Falso techo</p> : null}
+                        {state.quality.others.freeHeight === true ? <p> <img src={check} alt='check'/> Altura libre 2.5m</p> : null}
+                        {state.quality.others.fullHoursSecurity === true ? <p> <img src={check} alt='check'/> Seguridad 24h</p> : null}
+                        {state.quality.others.garage === true ? <p> <img src={check} alt='check'/> Garaje</p> : null}
+                        {state.quality.others.gunRack === true ? <p> <img src={check} alt='check'/> Armero</p> : null}
+                        {state.quality.others.homeAutomation === true ? <p> <img src={check} alt='check'/> Domótica</p> : null}
+                        {state.quality.others.indoorAlarm === true ? <p> <img src={check} alt='check'/> Alarma interior</p> : null}
+                        {state.quality.others.lift === true ? <p> <img src={check} alt='check'/> Ascensor</p> : null}
+                        {state.quality.others.liftTruck === true ? <p> <img src={check} alt='check'/> Montacargas</p> : null}
+                        {state.quality.others.outdoorAlarm === true ? <p> <img src={check} alt='check'/> Alarma perimetral</p> : null}
+                        {state.quality.others.padelCourt === true ? <p> <img src={check} alt='check'/> Pista de pádel</p> : null}
+                        {state.quality.others.qualityBathrooms === true ? <p> <img src={check} alt='check'/> Baños</p> : null}
+                        {state.quality.others.smokeOutlet === true ? <p> <img src={check} alt='check'/> Salida de humos</p> : null}
+                        {state.quality.others.storage === true ? <p> <img src={check} alt='check'/> Trastero</p> : null}
+                        {state.quality.others.strongBox === true ? <p> <img src={check} alt='check'/> Caja fuerte</p> : null}
+                        {state.quality.others.subFloorHeating === true ? <p> <img src={check} alt='check'/> Suelo radiante</p> : null}
+                        {state.quality.others.swimmingPool === true ? <p> <img src={check} alt='check'/> Piscina</p> : null}
+                        {state.quality.others.tennisCourt === true ? <p> <img src={check} alt='check'/> Pista de tenis</p> : null}
+                        {state.quality.others.terrace === true ? <p> <img src={check} alt='check'/> Terraza</p> : null}
+                        {state.quality.others.well === true ? <p> <img src={check} alt='check'/> Pozo</p> : null}
+                        {state.quality.others.raisedFloor === true ? <p> <img src={check} alt='check'/> Tarima flotante</p> : null}
                     </div>
                     <div className='patrimonialItem__wrapper'>
                         <div className='patrimonialItem__description__owner'>
                             {consultants.map(consultant => 
-                                consultant.fullName === state.item.consultant.fullName ? 
+                                consultant.fullName === state.consultant.fullName ? 
                                 <div key={consultant._id} className='patrimonialItem__description__owner__details'>
                                     <img src={consultant.avatar} alt={consultant.fullName}/>
                                     <p>{consultant.fullName}</p>
@@ -412,7 +426,7 @@ const PatrimonioItem = () => {
                                         </div>
                                         <div className='patrimonialItem__description__form__wrapper__position__reference'>
                                             <label className='patrimonialItem__description__form__label'>Referencia</label>
-                                            <Field name="referencia" value={state.item.adReference}/>
+                                            <Field name="referencia" value={state.adReference}/>
                                         </div>
                                         <button className='patrimonialItem__description__form__button' type='submit'>Enviar <span><img src={send} alt='enviar'/></span></button>
                                     </Form>

@@ -148,7 +148,7 @@ const Patrimonio = () => {
                                         <li className='patrimonial__list__item__text__characteristics__car'><span><img src={parking} alt='plazas parking'/></span>{item.quality.parking}</li>
                                     :null}
                                     {item.adReference !== 0 ?
-                                        <li><span><img src={refer} alt='referencia'/></span><p>Ref {item.adReference}</p></li>
+                                        <li><span><img src={refer} alt='referencia'/></span><p> Ref {item.adReference}</p></li>
                                     :null}
                                 </ul>
                                 <div className='patrimonial__list__item__text__blocker'></div>
@@ -246,7 +246,7 @@ const Patrimonio = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className='patrimonial__pagination__list__item'><a href={`https://modest-darwin-2e96d1.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
+                <li className='patrimonial__pagination__list__item'><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -286,20 +286,36 @@ const Patrimonio = () => {
     useEffect(() => {
         if(filter===true){
             let label = document.getElementsByClassName('MuiSlider-valueLabelLabel')
-            if (label[0].innerHTML==='0.1'){
+            if (saleOrRent[0]==='Alquiler'){
+                if (label[0].innerHTML==='0,1 €/mes'){
+                    label[0].innerHTML='min'
+                }
+                if (label[1].innerHTML==='99.999.999,9 €/mes'){
+                    label[1].innerHTML='max'
+                }
+            }
+            if (saleOrRent[0]==='Venta'){
+                if (label[0].innerHTML==='0,1 €'){
+                    label[0].innerHTML='min'
+                }
+                if (label[1].innerHTML==='99.999.999,9 €'){
+                    label[1].innerHTML='max'
+                }
+            }
+            if (label[0].innerHTML==='0,1 €/mes'){
                 label[0].innerHTML='min'
             }
-            if (label[1].innerHTML==='99999999.9'){
+            if (label[1].innerHTML==='99.999.999,9 €/mes'){
                 label[1].innerHTML='max'
             }
-            if (label[3].innerHTML==='99999999.9'){
+            if (label[3].innerHTML==='99.999.999,9 m2'){
                 label[3].innerHTML='max'
             }
-            if (label[2].innerHTML==='0.1'){
+            if (label[2].innerHTML==='0,1 m2'){
                 label[2].innerHTML='min'
             }
         }
-    },[price, surface, filter])
+    },[price, surface, filter, saleOrRent])
 
 
     useEffect(() => {
@@ -481,7 +497,7 @@ const Patrimonio = () => {
             state2.map(itemState => 
                 selected.map(itemType => 
                     itemState.zone.map(itemAd => {
-                        if (itemAd.zone !== 'Residencial' && itemAd !== 'Patrimonial'){
+                        if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
                             if (itemType === itemAd.zone) {
                                 actualizeState3.push(itemState)
                             }
@@ -601,7 +617,7 @@ const Patrimonio = () => {
                         <div className='patrimonial__filter'>
                             <div className='patrimonial__filter__position'>
                                 <h2 className='patrimonial__filter__title'>Zonas <span onClick={toggleFilter}><img src={cerrarFiltro} alt='cerrar'/></span></h2>
-                                <h3 className='patrimonial__filter__subTitle'>Seleccione varias zonas</h3>
+                                <h3 className='patrimonial__filter__subTitle'>Seleccione una o varias zonas</h3>
                                 <div className='patrimonial__filter__position__mapContainer'>
                                     <div className='patrimonial__filter__position__mapContainer__mapa'>
                                         <input type='image' className='c1' src={carretera1} alt='componente mapa' />
@@ -742,6 +758,7 @@ const Patrimonio = () => {
                                             min={0}
                                             max={maxPrice}
                                             step={saleOrRent[0]==='Venta' ? 500000 : 500}
+                                            valueLabelFormat={saleOrRent[0] === 'Venta' ? value => `${new Intl.NumberFormat('de-DE').format(value)} €` : value => `${new Intl.NumberFormat('de-DE').format(value)} €/mes`}
                                         />
                                         <p className={disableSliders === true ? 'patrimonial__filter__selectors__sliders__surface' : 'patrimonial__filter__selectors__sliders__surfaceDisabled'}>Superficie m<sup>2</sup></p>
                                         <Slider
@@ -754,6 +771,7 @@ const Patrimonio = () => {
                                             min={0}
                                             max={maxSurface}
                                             step={50}
+                                            valueLabelFormat={value => `${new Intl.NumberFormat('de-DE').format(value)} m2`}
                                         />
                                     </div>
                                     <div className='patrimonial__filter__selectors__buscar'>
@@ -797,9 +815,9 @@ const Patrimonio = () => {
                     </div>
                     <div className='patrimonial__pagination'>
                         <ul className='patrimonial__pagination__list'>
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://modest-darwin-2e96d1.netlify.app/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`https://modest-darwin-2e96d1.netlify.app/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                         </ul>
                     </div>
                     <div className='patrimonial__zoneMap'>

@@ -38,3 +38,25 @@ body{
     transform: rotate(180deg);
     margin-left: 5px;
 }
+.css-1kz0hui-MuiSlider-valueLabel.MuiSlider-valueLabelOpen{
+    top: 16;
+    background-color: transparent;
+    color: black;
+}
+.css-187mznn-MuiSlider-root{
+    color: #2b363d!important;
+}
+span[data-index='1'] {
+    border-width: 6px;
+}
+.css-eg0mwd-MuiSlider-thumb{
+    background-color: white!important;
+    border: solid;
+    border-width: 3px;
+}
+.css-1kz0hui-MuiSlider-valueLabel:before{
+    display: none;
+}
+.css-eg0mwd-MuiSlider-thumb.Mui-active{
+    box-shadow: none !important;
+}

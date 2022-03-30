@@ -198,9 +198,6 @@
             }
         }
         &__numbers{
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
             margin:30px;
             margin-top: 0;
             margin-bottom: -50px;
@@ -215,7 +212,8 @@
                 margin-top: 8px;
             }
             div{
-                margin-top: 40px;
+                display: flex;
+                flex-wrap: wrap;
             }
             &__plot{
                 display: flex;
@@ -379,7 +377,7 @@
             div{
                 @include litleTextMobile;
                 margin-top: 5px;
-                color: red;
+                color: #2B363D!important;
             }
             &__return{
                 height: 33vh;
@@ -478,14 +476,12 @@
                 justify-content: space-around;
                 margin-bottom: 50px;
                 div{
-                    width: 24%;
                     display: flex;
                     justify-content: space-around;
                 }
                 p{
                     @include textMobile;
                 }
-
             }
             &__extras{
                 p{
@@ -649,14 +645,14 @@
             &__principal{
                 position: absolute;
                 width: 100%;
-                top: -275px;
+                top: -280px;
                 background-color: rgba(253, 253, 253, 0.425);
                 border: none;
                 margin: 0;
                 padding-bottom: 0;
                 &__price{
                     @include subSubTitle;
-                    font-size: 30px!important;
+                    font-size: 35px!important;
                     padding-top: 0px;
                     margin-bottom: 0;
                 }
@@ -741,7 +737,6 @@
                 padding: 20px 0;
                 display: flex;
                 align-items: center;
-                justify-content: initial;
                 flex-wrap: wrap;
                 sup{
                     font-size: 12px;
@@ -749,6 +744,13 @@
                 p{
                     margin-right: 10px;
                     @include text;
+                }
+                div{
+                    display: flex;
+                    justify-content: space-around;
+                    flex-wrap: initial;
+                    width: 100%;
+                    margin-top: 40px;
                 }
                 &__plot{
                     display: flex;
@@ -764,7 +766,6 @@
                 &__build{
                     display: flex;
                     flex-direction: column;
-                    width: 20%;
                     &__data{
                         font-size: 64px !important;
                         margin-top: 75px;
@@ -775,7 +776,6 @@
                 &__bed{
                     display: flex;
                     flex-direction: column;
-                    width: 20%;
                     text-align: center;
                     &__data{
                         font-size: 64px !important;
@@ -787,7 +787,6 @@
                 &__bath{
                     display: flex;
                     flex-direction: column;
-                    width: 30%;
                     &__data{
                         font-size: 64px !important;
                         margin-top: 75px;
@@ -823,6 +822,7 @@
                 font-size: 14px!important;
                 line-height: 20px!important;
                 align-items: flex-end;
+                margin-bottom: 120px;
                 p{
                     margin-bottom: 1%;
                 }
@@ -918,6 +918,7 @@
         }
         &__wrapper{
             display: flex;
+            align-items: center;
         }
     }
     .carouselImages{

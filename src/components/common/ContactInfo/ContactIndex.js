@@ -16,7 +16,7 @@ const ContactIndex = () => {
             </div>
             <div className='contactIndex__location__right'>
                 <p>917 36 53 85</p>
-                <p>info@gvre.es</p>
+                <a target='blank' href='mailto:info@gvre.es'>info@gvre.es</a>
             </div>
         </div>
         <Link to={routes.Contact} className='contactIndex__button'>Contactar</Link>

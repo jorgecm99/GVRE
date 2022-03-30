@@ -1,4 +1,4 @@
-const googleKey = 'AIzaSyDta-Ln6pjIsSH5_wuPkBJXsiMwpFrr2f4'
+const googleKey = 'AIzaSyAf3p-MyYy83dvOuh8b7zIBanB7EkpjJhw'
 const attomo = ''
 
 const key = {

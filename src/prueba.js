@@ -1,232 +1,419 @@
-import React, { useEffect,useState, useContext } from 'react';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "./patrimonio.scss"
-import routes from '../../../config/routes';
-import { Link, generatePath, NavLink} from 'react-router-dom';
-import { Carousel } from 'react-responsive-carousel';
-import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
-import job from '../../../assets/SVG/web/anuncios/anuncios_trabajo.svg';
-import refer from '../../../assets/SVG/mobile/anuncios/anuncios_referencia.svg';
-import sup from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg'
-import filterImg from '../../../assets/SVG/mobile/comun/iconoFiltros.svg';
-import order from '../../../assets/SVG/mobile/comun/flechaOrdenar.svg';
-import zoneMap from '../../../assets/SVG/mobile/anuncios/anuncios_mapa.svg';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import { generalContext } from '../../../providers/generalProvider';
+import { Carousel } from 'react-responsive-carousel';
+import { Formik, Form, Field } from 'formik';
+import * as yup from 'yup';
+import "./residentialItem.scss";
+import fullScreen from '../../../assets/SVG/mobile/comun/pantallaCompleta.svg';
+import closeFullScreen from '../../../assets/SVG/mobile/comun/cerrarCompleta.svg';
+import { getConsultants } from '../../../api-requests/requests';
 import Header from '../../common/Header/Header';
-import ContactIndex from '../../common/ContactInfo/ContactIndex'
+import check from '../../../assets/SVG/mobile/comun/check.svg';
+import send from '../../../assets/SVG/mobile/comun/flechaEnviar.svg';
+import MapItem from '../../common/MapItem/MapItem';
+import Geocode from "react-geocode";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import googleKey from '../../../Keys.js';
+import emailjs from 'emailjs-com';
 
-const Patrimonio = () => {
-    const [orderedItems, setOrderedItems] = useState([])
-    const [perPage] = useState(31);
-    const [pageNumber, setPageNumber] = useState(0);
-    const [pagElements, setPagElements] = useState();
 
-    const [orderItems, setOrderItems] = useState(false);
+Geocode.setApiKey({googleKey});
+Geocode.setLanguage("es");
+Geocode.setRegion("es");
+Geocode.setLocationType("ROOFTOP");
+Geocode.enableDebug();
+
+const ResidentialItem = () => {
     const [state, setState] = useContext(generalContext);
-
-    const [coord, setCoord] = useState(0)
-
-        const setPosition = () => {
-        if (coord !== 0) {
-            window.localStorage.setItem(
-                'storedPosition', JSON.stringify(coord)
-            )
-        }
-    }
-    const pagesVisited = pageNumber * perPage;
-    const pageCount = Math.ceil(orderedItems.length/perPage);
-    const getPostItems = orderedItems.slice(pagesVisited, pagesVisited + perPage)
-    .map(item => {
-            return item.department === "Patrimonio" && item.showOnWeb === true? 
-            <div onClick={setPosition} className='patrimonial__list__item' key={item._id} details={item}>
-                <Carousel 
-                    className='patrimonial__list__item__images'
-                    showArrows={true}
-                    showThumbs={false}
-                    infiniteLoop={true}
-                    showStatus={false}
-                >
-                    <img src={item.images.main} alt={item.title}/>
-                    {item.images.others.map((image)=> (
-                        <img key={item.title} src={image} alt={item.title}/>
-                    ))}
-                </Carousel>
-                <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemPatrimonial, {id:item._id})}>
-                    <div className='patrimonial__list__item__text'>
-                        {item.adType.length === 1 ? 
-                            <h2 className='patrimonial__list__item__text__price'>{item.adType.map(type => 
-                                type==='Venta' && item.sale.saleShowOnWeb ? 
-                                `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`:
-                                type==='Alquiler' && item.rent.rentShowOnWeb ?
-                                `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
-                            </h2>
-                            :
-                            <h2 className='patrimonial__list__item__text__prices'>
-                                {item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
-                                {item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
-                            </h2>
-                        }   
-                        <h2 className='patrimonial__list__item__text__title'>{item.title}</h2>
-                        <h3 className='patrimonial__list__item__text__street'>{item.webSubtitle}</h3>
-                        <ul className='patrimonial__list__item__text__characteristics'>
-                            {item.buildSurface !== 0 ?
-                                <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
-                            :null}
-                            {item.quality.jobPositions !== 0 ?
-                                <li><span><img src={job} alt='puestos de trabajo'/></span>{item.quality.jobPositions}</li>
-                            :null}
-                            {item.quality.parking !== 0 ?
-                                <li className='patrimonial__list__item__text__characteristics__car'><span><img src={parking} alt='plazas parking'/></span>{item.quality.parking}</li>
-                            :null}
-                            {item.adReference !== 0 ?
-                                <li><span><img src={refer} alt='referencia'/></span><p>Ref {item.adReference}</p></li>
-                            :null}
-                        </ul>
-                        <div className='patrimonial__list__item__text__clickable'></div>
-                    </div>
-                </Link>
-            </div> : null
-    })
+    const [consultants, setConsultants] = useState([]);
+    const [viewFullScreen, setViewFullScreen] = useState(false);
+    const [viewMap, setViewMap] = useState(false);
+    const form = useRef();
+    const [viewForm, setViewForm] = useState(true)
+    
+    useState(() => {
+        Geocode.fromAddress("Eiffel Tower").then(
+            (response) => {
+              const { lat, lng } = response.results[0].geometry.location;
+              console.log(lat, lng);
+            },
+            (error) => {
+              console.error(error);
+            }
+          )
+    },[])
 
     useEffect(() => {
-        if (state.length>=1) {
+        window.scroll({
+            top:0
+        })
+    },[])
+
+    useEffect(() => {
+        if (Object.keys(state).length!==0){
             window.localStorage.setItem(
-                'storedState', JSON.stringify(state)
+                'storedState2', JSON.stringify(state)
             )
         }
     },[state])
 
-    useEffect(() => {
-        window.localStorage.removeItem('storedState2')
-    },[])
+    useEffect(()=> {
+            const local = window.localStorage.getItem('storedState2')
+            const item = JSON.parse(local)
+            setState(item)
+    },[setState])
 
     useEffect (() => {
-        const localState = window.localStorage.getItem('storedState')
-        let Items = []
-        if (localState) {
-            const itemList = JSON.parse(localState)
-            itemList.map(item => 
-               Items.push(item) 
-            )
-            const array = Object.values(Items)
-            const sortArray = (a, b) => {
-                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
-                return 0
-            }
-            let orderedArrayPrice = array.sort(sortArray);
-            Items=orderedArrayPrice
-        }
-        setOrderedItems(Items)
+        getConsultants().then(itemConsultants => {
+            setConsultants(itemConsultants)
+        })
     },[])
 
-    useEffect(() => {
-        let splitedLocation = window.location.href.split('/');
-        let elements = []
-        setPageNumber(parseInt(splitedLocation[4])-1)
-        for(let i = 0; i<pageCount; i++){
-            elements.push(
-                <li className='patrimonial__pagination__list__item'><a href={`https://modest-darwin-2e96d1.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
-            )
-        }
-        setPagElements(elements)
-    },[pageCount])
 
-    useEffect (() => {
-        if (filteredState.length>0) {
-            setOrderedItems(filteredState)
-        }
-    },[filteredState])
-
-    useEffect(() => {
-        setTimeout(function(){
-            const localPosition = window.localStorage.getItem('storedPosition')
-            if (localPosition !== 0) {
-                window.scroll( {
-                    top:localPosition-650
-                })
-            }else{
-                window.scroll(
-                    {top:0}
-                )
-            }
-        },1)
-    },[])
-
-    const onPrice = () => {
-        const array = Object.values(orderedItems)
-        const sortArray = (a, b) => {
-            if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-            if (a.sale.saleValue > b.sale.saleValue) {return -1;}
-            return 0
-        }
-        let orderedArrayPrice = array.sort(sortArray);
-        setOrderedItems(orderedArrayPrice);
-        setOrderItems (!orderItems)
+    const toggleFullScreen = () => {
+        setViewFullScreen(!viewFullScreen)
+    }
+    const toggleMap = () => {
+        setViewMap(!viewMap)
     }
 
-    const onDate = () => {
-        const array = Object.values(orderedItems)
-        const sortArray = (a, b) => {
-            if (a.createdAt < b.createdAt) {return 1;}
-            if (a.createdAt > b.createdAt) {return -1;}
-            return 0
-        }
-        let orderedArrayDate = array.sort(sortArray);
-        setOrderedItems(orderedArrayDate);
-        setOrderItems (!orderItems);
+    const initialValues = {
+        nombre:'',
+        apellidos:'',        
+        email:'',
+        telefono:'',
+        mensaje:''
+    }
+    const validationSchema = yup.object({
+        nombre: yup
+            .string('')
+            .required('Este campo es obligatorio'),
+        apellidos: yup
+            .string('')
+            .required('Este campo es obligatorio'),
+        email: yup
+            .string('')
+            .required('Este campo es obligatorio')
+            .email('El email no es válido'),
+        telefono: yup
+            .string('')
+            .required('Este campo es obligatorio'),
+        mensaje: yup
+            .string(''),
+        referencia: yup
+            .string('')
+    })
+
+    const sendEmail = (e) => {
+        emailjs.sendForm('gmail', 'template_zpo7p8a', form.current, 'd0RpjhV6JfLsc5KLH')
+        .then((result) => {
+            setViewForm(!viewForm)
+            return (result)
+        }, (error) => {
+            alert('El email no se ha podido enviar correctamente, intentelo de nuevo más tarde, disculpe las molestias.');
+            return(error)
+        });
     }
 
-    const toggleOrderItems = () => {
-        setOrderItems (!orderItems)
+    const toggleForm = () => {
+        setViewForm(!viewForm)
     }
-
-    window.onmousemove = function (e){
-        var y = e.pageY
-        setCoord(y)
-    }
-
+    
     return (
-        <div className='patrimonial'>
-            <Header/>
-            {orderedItems.length > 0 ?
+        <div className='residentialItem'>
+            {state.item? 
                 <div>
-                    <h1 className='patrimonial__title'>Patrimonio</h1>
-                    <div className='patrimonial__buttons'>
-                        <button onClick={toggleFilter} className='patrimonial__buttons__filter'><img src={filterImg} alt='boton filtro'/> Filtros</button>
-                        <div className='patrimonial__buttons__order'>
-                        <button onClick={toggleOrderItems} className='patrimonial__buttons__order__title'>Ordenar por <img src={order} alt='boton ordenar por'/></button>
-                            <ul className={orderItems === false ? 'patrimonial__buttons__order__listDisabled' : 'patrimonial__buttons__order__list'}>
-                                <li onClick={onPrice} className='patrimonial__buttons__order__list__first'>Precio más alto</li>
-                                <li onClick={onDate}>Más reciente</li>
-                            </ul>
+                    <Header/>
+                    <Carousel 
+                        className='residentialItem__carousel'
+                        showArrows={true}
+                        showThumbs={false}
+                        infiniteLoop={true}
+                        showStatus={false}
+                        useKeyboardArrows={true}
+                        autoFocus={true}
+                    >
+                        <img className='residentialItem__carousel__images' src={state.item.images.main} alt={state.item.title}/>
+                        {state.item.images.others.map((image)=> (
+                            <img className='residentialItem__carousel__images' key={state.item._id} src={image} alt={state.item.title}/>
+                        ))}
+                    </Carousel>
+                    {viewFullScreen === true ? 
+                        <div className='residentialItem__fullScreen'>
+                            <button onClick={toggleFullScreen} className='residentialItem__fullScreen__close'><img src={closeFullScreen} alt='close full screen'/></button>
+                            <Carousel 
+                                className='residentialItem__fullScreen__carousel'
+                                showArrows={true}
+                                showThumbs={false}
+                                infiniteLoop={true}
+                                showStatus={false}
+                                useKeyboardArrows={true}
+                                autoFocus={true}
+                            >
+                                <img className='carouselImages' src={state.item.images.main} alt={state.item.title}/>
+                                {state.item.images.others.map((image)=> (
+                                    <img className='carouselImages' key={state.item._id} src={image} alt={state.item.title}/>
+                                ))}
+                            </Carousel>
+                        </div>
+                    : null
+                    }
+                    {viewMap === true ?
+                        <div className='residentialItem__fullScreen'>
+                            <button onClick={toggleMap} className='residentialItem__map__close'><img src={closeFullScreen} alt='close full screen'/></button>
+                            <Carousel 
+                                className='residentialItem__fullScreen__carousel'
+                                showArrows={true}
+                                showThumbs={false}
+                                infiniteLoop={true}
+                                showStatus={false}
+                                useKeyboardArrows={true}
+                                autoFocus={true}
+                            >
+                                {state.item.images.blueprint.map((image)=> (
+                                    <img className='carouselImages' key={state.item.name} src={image} alt={state.item.title}/>
+                                ))}
+                            </Carousel>
+                        </div>
+                    :null
+                    }
+                    <p className='residentialItem__ref'>Ref. {state.item.adReference}</p>
+                    <div className='residentialItem__description'>
+                        <div className='residentialItem__description__principal'>
+                            <button onClick={toggleFullScreen} ><img src={fullScreen} alt='full screen'/></button>
+                            {state.item.adType.length === 1 ? 
+                                <h2 className='residentialItem__description__principal__price'>{state.item.adType.map(type => 
+                                    type==='Venta' && state.item.sale.saleShowOnWeb ? 
+                                    `${new Intl.NumberFormat('de-DE').format(state.item.sale.saleValue)} €`:
+                                    type==='Alquiler' && state.item.rent.rentShowOnWeb ?
+                                    `${new Intl.NumberFormat('de-DE').format(state.item.rent.rentValue)} € mes` : null)}
+                                </h2>
+                                :
+                                <h2 className='residentialItem__description__principal__prices'>
+                                    {state.item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(state.item.sale.saleValue)} €`}</p>:null}
+                                    {state.item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(state.item.rent.rentValue)} € mes`}</p>:null}
+                                </h2>
+                            }                               
+                        <h1 className='residentialItem__description__principal__title'>{state.item.title}</h1>
+                        <h3>{state.item.webSubtitle}</h3>
+                        </div>
+                        {state.item.adType.map(item => 
+                        item === 'Alquiler' ? 
+                        <div className={state.item.expensesIncluded !== 0 && state.item.monthlyRent !== 0 && state.item.expenses !== 0 ?'residentialItem__description__rent' : 'residentialItem__description__rentEmpty'}>
+                            <h3 className='residentialItem__description__rent__title'>Alquiler</h3>
+                            <div className={state.item.expensesIncluded !== 0 && state.item.monthlyRent !== 0 && state.item.expenses !== 0 ?'residentialItem__description__rent__numbers' : 'residentialItem__description__rentEmpty__numbers'}>
+                            {state.item.expensesIncluded !== 0 ? 
+                                    <div>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.item.expensesIncluded)}`}</h4>
+                                        <p>Renta €/m<sup>2</sup>/mes</p>
+                                        <p>gastos incluidos</p>
+                                    </div>:null
+                                }
+                                {state.item.monthlyRent !== 0 ? 
+                                    <div>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.item.monthlyRent)}`}</h4>
+                                        <p>Renta €/m<sup>2</sup></p>
+                                    </div>:null
+                                }
+                                {state.item.expenses !== 0 ?
+                                    <div>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.item.expenses)}`}</h4>
+                                        <p>Gastos €/m<sup>2</sup>/mes</p>
+                                    </div>:null
+                                }
+                            </div>
+                        </div>
+                        :null
+                    )}
+                        {state.item.description.web !== '' ? 
+                            <div className='residentialItem__description__web'>
+                                <h2>Descripción</h2>
+                                <p>{state.item.description.web}</p>
+                            </div>:null
+                        }
+                        <div className='residentialItem__description__distribution'>
+                            {state.item.description.distribution !== '' ? <h2>Distribución</h2> : null}
+                            {state.item.description.distribution !== '' ? <p>{state.item.description.distribution}</p>:null}
+                            {state.item.images.blueprint.length!== 0 ?
+                                <button onClick={toggleMap}>Ver plano</button>
+                                :null
+                            }
+                        </div>
+                        <div className='residentialItem__description__numbers'>
+                            {state.item.plotSurface!==0 ? 
+                                <div className='residentialItem__description__numbers__plot'>
+                                    <p className='residentialItem__description__numbers__plot__data'>{state.item.plotSurface}</p>
+                                    <p>m<sup>2</sup> de parcela.</p>
+                                </div>
+                            :null}
+                            {state.item.buildSurface!==0 ? 
+                                <div className='residentialItem__description__numbers__build'>
+                                    <p className='residentialItem__description__numbers__build__data'>{state.item.buildSurface}</p>
+                                    <p>m<sup>2</sup> construidos.</p>
+                                </div>
+                            :null}
+                            {state.item.quality.bedrooms!==0 ? 
+                                <div className='residentialItem__description__numbers__bed'>
+                                    <p className='residentialItem__description__numbers__bed__data'>{state.item.quality.bedrooms}</p>
+                                    <p>Habitaciones</p>
+                                </div>
+                            :null}
+                            {state.item.quality.bathrooms!==0 ? 
+                                <div className='residentialItem__description__numbers__bed'>
+                                    <p className='residentialItem__description__numbers__bed__data'>{state.item.quality.bathrooms}</p>
+                                    <p>Baños</p>
+                                </div>
+                            : null}
+                            {state.item.quality.parking!==0 ? 
+                                <div className='residentialItem__description__numbers__bed'>
+                                    <p className='residentialItem__description__numbers__bed__data'>{state.item.quality.parking}</p>
+                                    <p>Garaje</p>
+                                </div>
+                            :null}
+                            {state.item.ibi.ibiValue!==0 && state.item.ibi.ibiShowOnWeb===true ? 
+                                <div className='residentialItem__description__numbers__bed'>
+                                    <p className='residentialItem__description__numbers__bed__data'>{state.item.ibi.ibiValue}</p>
+                                    <p>IBI €/año</p>
+                                </div>
+                            :null}
+                            {state.item.communityExpenses.expensesValue!==0 && state.item.communityExpenses.expensesShowOnWeb===true ? 
+                                <div className='residentialItem__description__numbers__bed'>
+                                    <p className='residentialItem__description__numbers__bed__data'>{state.item.communityExpenses.expensesValue}</p>
+                                    <p>Gastos de comunidad €/mes</p>
+                                </div>
+                            :null}
+                            {state.item.floor!=='' ? 
+                                <div className='residentialItem__description__numbers__bed'>
+                                    <p className='residentialItem__description__numbers__bed__data'>{state.item.floor}</p>
+                                    <p>Planta</p>
+                                </div>
+                            :null}
+                            {state.item.disponibility!=='' ? 
+                                <div className='residentialItem__description__numbers__bath'>
+                                    <p className='residentialItem__description__numbers__bath__data'>{state.item.disponibility}</p>
+                                    <p>Disponibilidad</p>
+                                </div>
+                            :null}
+                        </div>
+                        <div className='residentialItem__description__extras'>
+                            {state.item.quality.others.accessControl === true ? <p> <img src={check} alt='check'/> Control de accesos</p> : null}
+                            {state.item.quality.others.airConditioning === true ? <p> <img src={check} alt='check'/> Aire acondicionado</p> : null}
+                            {state.item.quality.others.centralHeating === true ? <p> <img src={check} alt='check'/> Calefacción central</p> : null}
+                            {state.item.quality.others.centralVacuum === true ? <p> <img src={check} alt='check'/> Aspiración centralizada</p> : null}
+                            {state.item.quality.others.dumbwaiter === true ? <p> <img src={check} alt='check'/> Montaplatos</p> : null}
+                            {state.item.quality.others.falseCeiling === true ? <p> <img src={check} alt='check'/> Falso techo</p> : null}
+                            {state.item.quality.others.freeHeight === true ? <p> <img src={check} alt='check'/> Altura libre 2.5m</p> : null}
+                            {state.item.quality.others.fullHoursSecurity === true ? <p> <img src={check} alt='check'/> Seguridad 24h</p> : null}
+                            {state.item.quality.others.garage === true ? <p> <img src={check} alt='check'/> Garaje</p> : null}
+                            {state.item.quality.others.gunRack === true ? <p> <img src={check} alt='check'/> Armero</p> : null}
+                            {state.item.quality.others.homeAutomation === true ? <p> <img src={check} alt='check'/> Domótica</p> : null}
+                            {state.item.quality.others.indoorAlarm === true ? <p> <img src={check} alt='check'/> Alarma interior</p> : null}
+                            {state.item.quality.others.lift === true ? <p> <img src={check} alt='check'/> Ascensor</p> : null}
+                            {state.item.quality.others.liftTruck === true ? <p> <img src={check} alt='check'/> Montacargas</p> : null}
+                            {state.item.quality.others.outdoorAlarm === true ? <p> <img src={check} alt='check'/> Alarma perimetral</p> : null}
+                            {state.item.quality.others.padelCourt === true ? <p> <img src={check} alt='check'/> Pista de pádel</p> : null}
+                            {state.item.quality.others.qualityBathrooms === true ? <p> <img src={check} alt='check'/> Baños</p> : null}
+                            {state.item.quality.others.smokeOutlet === true ? <p> <img src={check} alt='check'/> Salida de humos</p> : null}
+                            {state.item.quality.others.storage === true ? <p> <img src={check} alt='check'/> Trastero</p> : null}
+                            {state.item.quality.others.strongBox === true ? <p> <img src={check} alt='check'/> Caja fuerte</p> : null}
+                            {state.item.quality.others.subFloorHeating === true ? <p> <img src={check} alt='check'/> Suelo radiante</p> : null}
+                            {state.item.quality.others.swimmingPool === true ? <p> <img src={check} alt='check'/> Piscina</p> : null}
+                            {state.item.quality.others.tennisCourt === true ? <p> <img src={check} alt='check'/> Pista de tenis</p> : null}
+                            {state.item.quality.others.terrace === true ? <p> <img src={check} alt='check'/> Terraza</p> : null}
+                            {state.item.quality.others.well === true ? <p> <img src={check} alt='check'/> Pozo</p> : null}
+                            {state.item.quality.others.raisedFloor === true ? <p> <img src={check} alt='check'/> Tarima flotante</p> : null}
+                            {state.item.quality.subway!=='' ? 
+                                <p><img src={check} alt='check'/> Metro: {state.item.quality.subway}</p>
+                            :null}
+                            {state.item.quality.subway!=='' ? 
+                                <p><img src={check} alt='check'/> Bus: {state.item.quality.bus}</p>
+                            :null}
+                        </div>
+                        <div className='residentialItem__wrapper'>
+                            <div className='residentialItem__description__owner'>
+                                {consultants.map((consultant) => {
+                                    return consultant.fullName === state.item.consultant.fullName ? 
+                                    <div key={consultant._id} className='residentialItem__description__owner__details'>
+                                        <img src={consultant.avatar} alt={consultant.fullName}/>
+                                        <p>{consultant.fullName}</p>
+                                        <p>{consultant.consultantPhoneNumber}</p>
+                                        <p>{consultant.consultantEmail}</p>
+                                    </div> 
+                                    : null
+                                })}
+                            </div>
+                            <div className='residentialItem__description__form'>
+                                {viewForm === true ? 
+                                    <Formik
+                                        initialValues={initialValues}
+                                        validationSchema={validationSchema} 
+                                        onSubmit={sendEmail}   
+                                    >
+                                        {({errors, touched}) => (
+                                            <Form ref={form} className='residentialItem__description__form__inputs'>
+                                                <div className='residentialItem__description__form__wrapper'>
+                                                    <div className='residentialItem__description__form__wrapper__name'>
+                                                        <div className='residentialItem__description__form__wrapper__name__position'>
+                                                            <label className='residentialItem__description__form__label'>NOMBRE</label>
+                                                            <Field placeholder="Escriba aquí" name="nombre"/>
+                                                            {errors.nombre && touched.nombre ? (
+                                                                <div>{errors.nombre}</div>
+                                                            ) : null}
+                                                        </div>
+                                                        <div className='residentialItem__description__form__wrapper__name__position'>
+                                                            <label className='residentialItem__description__form__label'>APELLIDOS</label>
+                                                            <Field placeholder="Escriba aquí" name="apellidos"/>
+                                                            {errors.apellidos && touched.apellidos ? (
+                                                                <div>{errors.apellidos}</div>
+                                                            ) : null}
+                                                        </div>
+                                                    </div>
+                                                    <div className='residentialItem__description__form__wrapper__contact'>
+                                                        <div className='residentialItem__description__form__wrapper__contact__position'>
+                                                            <label className='residentialItem__description__form__label'>EMAIL</label>
+                                                            <Field placeholder="ejemplo@gmail.eu" name="email"/>
+                                                            {errors.email && touched.email ? (
+                                                                <div>{errors.email}</div>
+                                                            ) : null}
+                                                        </div>
+                                                        <div className='residentialItem__description__form__wrapper__contact__position'>
+                                                            <label className='residentialItem__description__form__label'>TELÉFONO</label>
+                                                            <Field placeholder="Escriba aquí" name="telefono"/>
+                                                            {errors.telefono && touched.telefono ? (
+                                                                <div>{errors.telefono}</div>
+                                                            ) : null}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className='residentialItem__description__form__wrapper__position'>
+                                                    <label className='residentialItem__description__form__label'>MENSAJE</label>
+                                                    <Field placeholder="Escriba aquí" name="mensaje"/>
+                                                    <p>Al compartir sus datos, está aceptando nuestros términos de uso y privacidad.</p>
+                                                </div>
+                                                <div className='residentialItem__description__form__wrapper__position__reference'>
+                                                    <label className='residentialItem__description__form__label'>Referencia</label>
+                                                    <Field name="referencia" value={state.item.adReference}/>
+                                                </div>
+                                                <button className='residentialItem__description__form__button' type='submit'>Enviar <span><img src={send} alt='enviar'/></span></button>
+                                            </Form>
+                                        )}
+                                    </Formik>
+                                    :
+                                    <div className='residentialItem__description__form__return'>
+                                        <p>Gracias por contactar con nosotros, en breve nos pondremos en contacto</p>
+                                        <button onClick={toggleForm}>Volver al formulario</button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div className='residentialItem__description__locationMap'>
+                            <MapItem/>
                         </div>
                     </div>
-                    <div className='patrimonial__list'>
-                        {getPostItems}
-                    </div>
-                    <div className='patrimonial__pagination'>
-                        <ul className='patrimonial__pagination__list'>
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://modest-darwin-2e96d1.netlify.app/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
-                            {pagElements}
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`https://modest-darwin-2e96d1.netlify.app/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
-                        </ul>
-                    </div>
-                    <div className='patrimonial__zoneMap'>
-                        <NavLink to={routes.FilterPatrimonial} className='patrimonial__zoneMap__button'><span><img src={zoneMap} alt='boton mapa'/></span> Abrir el mapa de zonas</NavLink>
-                    </div>
-                    <ContactIndex/>
                 </div>
-            :
-            <div>
-            <div className='patrimonial__empty'>
-                <h2 className='patrimonial__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
-                <Link className='patrimonial__empty__button' to={routes.FilterPatrimonial}>Volver al mapa</Link>            
-            </div>
-            </div>
-            }
+            :null}
         </div>
     )
 }
 
-export default Patrimonio
+export default ResidentialItem
