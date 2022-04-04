@@ -5,7 +5,7 @@ import React, { lazy, Suspense } from 'react';
 import routes from '../config/routes.js';
 import logo from '../assets/logo.svg';
 
-/* import ProviderRes from '../providers/generalProvider'; */
+import ProviderRes from '../providers/generalProvider';
 
 import Footer from '../components/common/Footer/Footer';
 
@@ -36,7 +36,8 @@ const App = () => {
               src={logo}
               alt='Loader'/>
           </div>
-        }>          
+        }>
+          <ProviderRes>
             <Routes>
               <Route exact path={routes.Residential} element={<Residential/>}/>
               <Route exact path={routes.ItemResidential} element={<ResidentialItem/>}/>
@@ -52,7 +53,8 @@ const App = () => {
               <Route exact path={routes.Costa} element={<Costa/>}/>
               <Route exact path={routes.Rustico} element={<CampoRustico/>}/>
               <Route exact path={routes.Singular} element={<ActivosSingulares/>}/>
-            </Routes>          
+            </Routes>
+          </ProviderRes>
         </Suspense>
       </div>
       <Footer/>
