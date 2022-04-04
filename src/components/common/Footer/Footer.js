@@ -24,7 +24,7 @@ const Footer = () => {
                 </div>
                 <div className='footer__right'>
                     <Link to={routes.Contact} className='footer__right__text'> Contacto</Link>
-                    <img src={footer_email} alt='email'/>
+                    {/* <img src={footer_email} alt='email'/> */}
                     <a target="_blank" rel="noopener noreferrer" href='https://instagram.com/gv_real_estate_?utm_medium=copy_link'><img src={footer_instagram} alt='instagram'/></a>
                     <a target="_blank" rel="noopener noreferrer" href='https://www.linkedin.com/company/gv-real-estate/'><img src={footer_linkedin} alt='linkedin'/></a>
                 </div>
