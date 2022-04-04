@@ -1,7 +1,7 @@
 import React from 'react'
 import './footer.scss'
 import footer_attomo from '../../../assets/SVG/mobile/comun/footer_attomo.svg'
-import footer_email from '../../../assets/SVG/mobile/comun/footer_email.svg'
+/* import footer_email from '../../../assets/SVG/mobile/comun/footer_email.svg' */
 import footer_instagram from '../../../assets/SVG/mobile/comun/footer_instagram.svg'
 import footer_linkedin from '../../../assets/SVG/mobile/comun/footer_linkedin.svg'
 import logo from '../../../assets/logo.svg'
