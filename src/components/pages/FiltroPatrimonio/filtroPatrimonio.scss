@@ -672,6 +672,7 @@
                 p{  
                     position: relative;
                     left: -10px;
+                    margin-bottom: 30px;
                     @include textMobile;
                 }
                 &__surfaceDisabled{
@@ -1292,17 +1293,29 @@
     color: black;
     @include mapBut;
 }
+
 .css-187mznn-MuiSlider-root{
     color: #2b363d!important;
 }
+.css-exkjcx{
+    color: #2b363d!important;
+}
+
 span[data-index='1'] {
     border-width: 6px;
 }
+
 .css-eg0mwd-MuiSlider-thumb{
     background-color: white!important;
     border: solid;
     border-width: 3px;
 }
+.css-7drnjp{
+    background-color: white!important;
+    border: solid;
+    border-width: 3px;
+}
+
 .css-1kz0hui-MuiSlider-valueLabel:before{
     display: none;
 }

@@ -48,9 +48,13 @@ import { getResidential } from '../../../api-requests/requests';
 const FiltroResidencial = () => {
 
     const [selected] = useState([]);
+    const [selectedActive, setSelectedActive] = useState(false);
     const [saleOrRent] = useState([]);
+    const [saleOrRentActive, setSaleOrRentActive] = useState(false);
     const [typeHouse] = useState([]);
+    const [typeHouseActive, setTypeHouseActive] = useState(false);
     const [extras] = useState([]);
+    const [extrasActive, setExtrasActive] = useState(false);
     const [itemRef, setItemRef] = useState ('initial');
     const [ref, setRef] = useState('');
     const [disableButton, setDisableButton] = useState(false);
@@ -63,6 +67,7 @@ const FiltroResidencial = () => {
         )
         window.localStorage.removeItem('storedState')
         window.localStorage.removeItem('storedPosition2')
+        window.localStorage.removeItem('saleOrRentStored')
     },[])
 
     useEffect(() => {
@@ -70,6 +75,14 @@ const FiltroResidencial = () => {
             setState(items)
         })
     },[setState])
+
+    useEffect(()=> {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref!==''){
+            setDisableButton(true)
+        }else{
+            setDisableButton(false)
+        }
+    },[ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
 
     useEffect(() => {
         if (state.length > 0) {
@@ -81,10 +94,8 @@ const FiltroResidencial = () => {
             })
         }
         if (ref!== '') {
-            setDisableButton(true)
             setVerLupa(false)
         }else{
-            setDisableButton(false)
             setVerLupa(true)
         }   
     },[ref, state])
@@ -100,9 +111,9 @@ const FiltroResidencial = () => {
             selected.splice(0, selected.length, ...newSelected)
         }
         if (selected.length !== 0) {
-            setDisableButton(true)
+            setSelectedActive(true)
         }else{
-            setDisableButton(false)
+            setSelectedActive(false)
         }
     }
     const selectSaleOrRent = (e) => {
@@ -116,9 +127,9 @@ const FiltroResidencial = () => {
             saleOrRent.splice(0, saleOrRent.length, ...newSaleOrRent)
         }
         if (saleOrRent.length !== 0) {
-            setDisableButton(true)
+            setSaleOrRentActive(true)
         }else{
-            setDisableButton(false)
+            setSaleOrRentActive(false)
         }
     }
     const addType = (e) => {
@@ -132,9 +143,9 @@ const FiltroResidencial = () => {
             typeHouse.splice(0, typeHouse.length, ...newType)
         }
         if (typeHouse.length !== 0) {
-            setDisableButton(true)
+            setTypeHouseActive(true)
         }else{
-            setDisableButton(false)
+            setTypeHouseActive(false)
         }
     }
     const addExtra = (e) => {
@@ -148,9 +159,9 @@ const FiltroResidencial = () => {
             extras.splice(0, extras.length, ...newExtra)
         }
         if (extras.length !== 0) {
-            setDisableButton(true)
+            setExtrasActive(true)
         }else{
-            setDisableButton(false)
+            setExtrasActive(false)
         }
     }
     const addRef = (e) => {
@@ -345,6 +356,15 @@ const FiltroResidencial = () => {
                 item.adReference===ref ? setState([item]) : null
             )
         }
+        if (saleOrRent.length === 1){
+            saleOrRent.map(item => {
+                window.localStorage.setItem(
+                    'saleOrRentStored', JSON.stringify(item)
+                )    
+                return(item)        
+            })
+        }
+
     }
 
     return (
@@ -374,6 +394,7 @@ const FiltroResidencial = () => {
                         <button name='Monteclaro' onClick={toggleActive} id='mocl' className='mocl'>
                             <p>Monte <br/> Claro</p>
                             <input type='image' src={mocl} alt='componente mapa' />
+                            <div></div>
                         </button>
                         <button type='image' onClick={toggleActive} name='Montealina' id='moal' className='moal'>
                             <input type='image' src={moal} alt='componente mapa' />

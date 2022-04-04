@@ -55,8 +55,11 @@ import { getResidential } from '../../../api-requests/requests';
 const FiltroPatrimonio = () => {
 
     const [selected] = useState([]);
+    const [selectedActive, setSelectedActive] = useState(false);
     const [saleOrRent] = useState([]);
+    const [saleOrRentActive, setSaleOrRentActive] = useState(false);
     const [typeHouse] = useState([]);
+    const [typeHouseActive, setTypeHouseActive] = useState(false);
     const [ref, setRef] = useState('');
     const [itemRef, setItemRef] = useState ('initial');
     const [maxPrice, setMaxPrice] = useState(99999999.9)
@@ -82,6 +85,14 @@ const FiltroPatrimonio = () => {
         })
     },[setState])
 
+    useEffect(()=> {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || ref!==''){
+            setDisableButton(true)
+        }else{
+            setDisableButton(false)
+        }
+    },[ref, selectedActive, saleOrRentActive, typeHouseActive])
+
     useEffect(() => {
         if (state.length > 0) {
             state.map(itemState => {
@@ -92,10 +103,8 @@ const FiltroPatrimonio = () => {
             })
         }
         if (ref!== '') {
-            setDisableButton(true)
             setVerLupa(false)
         }else{
-            setDisableButton(false)
             setVerLupa(true)
         }    
     },[ref, state])
@@ -144,9 +153,9 @@ const FiltroPatrimonio = () => {
             selected.splice(0, selected.length, ...newSelected)
         }
         if (selected.length !== 0) {
-            setDisableButton(true)
+            setSelectedActive(true)
         }else{
-            setDisableButton(false)
+            setSelectedActive(false)
         }
     }
     const selectSaleOrRent = (e) => {
@@ -158,11 +167,6 @@ const FiltroPatrimonio = () => {
             const elementName = e.currentTarget.name
             const newSaleOrRent = saleOrRent.filter(item => item !== elementName)
             saleOrRent.splice(0, saleOrRent.length, ...newSaleOrRent)
-        }
-        if (saleOrRent.length !== 0) {
-            setDisableButton(true)
-        }else{
-            setDisableButton(false)
         }
         if (saleOrRent.length===1) {
             saleOrRent.map(item => {
@@ -214,6 +218,11 @@ const FiltroPatrimonio = () => {
                 return(item)
             })
         }
+        if (saleOrRent.length !== 0) {
+            setSaleOrRentActive(true)
+        }else{
+            setSaleOrRentActive(false)
+        }
         if (saleOrRent.length===2 || saleOrRent.length===0){
             setDisableSliders(!disableSliders)
             setMaxPrice(99999999.9)
@@ -233,9 +242,9 @@ const FiltroPatrimonio = () => {
             typeHouse.splice(0, typeHouse.length, ...newType)
         }
         if (typeHouse.length !== 0) {
-            setDisableButton(true)
+            setTypeHouseActive(true)
         }else{
-            setDisableButton(false)
+            setTypeHouseActive(false)
         }
     }
     const handlePriceInput = (e, data1) => {
@@ -322,15 +331,29 @@ const FiltroPatrimonio = () => {
         if (finalState.length>0) {
             let slidersFilter = []
             finalState.map(item => {
-                if (item.adType.map(type => type === 'Venta')) {
-                    if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                        slidersFilter.push(item)
+                item.adType.map(type => {
+                    if (type === 'Venta' ){
+                        saleOrRent.map(itemSR => {
+                            if (itemSR === 'Venta'){
+                                if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
+                                    slidersFilter.push(item)
+                                }
+                            }
+                            return(itemSR)
+                        })
                     }
-                }else{
-                    if (item.rent.rentValue >= price[0] && item.rent.rentValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                        slidersFilter.push(item)
+                    else if(type === 'Alquiler'){
+                        saleOrRent.map(itemSR => {
+                            if(itemSR ==='Alquiler') {
+                                if (item.rent.rentValue >= price[0] && item.rent.rentValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
+                                    slidersFilter.push(item)
+                                }
+                            }
+                            return(itemSR)
+                        })
                     }
-                }
+                    return(type)
+                })
                 return(item)
             })
             if (slidersFilter.length>0){
@@ -349,6 +372,14 @@ const FiltroPatrimonio = () => {
             state.map(item => 
                 item.adReference===ref ? setState([item]) : null
             )
+        }
+        if (saleOrRent.length === 1){
+            saleOrRent.map(item => {
+                window.localStorage.setItem(
+                    'saleOrRentStored', JSON.stringify(item)
+                )    
+                return(item)        
+            })
         }
     }
 

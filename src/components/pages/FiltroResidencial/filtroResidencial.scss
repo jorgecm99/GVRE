@@ -33,6 +33,7 @@
     }
     .active{
         filter:  contrast(0%) sepia(1) hue-rotate(202deg) saturate(1000%) grayscale(85%) brightness(55%);
+        z-index: 1;
     }
     .c1{
         bottom: 0;
@@ -157,6 +158,14 @@
         }
         input{
             width: 100%;
+        }
+        div{
+            height: 25px;
+            width: 70px;
+            background-color: transparent;
+            transform: rotate(40deg);
+            margin-top: 10px;
+            z-index: 1;
         }
     }
     .moal{
@@ -708,6 +717,12 @@
         height: 600px;
         width: 820px;
         margin: 0px auto;
+        .mocl{
+            div{
+                width: 110px;
+                margin-top: 25px;
+            }
+        }
         .moal{
             bottom: 38%;
             left: 0;

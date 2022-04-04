@@ -74,7 +74,7 @@ const Contacto = () => {
                         <div className='contact__text__phone'>
                             <h2>Contacto</h2>
                             <p>+34 917 36 53 85</p>
-                            <p>info@gvre.es</p>
+                            <a target='blank' href='mailto:info@gvre.es'>info@gvre.es</a>
                         </div>
                     </div>
                 </div>

@@ -24,7 +24,7 @@
         &__order{
             @include textMobile;
             position: relative;
-            z-index: 10;
+            z-index: 5;
             &__title{
                 @include textMobile;
                 background-color: white;
@@ -157,6 +157,13 @@
                             margin-right: 5px;
                             img{
                                 height: 18px;
+                            }
+                        }
+                    }
+                    &__car{
+                        span{
+                            img{
+                                width: 30px!important;
                             }
                         }
                     }
@@ -691,6 +698,7 @@
                     }
                     .active{
                         filter:  contrast(0%) sepia(1) hue-rotate(202deg) saturate(1000%) grayscale(85%) brightness(55%);
+                        z-index: 1;
                     }
                     .c1{
                         bottom: 0;
@@ -745,6 +753,14 @@
                         }
                         input{
                             width: 100%;
+                        }
+                        div{
+                            height: 20px;
+                            width: 80px;
+                            background-color: transparent;
+                            transform: rotate(40deg);
+                            margin-top: 20px;
+                            z-index: 1;
                         }
                     }
                     .moal{
@@ -1282,6 +1298,7 @@
                 p{  
                     position: relative;
                     left: -10px;
+                    margin-bottom: 30px;
                     @include textMobile;
                 }
                 &__surfaceDisabled{

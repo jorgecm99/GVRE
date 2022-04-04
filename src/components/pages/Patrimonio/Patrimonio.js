@@ -71,8 +71,11 @@ const Patrimonio = () => {
     const [pagElements, setPagElements] = useState();
 
     const [selected] = useState([]);
+    const [selectedActive, setSelectedActive] = useState(false);
     const [saleOrRent] = useState([]);
+    const [saleOrRentActive, setSaleOrRentActive] = useState(false);
     const [typeHouse] = useState([]);
+    const [typeHouseActive, setTypeHouseActive] = useState(false);
     const [ref, setRef] = useState('');
     const [itemRef, setItemRef] = useState ('initial');
     const [maxPrice, setMaxPrice] = useState(99999999.9)
@@ -222,16 +225,23 @@ const Patrimonio = () => {
 
     useEffect (() => {
         const localState = window.localStorage.getItem('storedState')
+        const storedSOR = window.localStorage.getItem('saleOrRentStored')
         let patrimonialItems = []
         if (localState) {
             const itemList = JSON.parse(localState)
+            const SOR = JSON.parse(storedSOR)
             itemList.map(item => 
                 item.department === 'Patrimonio' ? patrimonialItems.push(item) : null
             )
             const array = Object.values(patrimonialItems)
             const sortArray = (a, b) => {
-                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+                if(SOR === 'Alquiler'){
+                    if (a.rent.rentValue < b.rent.rentValue) {return 1;}
+                    if (a.rent.rentValue > b.rent.rentValue) {return -1;}
+                }else {
+                    if (a.sale.saleValue < b.sale.saleValue) {return 1;}
+                    if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+                }
                 return 0
             }
             let orderedArrayPrice = array.sort(sortArray);
@@ -264,6 +274,14 @@ const Patrimonio = () => {
         }
     },[filteredState])
 
+    useEffect(()=> {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || ref!==''){
+            setDisableButton(true)
+        }else{
+            setDisableButton(false)
+        }
+    },[ref, selectedActive, saleOrRentActive, typeHouseActive])
+
     useEffect(() => {
         if (state2.length > 0) {
             state2.map(itemState => {
@@ -275,10 +293,8 @@ const Patrimonio = () => {
             })
         }
         if (ref!== '') {
-            setDisableButton(true)
             setVerLupa(false)
         }else{
-            setDisableButton(false)
             setVerLupa(true)
         }  
     },[ref, state2])
@@ -334,11 +350,17 @@ const Patrimonio = () => {
     },[])
 
     const onPrice = () => {
+        const storedSOR = window.localStorage.getItem('saleOrRentStored')
+        const SOR = JSON.parse(storedSOR)
         const array = Object.values(orderedItems)
         const sortArray = (a, b) => {
-            if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-            if (a.sale.saleValue > b.sale.saleValue) {return -1;}
-            return 0
+            if(SOR === 'Alquiler'){
+                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
+                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
+            }else {
+                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
+                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+            }
         }
         let orderedArrayPrice = array.sort(sortArray);
         setOrderedItems(orderedArrayPrice);
@@ -367,9 +389,9 @@ const Patrimonio = () => {
             selected.splice(0, selected.length, ...newSelected)
         }
         if (selected.length !== 0) {
-            setDisableButton(true)
+            setSelectedActive(true)
         }else{
-            setDisableButton(false)
+            setSelectedActive(false)
         }
     }
     const selectSaleOrRent = (e) => {
@@ -383,9 +405,9 @@ const Patrimonio = () => {
             saleOrRent.splice(0, saleOrRent.length, ...newSaleOrRent)
         }
         if (saleOrRent.length !== 0) {
-            setDisableButton(true)
+            setSaleOrRentActive(true)
         }else{
-            setDisableButton(false)
+            setSaleOrRentActive(false)
         }
         if (saleOrRent.length>0) {
             saleOrRent.map(item => {
@@ -456,9 +478,9 @@ const Patrimonio = () => {
             typeHouse.splice(0, typeHouse.length, ...newType)
         }
         if (typeHouse.length !== 0) {
-            setDisableButton(true)
+            setTypeHouseActive(true)
         }else{
-            setDisableButton(false)
+            setTypeHouseActive(false)
         }
     }
     const handlePriceInput = (e, data1) => {
@@ -553,15 +575,29 @@ const Patrimonio = () => {
         if (finalState.length>0) {
             let slidersFilter = []
             finalState.map(item => {
-                if (item.adType.map(type => type === 'Venta')) {
-                    if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                        slidersFilter.push(item)
+                item.adType.map(type => {
+                    if (type === 'Venta' ){
+                        saleOrRent.map(itemSR => {
+                            if (itemSR === 'Venta'){
+                                if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
+                                    slidersFilter.push(item)
+                                }
+                            }
+                            return(itemSR)
+                        })
                     }
-                }else{
-                    if (item.rent.rentValue >= price[0] && item.rent.rentValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                        slidersFilter.push(item)
+                    else if(type === 'Alquiler'){
+                        saleOrRent.map(itemSR => {
+                            if(itemSR ==='Alquiler') {
+                                if (item.rent.rentValue >= price[0] && item.rent.rentValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
+                                    slidersFilter.push(item)
+                                }
+                            }
+                            return(itemSR)
+                        })
                     }
-                }
+                    return(type)
+                })
                 return(item)
             })
             if (slidersFilter.length>0){
@@ -579,6 +615,21 @@ const Patrimonio = () => {
             setOrderedItems(refItem)
         }
         setFilter(!filter)
+
+        const storedSOR = window.localStorage.getItem('saleOrRentStored')
+        const SOR = JSON.parse(storedSOR)
+        const array = Object.values(orderedItems)
+        const sortArray = (a, b) => {
+            if(SOR === 'Alquiler'){
+                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
+                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
+            }else {
+                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
+                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+            }
+        }
+        let orderedArrayPrice = array.sort(sortArray);
+        setOrderedItems(orderedArrayPrice)
 
         window.scroll(
             {top:0}

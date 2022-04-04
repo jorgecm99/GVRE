@@ -130,6 +130,7 @@
             }
         }
         &__rentEmpty{
+            display: none;
             &__numbers{
                 display: flex;
                 flex-wrap: wrap;
@@ -213,6 +214,7 @@
             }
             div{
                 display: flex;
+                justify-content: center;
                 flex-wrap: wrap;
             }
             &__plot{

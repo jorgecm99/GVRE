@@ -45,6 +45,10 @@
                 @include contactMobile;
                 margin: 0
             }
+            a{
+                @include contactMobile;
+                margin: 0;
+            }
         }
     }
     &__form{
@@ -197,6 +201,11 @@
                     margin-bottom: 20px;
                     font-size: 18px!important;
 
+                }
+                a{
+                    @include contact;
+                    margin-bottom: 20px;
+                    font-size: 18px!important;
                 }
             }
         }

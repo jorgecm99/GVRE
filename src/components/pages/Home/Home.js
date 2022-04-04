@@ -18,7 +18,8 @@ import singular from '../../../assets/home/singular.jpg';
 import rustico from '../../../assets/home/rustico.png';
 import ContactIndex from '../../common/ContactInfo/ContactIndex';
 import flechaCarrusel from '../../../assets/SVG/web/comunes/homepageDestacados.svg';
-import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg'
+import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg';
+import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
 
 const Home = () => {
     const [state, setState] = useContext(generalContext);    
@@ -196,13 +197,16 @@ const Home = () => {
                                             <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
                                             :null}
                                             {item.plotSurface !== 0 ?
-                                            <li><span><img src={supP} alt='superficie'/></span>{item.plotdSurface}m<sup>2</sup></li>
+                                            <li><span><img src={supP} alt='superficie'/></span>{item.plotSurface}m<sup>2</sup></li>
                                             :null}
                                             {item.quality.bedrooms !== 0 ?
                                                 <li><span><img src={habit} alt='habitaciones'/></span>{item.quality.bedrooms}</li>
                                             :null}
                                             {item.quality.bathrooms !== 0 ?
                                                 <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
+                                            :null}
+                                            {item.quality.parking !== 0 ?
+                                                <li className='home__outstanding__position__images__item__text__characteristics__car'><span><img src={parking} alt='plazas parking'/></span>{item.quality.parking}</li>
                                             :null}
                                             {item.quality.outdoorPool !== 0 ?
                                                 <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
