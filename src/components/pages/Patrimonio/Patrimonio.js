@@ -139,7 +139,7 @@ const Patrimonio = () => {
                                     </h2>
                                 }   
                                 <h2 className='patrimonial__list__item__text__title'>{item.title}</h2>
-                                <h3 className='patrimonial__list__item__text__street'>{item.webSubtitle}</h3>
+                                <h3 className='patrimonial__list__item__text__street custom-subtitle'>{item.webSubtitle}</h3>
                                 <ul className='patrimonial__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ?
                                         <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
@@ -188,7 +188,7 @@ const Patrimonio = () => {
                                     </h2>
                                 }   
                                 <h2 className='patrimonial__list__item__text__title'>{item.title}</h2>
-                                <h3 className='patrimonial__list__item__text__street'>{item.webSubtitle}</h3>
+                                <h3 className='patrimonial__list__item__text__street custom-subtitle'>{item.webSubtitle}</h3>
                                 <ul className='patrimonial__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ?
                                         <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
