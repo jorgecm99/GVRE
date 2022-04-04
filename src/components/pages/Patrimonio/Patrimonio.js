@@ -618,7 +618,7 @@ const Patrimonio = () => {
 
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
         const SOR = JSON.parse(storedSOR)
-        const array = Object.values(orderedItems)
+        const array = Object.values(finalState)
         const sortArray = (a, b) => {
             if(SOR === 'Alquiler'){
                 if (a.rent.rentValue < b.rent.rentValue) {return 1;}
