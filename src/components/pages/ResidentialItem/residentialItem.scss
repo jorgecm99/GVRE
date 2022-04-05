@@ -406,6 +406,10 @@
     height: 250px;
 }
 
+.custom-fontsize-numbers{
+    font-size: 35px !important;
+}
+
 @include tablet {
     .residentialItem{
         margin-top: 80px;
@@ -925,5 +929,9 @@
     }
     .carouselImages{
         height: 954px;
+    }
+
+    .custom-fontsize-numbers{
+        font-size: 35px !important;
     }
 }

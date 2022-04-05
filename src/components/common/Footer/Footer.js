@@ -1,7 +1,7 @@
 import React from 'react'
 import './footer.scss'
 import footer_attomo from '../../../assets/SVG/mobile/comun/footer_attomo.svg'
-import footer_email from '../../../assets/SVG/mobile/comun/footer_email.svg'
+/* import footer_email from '../../../assets/SVG/mobile/comun/footer_email.svg' */
 import footer_instagram from '../../../assets/SVG/mobile/comun/footer_instagram.svg'
 import footer_linkedin from '../../../assets/SVG/mobile/comun/footer_linkedin.svg'
 import logo from '../../../assets/logo.svg'
@@ -24,7 +24,7 @@ const Footer = () => {
                 </div>
                 <div className='footer__right'>
                     <Link to={routes.Contact} className='footer__right__text'> Contacto</Link>
-                    <a target='blank' href='mailto:info@gvre.es'><img src={footer_email} alt='email'/></a>
+                    {/* <a target='blank' href='mailto:info@gvre.es'><img src={footer_email} alt='email'/></a> */}
                     <a target='blank' href='https://instagram.com/gv_real_estate_?utm_medium=copy_link'><img src={footer_instagram} alt='instagram'/></a>
                     <a target='blank' href='https://www.linkedin.com/company/gv-real-estate/'><img src={footer_linkedin} alt='linkedin'/></a>
                 </div>

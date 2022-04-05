@@ -447,6 +447,10 @@
     height: 250px;
 }
 
+.custom-fontsize-numbers{
+    font-size: 20px !important;
+}
+
 @include tablet {
     .patrimonialItem{
         margin-top: 80px;
@@ -1031,6 +1035,10 @@
     }
     .carouselImages{
         height: 954px;
+    }
+
+    .custom-fontsize-numbers{
+        font-size: 35px !important;
     }
 }
 

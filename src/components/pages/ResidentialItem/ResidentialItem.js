@@ -279,13 +279,13 @@ const ResidentialItem = () => {
                             <div>
                                 {state.floor!=='' ? 
                                     <div className='residentialItem__description__numbers__bed'>
-                                        <p className='residentialItem__description__numbers__bed__data'>{state.floor}</p>
+                                        <p className='residentialItem__description__numbers__bed__data custom-fontsize-numbers'>{state.floor}</p>
                                         <p>Planta</p>
                                     </div>
                                 :null}
                                 {state.disponibility!=='' ? 
                                     <div className='residentialItem__description__numbers__bath'>
-                                        <p className='residentialItem__description__numbers__bath__data'>{state.disponibility}</p>
+                                        <p className='residentialItem__description__numbers__bath__data custom-fontsize-numbers'>{state.disponibility}</p>
                                         <p>Disponibilidad</p>
                                     </div>
                                 :null}
@@ -307,13 +307,13 @@ const ResidentialItem = () => {
                             <div>
                                 {state.quality.subway!=='' ? 
                                     <div className='residentialItem__description__numbers__bed'>
-                                        <p className='residentialItem__description__numbers__bed__data'>{state.quality.subway}</p>
+                                        <p className='residentialItem__description__numbers__bed__data custom-fontsize-numbers'>{state.quality.subway}</p>
                                         <p>Metro</p>
                                     </div>
                                 :null}
                                 {state.quality.bus!=='' ? 
                                     <div className='residentialItem__description__numbers__bed'>
-                                        <p className='residentialItem__description__numbers__bed__data'>{state.quality.bus}</p>
+                                        <p className='residentialItem__description__numbers__bed__data custom-fontsize-numbers'>{state.quality.bus}</p>
                                         <p>Autobús</p>
                                     </div>
                                 :null}
