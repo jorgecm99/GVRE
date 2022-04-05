@@ -1,5 +1,5 @@
 import React, { useEffect,useState, useContext} from 'react';
-import "react-responsive-carousel/lib/styles/carousel.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./residential.scss"
 import routes from '../../../config/routes';
 import { Link, generatePath, NavLink } from 'react-router-dom';
@@ -138,7 +138,7 @@ const Residential = () => {
                                     </h2>
                                 }                        
                                 <h2 className='residential__list__item__text__title'>{item.title}</h2>
-                                <h3 className='residential__list__item__text__street custom-subtitle'>{item.webSubtitle}</h3>
+                                <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
                                 <ul className='residential__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ? 
                                         <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
@@ -184,19 +184,19 @@ const Residential = () => {
                             <div className='residential__list__item__text'>
                                 {item.adType.length === 1 ? 
                                     <h2 className='residential__list__item__text__price'>{item.adType.map(type => 
-                                        type==='Venta' && item.sale.saleShowOnWeb ? 
+                                        type==='Venta' && item.sale.saleShowOnWeb===true && item.sale.saleValue !== 0 ? 
                                         `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`:
-                                        type==='Alquiler' && item.rent.rentShowOnWeb ?
+                                        type==='Alquiler' && item.rent.rentShowOnWeb===true && item.rent.rentValue !== 0 ?
                                         `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
                                     </h2>
                                     :
                                     <h2 className='residential__list__item__text__prices'>
-                                        {item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
-                                        {item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
+                                        {item.sale.saleShowOnWeb && item.sale.saleValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
+                                        {item.rent.rentShowOnWeb && item.rent.rentValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
                                     </h2>
                                 }                        
                                 <h2 className='residential__list__item__text__title'>{item.title}</h2>
-                                <h3 className='residential__list__item__text__street custom-subtitle'>{item.webSubtitle}</h3>
+                                <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
                                 <ul className='residential__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ? 
                                     <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
@@ -248,7 +248,7 @@ const Residential = () => {
             const itemList = JSON.parse(localState)
             const SOR = JSON.parse(storedSOR)
             itemList.map(item => 
-                item.department === 'Residencial' ? residentialItems.push(item) : null
+                item.department === 'Residencial' && item.showOnWeb === true ? residentialItems.push(item) : null
             )
             const array = Object.values(residentialItems)
             const sortArray = (a, b) => {
@@ -273,7 +273,7 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className='residential__pagination__list__item'><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -335,6 +335,13 @@ const Residential = () => {
                     label[1].innerHTML='max'
                 }
             }
+            if(saleOrRent.length===0){
+                setMaxPrice(99999999.9)
+                setMaxSurface(99999999.9)
+                setPrice([0.1, 99999999.9])
+                setSurface([0.1, 99999999.9])
+                setDisableSliders(false)
+            }
             if (label[0].innerHTML==='0,1 €/mes'){
                 label[0].innerHTML='min'
             }
@@ -348,7 +355,7 @@ const Residential = () => {
                 label[2].innerHTML='min'
             }
         }
-    },[price, surface, filter, saleOrRent])
+    },[saleOrRent, filter, disableSliders])
 
     useEffect(() => {
         setTimeout(function(){
@@ -567,6 +574,10 @@ const Residential = () => {
                     })
                 )
             )
+            let filtered = actualizeState3.filter ((item, index) => {
+                return actualizeState3.indexOf(item) === index
+            })
+            actualizeState3=filtered  
         }
         let actualizeState4 = []
         if (extras.length>0){
@@ -704,9 +715,9 @@ const Residential = () => {
             let slidersFilter = []
             finalState.map(item => {
                 item.adType.map(type => {
-                    if (type === 'Venta' ){
+                    if (type !== 'Alquiler' ){
                         saleOrRent.map(itemSR => {
-                            if (itemSR === 'Venta'){
+                            if (itemSR !== 'Alquiler'){
                                 if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
                                     slidersFilter.push(item)
                                 }
@@ -771,6 +782,12 @@ const Residential = () => {
         window.scroll(
             {top:0}
         )
+
+        saleOrRent.length=0;
+        extras.length=0;
+        typeHouse.length=0;
+        selected.length=0;
+        setSelectedActive(false)
     }
 
     const toggleFilter = () => {
@@ -787,10 +804,24 @@ const Residential = () => {
     }
 
     const seeAll = () => {
-        getResidential().then(items => {
-            setOrderedItems(items);
-            setFilter (!filter)
-        })
+        const storedSOR = window.localStorage.getItem('saleOrRentStored')
+        const SOR = JSON.parse(storedSOR)
+        const array = Object.values(state2)
+        const sortArray = (a, b) => {
+            if(SOR === 'Alquiler'){
+                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
+                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
+            }else {
+                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
+                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+            }
+        }
+        let finalArray = []
+        array.sort(sortArray).map(item=>
+            item.department === 'Residencial' ? finalArray.push(item) : null
+        );
+        setOrderedItems(finalArray)
+        setFilter (!filter)
         window.scroll(
             {top:0}
         )
@@ -859,7 +890,7 @@ const Residential = () => {
                                             <input type='image' className='vald2' src={vald2} alt='componente mapa'/>
                                             <p>Valdemarín</p>
                                         </button>
-                                        <button onClick={toggleActive} name='Colonia Fuentelarreina' id='fuen1' className='fuen1'>
+                                        <button onClick={toggleActive} name='Colonia Fuentelarreyna' id='fuen1' className='fuen1'>
                                             <input type='image' src={fuen1} alt='componente mapa' />
                                             <input type='image' className='fuen2' src={fuen2} alt='componente mapa' />
                                             <p>Fuentelarreina</p>

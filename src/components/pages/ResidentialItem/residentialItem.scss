@@ -822,14 +822,14 @@
                 width: 40%;
                 @include text;
                 font-size: 14px!important;
-                line-height: 20px!important;
+                line-height: 24px!important;
                 align-items: flex-end;
                 margin-bottom: 120px;
                 p{
                     margin-bottom: 1%;
                 }
                 img{
-                    width: 350px;
+                    width: 200px;
                 }
             }
             &__form{
@@ -926,12 +926,4 @@
     .carouselImages{
         height: 954px;
     }
-
-    .customfont-numbers{
-        font-size: 35px !important;
-    }
-}
-
-.custom-subtitle{
-    text-transform: uppercase;
 }

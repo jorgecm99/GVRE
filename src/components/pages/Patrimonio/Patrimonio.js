@@ -66,7 +66,7 @@ const Patrimonio = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [refItem, setRefItem] = useState([])
     const [filteredState] = useState([])
-    const [perPage] = useState(31);
+    const [perPage] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
 
@@ -88,7 +88,7 @@ const Patrimonio = () => {
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
     const [orderItems, setOrderItems] = useState(false);
-    const [state2, setState2] = useState([])
+    const [state2, setState2] = useState([]);
     const [state, setState] = useContext(generalContext);
 
     const [coord, setCoord] = useState(0)
@@ -127,19 +127,19 @@ const Patrimonio = () => {
                             <div className='patrimonial__list__item__text'>
                                 {item.adType.length === 1 ? 
                                     <h2 className='patrimonial__list__item__text__price'>{item.adType.map(type => 
-                                        type==='Venta' && item.sale.saleShowOnWeb ? 
+                                        type==='Venta' && item.sale.saleShowOnWeb===true && item.sale.saleValue !== 0 ? 
                                         `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`:
-                                        type==='Alquiler' && item.rent.rentShowOnWeb ?
+                                        type==='Alquiler' && item.rent.rentShowOnWeb===true && item.rent.rentValue !== 0 ?
                                         `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
                                     </h2>
                                     :
                                     <h2 className='patrimonial__list__item__text__prices'>
-                                        {item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
-                                        {item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
+                                        {item.sale.saleShowOnWeb && item.sale.saleValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
+                                        {item.rent.rentShowOnWeb && item.rent.rentValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
                                     </h2>
                                 }   
                                 <h2 className='patrimonial__list__item__text__title'>{item.title}</h2>
-                                <h3 className='patrimonial__list__item__text__street custom-subtitle'>{item.webSubtitle}</h3>
+                                <h3 className='patrimonial__list__item__text__street'>{item.webSubtitle}</h3>
                                 <ul className='patrimonial__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ?
                                         <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
@@ -188,7 +188,7 @@ const Patrimonio = () => {
                                     </h2>
                                 }   
                                 <h2 className='patrimonial__list__item__text__title'>{item.title}</h2>
-                                <h3 className='patrimonial__list__item__text__street custom-subtitle'>{item.webSubtitle}</h3>
+                                <h3 className='patrimonial__list__item__text__street'>{item.webSubtitle}</h3>
                                 <ul className='patrimonial__list__item__text__characteristics'>
                                     {item.buildSurface !== 0 ?
                                         <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
@@ -231,7 +231,7 @@ const Patrimonio = () => {
             const itemList = JSON.parse(localState)
             const SOR = JSON.parse(storedSOR)
             itemList.map(item => 
-                item.department === 'Patrimonio' ? patrimonialItems.push(item) : null
+                item.department === 'Patrimonio' && item.showOnWeb === true ? patrimonialItems.push(item) : null
             )
             const array = Object.values(patrimonialItems)
             const sortArray = (a, b) => {
@@ -256,7 +256,7 @@ const Patrimonio = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className='patrimonial__pagination__list__item'><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
+                <li className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -318,6 +318,13 @@ const Patrimonio = () => {
                     label[1].innerHTML='max'
                 }
             }
+            if(saleOrRent.length===0){
+                setMaxPrice(99999999.9)
+                setMaxSurface(99999999.9)
+                setPrice([0.1, 99999999.9])
+                setSurface([0.1, 99999999.9])
+                setDisableSliders(false)
+            }
             if (label[0].innerHTML==='0,1 €/mes'){
                 label[0].innerHTML='min'
             }
@@ -331,7 +338,7 @@ const Patrimonio = () => {
                 label[2].innerHTML='min'
             }
         }
-    },[price, surface, filter, saleOrRent])
+    },[filter, saleOrRent, disableSliders])
 
 
     useEffect(() => {
@@ -532,6 +539,10 @@ const Patrimonio = () => {
                     })
                 )
             )
+            let filtered = actualizeState3.filter ((item, index) => {
+                return actualizeState3.indexOf(item) === index
+            })
+            actualizeState3=filtered  
         }
 
         let finalState = [];
@@ -634,6 +645,11 @@ const Patrimonio = () => {
         window.scroll(
             {top:0}
         )
+
+        saleOrRent.length=0;
+        typeHouse.length=0;
+        selected.length=0;
+        setSelectedActive(false)
     }
 
     const toggleFilter = () => {
@@ -650,10 +666,21 @@ const Patrimonio = () => {
     }
 
     const seeAll = () => {
-        getResidential().then(items => {
-            setOrderedItems(items);
-            setFilter (!filter)
-        })
+        const storedSOR = window.localStorage.getItem('saleOrRentStored')
+        const SOR = JSON.parse(storedSOR)
+        const array = Object.values(state2)
+        const sortArray = (a, b) => {
+            if(SOR === 'Alquiler'){
+                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
+                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
+            }else {
+                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
+                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+            }
+        }
+        let orderedArrayPrice = array.sort(sortArray);
+        setOrderedItems(orderedArrayPrice)
+        setFilter (!filter)
         window.scroll(
             {top:0}
         )

@@ -13,6 +13,8 @@ const Costa = `${Home}costa/:page`;
 const Singular = `${Home}singular/:page`;
 const Rustico = `${Home}rustico/:page`;
 const RefItem = `${Home}reference/:id`;
+const Aviso = `${Home}aviso-legal`;
+const Politica = `${Home}politica-privacidad`;
 
 const route = {
     Home,
@@ -29,7 +31,9 @@ const route = {
     Costa,
     Singular,
     Rustico,
-    RefItem
+    RefItem,
+    Aviso,
+    Politica
 }
 
 export default route;

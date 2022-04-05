@@ -213,7 +213,7 @@ const CampoRustico = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className='campoRustico__pagination__list__item'><a href={`https://modest-darwin-2e96d1.netlify.app/rustico/${i+1}`}>{i+1}</a></li>
+                <li className='campoRustico__pagination__list__item'><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -272,9 +272,9 @@ const CampoRustico = () => {
                 </div>
                 <div className='campoRustico__pagination'>
                     <ul className='campoRustico__pagination__list'>
-                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__back' href={`https://modest-darwin-2e96d1.netlify.app/singular/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}
-                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__next' href={`https://modest-darwin-2e96d1.netlify.app/singular/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                     </ul>
                 </div>
                 <ContactIndex/>
