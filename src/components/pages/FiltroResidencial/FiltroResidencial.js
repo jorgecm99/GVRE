@@ -436,7 +436,7 @@ const FiltroResidencial = () => {
                         <button onClick={toggleActive} name='Colonia Fuentelarreyna' id='fuen1' className='fuen1'>
                             <input type='image' src={fuen1} alt='componente mapa' />
                             <input type='image' className='fuen2' src={fuen2} alt='componente mapa' />
-                            <p>Fuentelarreina</p>
+                            <p>Fuentelarreyna</p>
                         </button>
                         <button onClick={toggleActive} name='Puerta de Hierro' id='puer' className='puer' >
                             <input type='image' src={puer} alt='componente mapa' />

@@ -451,6 +451,11 @@
     font-size: 18px !important;
 }
 
+.custom-rent-numbers-patrimonio{
+    font-size: 10px;
+    
+}
+
 @include tablet {
     .patrimonialItem{
         margin-top: 80px;
@@ -583,6 +588,9 @@
     }
     .carouselImages{
         height: 400px;
+    }
+    .custom-rent-numbers-patrimonio{
+        font-size: 14px;
     }
 }
 @include desktop {
@@ -1038,6 +1046,11 @@
     }
     .custom-numbers-size{
         font-size: 30px !important;
+    }
+    .custom-rent-numbers-patrimonio{
+        color: #b4b4b4 !important;
+        font-size: 25px;
+        line-height: 1.5;
     }
 }
 

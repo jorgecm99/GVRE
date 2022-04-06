@@ -65,7 +65,7 @@ import ContactIndex from '../../common/ContactInfo/ContactIndex'
 const Patrimonio = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [refItem, setRefItem] = useState([])
-    const [filteredState] = useState([])
+    /* const [filteredState] = useState([]) */
     const [perPage] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
@@ -272,11 +272,11 @@ const Patrimonio = () => {
         })
     },[])
 
-    useEffect (() => {
+   /*  useEffect (() => {
         if (filteredState.length>0) {
             setOrderedItems(filteredState)
         }
-    },[filteredState])
+    },[filteredState]) */
 
     useEffect(()=> {
         if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || ref!==''){
