@@ -250,6 +250,10 @@ const ActivosSingulares = () => {
         setCoord(y)
     }
 
+    const deletePosition = () => {
+        window.localStorage.removeItem('storedPosition2')
+    }
+
     const onDate = () => {
         const array = Object.values(orderedItems)
         const sortArray = (a, b) => {
@@ -284,7 +288,7 @@ const ActivosSingulares = () => {
                 <div className='singular__list'>
                     {getPostItems}
                 </div>
-                <div className='singular__pagination'>
+                <div onClick={deletePosition} className='singular__pagination'>
                     <ul className='singular__pagination__list'>
                         <li className='singular__pagination__list__item'><a className='singular__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/singular/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}

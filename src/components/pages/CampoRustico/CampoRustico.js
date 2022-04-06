@@ -267,6 +267,10 @@ const CampoRustico = () => {
         setOrderItems (!orderItems)
     }
 
+    const deletePosition = () => {
+        window.localStorage.removeItem('storedPosition2')
+    }
+
   return (
     <div>
         {orderedItems.length>0 ? 
@@ -285,7 +289,7 @@ const CampoRustico = () => {
                 <div className='campoRustico__list'>
                     {getPostItems}
                 </div>
-                <div className='campoRustico__pagination'>
+                <div onClick={deletePosition} className='campoRustico__pagination'>
                     <ul className='campoRustico__pagination__list'>
                         <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}

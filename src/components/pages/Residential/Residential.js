@@ -800,6 +800,10 @@ const Residential = () => {
         setCoord(y)
     }
 
+    const deletePosition = () => {
+        window.localStorage.removeItem('storedPosition2')
+    }
+
     const seeAll = () => {
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
         const SOR = JSON.parse(storedSOR)
@@ -1041,7 +1045,7 @@ const Residential = () => {
                     <div className='residential__list'>
                         {getPostItems}
                     </div>
-                    <div className='residential__pagination'>
+                    <div onClick={deletePosition} className='residential__pagination'>
                         <ul className='residential__pagination__list'>
                             <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}

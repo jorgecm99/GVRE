@@ -657,6 +657,10 @@ const Patrimonio = () => {
         setOrderItems (!orderItems)
     }
 
+    const deletePosition = () => {
+        window.localStorage.removeItem('storedPosition2')
+    }
+
     window.onmousemove = function (e){
         var y = e.pageY
         setCoord(y)
@@ -888,7 +892,7 @@ const Patrimonio = () => {
                     <div className='patrimonial__list'>
                         {getPostItems}
                     </div>
-                    <div className='patrimonial__pagination'>
+                    <div onClick={deletePosition} className='patrimonial__pagination'>
                         <ul className='patrimonial__pagination__list'>
                             <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}

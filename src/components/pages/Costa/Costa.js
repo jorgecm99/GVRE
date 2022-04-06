@@ -265,6 +265,10 @@ const Costa = () => {
         setOrderItems (!orderItems)
     }
 
+    const deletePosition = () => {
+        window.localStorage.removeItem('storedPosition2')
+    }
+
   return (
     <div>
         {orderedItems.length>0 ? 
@@ -283,7 +287,7 @@ const Costa = () => {
                 <div className='costa__list'>
                     {getPostItems}
                 </div>
-                <div className='costa__pagination'>
+                <div onClick={deletePosition} className='costa__pagination'>
                     <ul className='costa__pagination__list'>
                         <li className='costa__pagination__list__item'><a className='costa__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/costa/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}
