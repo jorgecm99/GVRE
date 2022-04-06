@@ -1062,10 +1062,12 @@
     }
 }
 
-@media screen and (min-width:#{425px}) {
+@media screen and (min-width:#{450px}) and (max-width:767px) {
     .patrimonialItem{
         &__fullScreen{
             &__carousel{
+                width: 70%;
+                height: 100%;
                 .carousel{
                     .carouselImages{
                         height: 100vh;
