@@ -62,7 +62,6 @@ import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
 const Residential = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [refItem, setRefItem] = useState([])
-    const [filteredState] = useState([])
     const [perPage] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
@@ -296,12 +295,6 @@ const Residential = () => {
             setDisableButton(false)
         }
     },[ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
-    
-    useEffect (() => {
-        if (filteredState.length>0) {
-            setOrderedItems(filteredState)
-        }
-    },[filteredState])
 
     useEffect(() => {
         if (state2.length > 0) {
