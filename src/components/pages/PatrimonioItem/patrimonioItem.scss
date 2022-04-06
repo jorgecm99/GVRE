@@ -29,6 +29,14 @@
             justify-content: center;
             padding: 0;
         }
+        &__carousel{
+            width: 80%;
+            .carousel{
+                .carouselImages{
+                    height: 40vh;
+                }
+            }
+        }
     }
     &__map{
         position: fixed;
@@ -1054,3 +1062,16 @@
     }
 }
 
+@media screen and (min-width:#{425px}) {
+    .patrimonialItem{
+        &__fullScreen{
+            &__carousel{
+                .carousel{
+                    .carouselImages{
+                        height: 100vh;
+                    }
+                }
+            }
+        }
+    }
+}
