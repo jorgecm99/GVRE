@@ -65,7 +65,7 @@ import ContactIndex from '../../common/ContactInfo/ContactIndex'
 const Patrimonio = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [refItem, setRefItem] = useState([])
-    /* const [filteredState] = useState([]) */
+    /* const [filteredState] = useState([]) */ 
     const [perPage] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
