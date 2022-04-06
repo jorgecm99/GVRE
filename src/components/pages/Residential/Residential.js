@@ -104,7 +104,7 @@ const Residential = () => {
     const getPostItems = orderedItems.slice(pagesVisited, pagesVisited + perPage)
     .map(item => {
         return item.department === "Residencial" && item.showOnWeb === true? 
-            <div onClick={setPosition} className='residential__list__item' key={item._id} details={item}>
+            <div onClick={setPosition} className='residential__list__item' key={item._id} >
                 {item.gvOperationClose === 'Alquilado' || item.gvOperationClose === 'Vendido' ?
                     <div className='wrapper'>
                         <div className='residential__list__item__status'>
@@ -119,7 +119,7 @@ const Residential = () => {
                         >
                             <img src={item.images.main} alt={item.title}/>
                             {item.images.others.map((image)=> (
-                                <img key={item._id} src={image} alt={item.title}/>
+                                <img key={image} src={image} alt={item.title}/>
                             ))}
                         </Carousel>
                         <div>
@@ -177,7 +177,7 @@ const Residential = () => {
                         >
                             <img src={item.images.main} alt={item.title}/>
                             {item.images.others.map((image)=> (
-                                <img key={item._id} src={image} alt={item.title}/>
+                                <img key={image} src={image} alt={item.title}/>
                             ))}
                         </Carousel>
                         <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemResidential, {id:item._id})}>
@@ -230,8 +230,12 @@ const Residential = () => {
     
     useEffect(() => {
         if (state.length>=1) {
+            let reducedState = []
+            state.map(item => 
+                item.department === 'Residencial' && item.showOnWeb === true ? reducedState.push(item) : null
+            )
             window.localStorage.setItem(
-                'storedState', JSON.stringify(state)
+                'storedState', JSON.stringify(reducedState)
             )
         }
     },[state])
@@ -273,7 +277,7 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)

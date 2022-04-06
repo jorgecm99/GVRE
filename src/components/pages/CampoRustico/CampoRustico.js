@@ -30,7 +30,7 @@ const CampoRustico = () => {
     const setPosition = () => {
         if (coord !== 0) {
             window.localStorage.setItem(
-                'storedPosition', JSON.stringify(coord)
+                'storedPosition2', JSON.stringify(coord)
             )
         }
     }
@@ -213,11 +213,26 @@ const CampoRustico = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className='campoRustico__pagination__list__item'><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${i+1}`}>{i+1}</a></li>
+                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'campoRustico__pagination__list__item currentPage' : 'campoRustico__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
     },[pageCount])
+
+    useEffect(() => {
+        setTimeout(function(){
+            const localPosition = window.localStorage.getItem('storedPosition2')
+            if (localPosition !== 0) {
+                window.scroll( {
+                    top:localPosition-700
+                })
+            }else{
+                window.scroll(
+                    {top:0}
+                )
+            }
+        },1)
+    },[])
 
     const onPrice = () => {
         const array = Object.values(orderedItems)

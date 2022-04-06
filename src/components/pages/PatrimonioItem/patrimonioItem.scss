@@ -422,6 +422,7 @@
             }
             input{
                 @include textMobile;
+                font-size: 16px!important;
                 border: none;
                 border-bottom: solid;
                 border-width: 2px;
@@ -446,9 +447,8 @@
 .carouselImages{
     height: 250px;
 }
-
-.custom-fontsize-numbers{
-    font-size: 20px !important;
+.custom-numbers-size{
+    font-size: 18px !important;
 }
 
 @include tablet {
@@ -611,7 +611,7 @@
                 height: 80%;
                 .carousel{
                     .carouselImages{
-                        height: 750px;
+                        height: 80vh;
                     }
                 }
             }
@@ -1036,9 +1036,8 @@
     .carouselImages{
         height: 954px;
     }
-
-    .custom-fontsize-numbers{
-        font-size: 35px !important;
+    .custom-numbers-size{
+        font-size: 30px !important;
     }
 }
 

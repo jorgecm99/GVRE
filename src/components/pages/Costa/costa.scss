@@ -171,8 +171,10 @@
             margin-right: 8px;
             @include textMobile;
             &__item{
-                margin-left: 8px;
-                margin-right: 8px;
+                margin-left: 3px;
+                margin-right: 3px;
+                padding-left: 5px;
+                padding-right: 5px;
                 &__back{
                     img{
                         width: 8px;
@@ -252,7 +254,13 @@
         }
     }
 }
-
+.currentPage {
+    background-color: #2B363D;
+    color: white!important;
+    a{
+        color: white!important;
+    }
+}
 .dot{
     display: none!important;
 }

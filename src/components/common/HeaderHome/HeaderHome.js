@@ -49,7 +49,7 @@ const Header = () => {
                         <li><NavLink onClick={toggleClass} to={routes.FilterResidential}>Residencial</NavLink></li>
                         <li><NavLink onClick={toggleClass} to={routes.FilterPatrimonial}>Patrimonio</NavLink></li>
                         <li className='headerHome__menu__list__GV'>
-                            <p className='headerHome__menu__list__GV__name'>
+                            <div className='headerHome__menu__list__GV__name'>
                                 GV Real Estate
                                 <ul className='headerHome__menu__list__GV__name__menu' >
                                     <li><NavLink onClick={toggleClass} to={routes.Team}>Equipo</NavLink></li>
@@ -59,7 +59,7 @@ const Header = () => {
                                     <li><NavLink onClick={toggleClass && situate3} to={routes.Contextual}>Nuevos desarrollos</NavLink></li>
                                     <li><NavLink onClick={toggleClass && situate4} to={routes.Contextual}>Arquitectura e interiorismo</NavLink></li>
                                 </ul>
-                            </p>
+                            </div>
                         </li>
                         <li className='headerHome__menu__list__contact'><NavLink onClick={toggleClass} to={routes.Contact}>Contacto</NavLink></li>
                         <li className='headerHome__menu__list__social'>

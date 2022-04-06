@@ -105,7 +105,7 @@ const Patrimonio = () => {
     const getPostItems = orderedItems.slice(pagesVisited, pagesVisited + perPage)
     .map(item => {
             return item.department === "Patrimonio" && item.showOnWeb === true? 
-            <div onClick={setPosition} className='patrimonial__list__item' key={item._id} details={item}>
+            <div onClick={setPosition} className='patrimonial__list__item' key={item._id}>
                 {item.gvOperationClose === 'Alquilado' || item.gvOperationClose === 'Vendido' ? 
                     <div className='wrapper'>
                         <div className='patrimonial__list__item__status'>
@@ -214,7 +214,7 @@ const Patrimonio = () => {
     useEffect(() => {
         if (state.length>=1) {
             let reducedState = []
-            state.map(item =>
+            state.map(item => 
                 item.department === 'Patrimonio' && item.showOnWeb === true ? reducedState.push(item) : null
             )
             window.localStorage.setItem(
@@ -260,7 +260,7 @@ const Patrimonio = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
+                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)

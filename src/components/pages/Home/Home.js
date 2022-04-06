@@ -114,15 +114,15 @@ const Home = () => {
                 <div className='home__categories__container'>
                     <NavLink to={routes.FilterResidential} className='home__categories__container__option'>
                         <div className='home__categories__container__option__residential'></div>
-                        <h2 className='home__categories__container__option__name'><NavLink to={routes.FilterResidential}>GV Residencial</NavLink><span><img src={flechaCategoriasWeb} alt='flecha'/></span></h2>
+                        <h2 className='home__categories__container__option__name'>GV Residencial<span><img src={flechaCategoriasWeb} alt='flecha'/></span></h2>
                     </NavLink>
                     <NavLink to={routes.FilterPatrimonial} className='home__categories__container__option'>
                         <div className='home__categories__container__option__patrimonial'></div>
-                        <h2 className='home__categories__container__option__name'><NavLink to={routes.FilterPatrimonial}>GV Patrimonio</NavLink><span><img src={flechaCategoriasWeb} alt='flecha'/></span></h2>
+                        <h2 className='home__categories__container__option__name'>GV Patrimonio<span><img src={flechaCategoriasWeb} alt='flecha'/></span></h2>
                     </NavLink>
                     <NavLink to={routes.Contact} className='home__categories__container__option'>
                         <div className='home__categories__container__option__art'></div>
-                        <h2 className='home__categories__container__option__name'><NavLink to={routes.Contact}>GV Arte</NavLink><span><img src={flechaCategoriasWeb} alt='flecha'/></span></h2>
+                        <h2 className='home__categories__container__option__name'>GV Arte<span><img src={flechaCategoriasWeb} alt='flecha'/></span></h2>
                     </NavLink>
                     <NavLink to={routes.Contact} className='home__categories__container__option'>
                         <div className='home__categories__container__option__catalog'></div>
@@ -187,7 +187,7 @@ const Home = () => {
                             <Link key={item.title} to={generatePath(routes.ItemResidential, {id:item._id})} className='home__outstanding__position__images'>
                                 <p className='home__outstanding__position__images__destacado'>DESTACADO</p>
                                 <img className='home__outstanding__position__images__image' key={item._id} src={item.images.main} alt={item.title}/>
-                                <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemResidential, {id:item._id})}>
+                                <div>
                                     <div className='home__outstanding__position__images__text'>
                                         <h2 className='home__outstanding__position__images__text__price'>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</h2>
                                         <h2 className='home__outstanding__position__images__text__title'>{item.title}</h2>
@@ -216,7 +216,7 @@ const Home = () => {
                                             :null}
                                         </ul>
                                     </div>
-                                </Link>
+                                </div>
                             </Link>
                         ): null}
                     </div>
