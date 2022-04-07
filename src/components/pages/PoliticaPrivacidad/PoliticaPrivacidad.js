@@ -15,7 +15,6 @@ const PoliticaPrivacidad = () => {
         <Header/>
         <div className='politicaPrivacidad'>
             <h1>POLÍTICA DE PRIVACIDAD</h1>
-            <p><b>Política de privacidad</b></p>
             <p>Mediante el presente aviso legal y política de privacidad, GRANDES VIVIENDAS con domicilio social en CALLE DE LA ISLA DE OZA, 16- 28035 MADRID (MADRID), informa a los usuarios del sitio web http://www.grandesviviendas.com/ de su Política de Privacidad, y describe qué datos recoge, cómo los utiliza,  las opciones de los usuarios en relación a estos datos, sus derechos (conocidos como derechos ARCO, Acceso, Rectificación, Cancelación y Oposición y los nuevos introducidos por el RGPD, derecho al olvido, derecho a la portabilidad de los datos personales y el derecho a la limitación en el tratamiento),  la seguridad de sus datos, y la modificación de la  política de confidencialidad.</p>
             <p>La utilización del sitio web de GRANDES VIVIENDAS y de cualquiera de los servicios que se incorporan en él, supone la plena aceptación de las condiciones que se presentan a continuación Política de Privacidad.</p>
             <p>      1. <b>Recogida de datos y consentimiento</b></p>
