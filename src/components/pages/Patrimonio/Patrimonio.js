@@ -624,6 +624,15 @@ const Patrimonio = () => {
         }
         setFilter(!filter)
 
+        if (saleOrRent.length === 1){
+            saleOrRent.map(item => {
+                window.localStorage.setItem(
+                    'saleOrRentStored', JSON.stringify(item)
+                )    
+                return(item)        
+            })
+        }
+
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
         const SOR = JSON.parse(storedSOR)
         const array = Object.values(finalState)
