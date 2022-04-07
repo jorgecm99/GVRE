@@ -207,7 +207,7 @@ const PatrimonioItem = () => {
                             <div className={state.expensesIncluded !== 0 && state.monthlyRent !== 0 && state.expenses !== 0 ?'patrimonialItem__description__rent__numbers' : 'patrimonialItem__description__rentEmpty__numbers'}>
                                 {state.expensesIncluded !== 0 ? 
                                     <div>
-                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.expensesIncluded)}`} <span className='custom-rent-numbers-patrimonio'>€/m<sup>2</sup></span></h4>
+                                        <h4>{`${new Intl.NumberFormat('de-DE').format(state.expensesIncluded)}`} <span className='custom-rent-numbers-patrimonio'>€/mes</span></h4>
                                         {/* <p className='custom-rent-numbers-patrimonio'>€/m<sup>2</sup>/mes</p> */}
                                         <p>Renta con gastos incluidos</p>
                                     </div>:null
