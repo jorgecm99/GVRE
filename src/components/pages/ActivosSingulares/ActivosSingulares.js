@@ -173,9 +173,13 @@ const ActivosSingulares = () => {
     },[])
 
     useEffect(() => {
-        if (state.length>1) {
+        if (state.length>=1) {
+            let reducedState = []
+            state.map(item => 
+                item.adBuildingType.includes('Activos singulares') && item.showOnWeb === true ? reducedState.push(item) : null
+            )
             window.localStorage.setItem(
-                'storedState', JSON.stringify(state)
+                'storedState', JSON.stringify(reducedState)
             )
         }
     },[state])
