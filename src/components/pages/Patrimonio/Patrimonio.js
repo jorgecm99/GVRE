@@ -420,8 +420,10 @@ const Patrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     orderedItems.map(item => {
-                        priceArray.push(item.sale.saleValue);
-                        surfaceArray.push(item.buildSurface);
+                        if (item.showOnWeb === true) {
+                            priceArray.push(item.sale.saleValue);
+                            surfaceArray.push(item.buildSurface);
+                        }
                         return (item)
                     })
                     priceArray.sort(function (a, b) {
@@ -439,14 +441,16 @@ const Patrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     orderedItems.map(item => {
-                        priceArray.push(item.rent.rentValue);
-                        item.adType.map(itemType => {
-                            if (itemType === 'Alquiler'){
-                                surfaceArray.push(item.buildSurface);
-                                return(itemType)
-                            }
-                            return(item)
-                        })
+                        if(item.showOnWeb === true){
+                            priceArray.push(item.rent.rentValue);
+                            item.adType.map(itemType => {
+                                if (itemType === 'Alquiler'){
+                                    surfaceArray.push(item.buildSurface);
+                                    return(itemType)
+                                }
+                                return(item)
+                            })
+                        }
                         return(item)
                     })
                     priceArray.sort(function (a, b) {

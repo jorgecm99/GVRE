@@ -170,13 +170,15 @@ const FiltroPatrimonio = () => {
         }
         if (saleOrRent.length===1) {
             saleOrRent.map(item => {
-                if (item === 'Venta') {
+                if (item === 'Venta' ) {
                     setDisableSliders(true)
                     let priceArray = [];
                     let surfaceArray = [];
                     state.map(item => {
-                        priceArray.push(item.sale.saleValue);
-                        surfaceArray.push(item.buildSurface);
+                        if (item.showOnWeb === true) {
+                            priceArray.push(item.sale.saleValue);
+                            surfaceArray.push(item.buildSurface);
+                        }
                         return(item)
                     })
                     priceArray.sort(function (a, b) {
@@ -194,14 +196,16 @@ const FiltroPatrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state.map(item => {
-                        priceArray.push(item.rent.rentValue);
-                        item.adType.map(itemType => {
-                            if (itemType === 'Alquiler'){
-                                surfaceArray.push(item.buildSurface);
-                                return(itemType)
-                            }
-                            return(item)
-                        })
+                        if(item.showOnWeb === true){
+                            priceArray.push(item.rent.rentValue);
+                            item.adType.map(itemType => {
+                                if (itemType === 'Alquiler'){
+                                    surfaceArray.push(item.buildSurface);
+                                    return(itemType)
+                                }
+                                return(item)
+                            })
+                        }
                         return(item)
                     })
                     priceArray.sort(function (a, b) {
