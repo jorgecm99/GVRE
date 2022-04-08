@@ -6,11 +6,11 @@
 }
 
 .campoRustico{
-    margin-top: 80px;
     &__title{
         @include subSubTitleMobile;
         padding-left: 15px;
         padding-top: 15px;
+        margin-top: 80px;
     }
     &__buttons{
         display: flex;

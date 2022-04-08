@@ -175,7 +175,7 @@ const FiltroPatrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state.map(item => {
-                        if (item.showOnWeb === true) {
+                        if (item.showOnWeb === true && item.department === 'Patrimonio') {
                             priceArray.push(item.sale.saleValue);
                             surfaceArray.push(item.buildSurface);
                         }
@@ -196,7 +196,7 @@ const FiltroPatrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state.map(item => {
-                        if(item.showOnWeb === true){
+                        if(item.showOnWeb === true && item.department === 'Patrimonio'){
                             priceArray.push(item.rent.rentValue);
                             item.adType.map(itemType => {
                                 if (itemType === 'Alquiler'){
