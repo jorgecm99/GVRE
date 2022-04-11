@@ -725,7 +725,7 @@ const Patrimonio = () => {
                                         <input type='image' className='c10' src={carretera10} alt='componente mapa' />
                                         <input type='image' className='secu' src={secu} alt='componente mapa' />
                                         <input type='image' className='ceba' src={ceba} alt='componente mapa' />
-                                        <button name='El plantío' onClick={toggleActive} id='plan' className='plan'>
+                                        <button name='El Plantío' onClick={toggleActive} id='plan' className='plan'>
                                             <input type='image' src={plan1} alt='componente mapa' className='plan__1'/>
                                             <input type='image' src={plan2} alt='componente mapa' className='plan__2'/>
                                             <p>El plantío</p>

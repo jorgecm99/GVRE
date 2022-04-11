@@ -466,11 +466,11 @@ const FiltroResidencial = () => {
                             <input type='image' src={cort} alt='componente mapa' />
                             <p>Cortes</p>
                         </button>
-                        <button onClick={toggleActive} name='Nueva España' id='nuev' className='nuev'>
+                        <button onClick={toggleActive} name='Nueva España - Hispanoamérica' id='nuev' className='nuev'>
                             <input type='image' src={nuev} alt='componente mapa' />
                             <p>Nueva España</p>
                         </button>
-                        <button onClick={toggleActive} name='Hispano américa' id='hisp' className='hisp'>
+                        <button onClick={toggleActive} name='Nueva España - Hispanoamérica' id='hisp' className='hisp'>
                             <input type='image' src={hisp} alt='componente mapa' />
                             <p>Hispano <br/> América</p>
                         </button>

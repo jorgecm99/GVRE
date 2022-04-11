@@ -415,7 +415,7 @@ const FiltroPatrimonio = () => {
                         <div className='a3'>A3</div>
                         <div className='a5'>A5</div>
                         <div className='a6'>A6</div>
-                        <button name='El plantío' onClick={toggleActive} id='plan' className='plan'>
+                        <button name='El Plantío' onClick={toggleActive} id='plan' className='plan'>
                             <input type='image' src={plan1} alt='componente mapa' className='plan__1'/>
                             <input type='image' src={plan2} alt='componente mapa' className='plan__2'/>
                             <p>El plantío</p>
