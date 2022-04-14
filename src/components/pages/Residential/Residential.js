@@ -276,7 +276,7 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -1051,9 +1051,9 @@ const Residential = () => {
                     </div>
                     <div onClick={deletePosition} className='residential__pagination'>
                         <ul className='residential__pagination__list'>
-                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`https://gvre.es/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}
-                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__next' href={`https://gvre.es/residential/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                         </ul>
                     </div>
                     <div className='residential__zoneMap'>

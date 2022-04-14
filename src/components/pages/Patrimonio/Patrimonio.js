@@ -259,7 +259,7 @@ const Patrimonio = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${i+1}`}>{i+1}</a></li>
+                <li className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`https://gvre.es/patrimonial/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -907,9 +907,9 @@ const Patrimonio = () => {
                     </div>
                     <div onClick={deletePosition} className='patrimonial__pagination'>
                         <ul className='patrimonial__pagination__list'>
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://gvre.es/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`https://gvre.es/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                         </ul>
                     </div>
                     <div className='patrimonial__zoneMap'>

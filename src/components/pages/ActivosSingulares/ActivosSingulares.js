@@ -216,7 +216,7 @@ const ActivosSingulares = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'singular__pagination__list__item currentPage' : 'singular__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'singular__pagination__list__item currentPage' : 'singular__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -294,9 +294,9 @@ const ActivosSingulares = () => {
                 </div>
                 <div onClick={deletePosition} className='singular__pagination'>
                     <ul className='singular__pagination__list'>
-                        <li className='singular__pagination__list__item'><a className='singular__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/singular/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                        <li className='singular__pagination__list__item'><a className='singular__pagination__list__item__back' href={`https://gvre.es/singular/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}
-                        <li className='singular__pagination__list__item'><a className='singular__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/singular/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                        <li className='singular__pagination__list__item'><a className='singular__pagination__list__item__next' href={`https://gvre.es/singular/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                     </ul>
                 </div>
                 <ContactIndex/>

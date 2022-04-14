@@ -215,7 +215,7 @@ const Costa = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'costa__pagination__list__item currentPage' : 'costa__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'costa__pagination__list__item currentPage' : 'costa__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -293,9 +293,9 @@ const Costa = () => {
                 </div>
                 <div onClick={deletePosition} className='costa__pagination'>
                     <ul className='costa__pagination__list'>
-                        <li className='costa__pagination__list__item'><a className='costa__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/costa/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                        <li className='costa__pagination__list__item'><a className='costa__pagination__list__item__back' href={`https://gvre.es/costa/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}
-                        <li className='costa__pagination__list__item'><a className='costa__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/costa/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                        <li className='costa__pagination__list__item'><a className='costa__pagination__list__item__next' href={`https://gvre.es/costa/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                     </ul>
                 </div>
                 <ContactIndex/>

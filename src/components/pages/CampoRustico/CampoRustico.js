@@ -217,7 +217,7 @@ const CampoRustico = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'campoRustico__pagination__list__item currentPage' : 'campoRustico__pagination__list__item'}><a href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/residential/${i+1}`}>{i+1}</a></li>
+                <li onclick={window.localStorage.removeItem('storedPosition2')} className={i+1 === parseInt(splitedLocation[4]) ? 'campoRustico__pagination__list__item currentPage' : 'campoRustico__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -295,9 +295,9 @@ const CampoRustico = () => {
                 </div>
                 <div onClick={deletePosition} className='campoRustico__pagination'>
                     <ul className='campoRustico__pagination__list'>
-                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__back' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__back' href={`https://gvre.es/rustico/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                         {pagElements}
-                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__next' href={`https://ubiquitous-dieffenbachia-2437f4.netlify.app/rustico/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                        <li className='campoRustico__pagination__list__item'><a className='campoRustico__pagination__list__item__next' href={`https://gvre.es/rustico/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                     </ul>
                 </div>
                 <ContactIndex/>
