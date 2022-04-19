@@ -436,7 +436,7 @@ const Residential = () => {
                     setDisableSliders(true)
                     let priceArray = [];
                     let surfaceArray = [];
-                    orderedItems.map(item => {
+                    state2.map(item => {
                         if (item.showOnWeb === true) {
                             priceArray.push(item.sale.saleValue);
                             surfaceArray.push(item.buildSurface);
@@ -457,7 +457,7 @@ const Residential = () => {
                     setDisableSliders(true)
                     let priceArray = [];
                     let surfaceArray = [];
-                    orderedItems.map(item => {
+                    state2.map(item => {
                         if(item.showOnWeb === true){
                             priceArray.push(item.rent.rentValue);
                             item.adType.map(itemType => {
