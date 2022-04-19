@@ -2,6 +2,8 @@ import React, {useEffect} from 'react'
 import Header from '../../common/Header/Header'
 import './avisoLegal.scss'
 
+import logopng from '../../../assets/logogvre.png';
+
 const AvisoLegal = () => {
 
     useEffect(() => {
@@ -102,6 +104,8 @@ const AvisoLegal = () => {
             <p>GRANDES VIVIENDAS se reserva el derecho de eliminación de aquellos contenidos que resulten inveraces, inexactos y contrarios a la ley, la moral, el orden público y las buenas costumbres.</p>
             <h2>Legislación y fuero</h2>
             <p>La prestación del servicio se rige por la legislación española, siendo competentes los Tribunales de Madrid, a los que el Usuario se somete expresamente.</p>
+
+            <img className='logoemails' src={logopng} alt='logo'></img>
         </div>
     </div>
   )
