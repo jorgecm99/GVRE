@@ -290,7 +290,7 @@ const PatrimonioItem = () => {
                                     <p>IBI €/año</p>
                                 </div>
                             :null}
-                            {state.communityExpenses.expensesValue!==0 && state.ibi.expensesShowOnWeb===true ? 
+                            {state.communityExpenses.expensesValue!==0 && state.communityExpenses.expensesShowOnWeb===true ? 
                                 <div className='patrimonialItem__description__numbers__bed'>
                                     <p className='patrimonialItem__description__numbers__bed__data'>{state.communityExpenses.expensesValue}</p>
                                     <p>Gastos de comunidad €/mes</p>
