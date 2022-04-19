@@ -8,6 +8,7 @@ import { NavLink } from "react-router-dom";
 import routes from "../../../config/routes";
 import cerrarFiltro from '../../../assets/SVG/mobile/comun/cerrarCompleta.svg';
 
+
 const Header = () => {
     const [isActive, setActive] = useState('false');
     const toggleClass = () => {

@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react'
 import Header from '../../common/Header/Header'
 import './politicaPrivacidad.scss'
+import logopng from '../../../assets/logogvre.png';
+
 
 const PoliticaPrivacidad = () => {
 
@@ -69,6 +71,8 @@ const PoliticaPrivacidad = () => {
             <p>El usuario al rellenar el formulario con los datos personales que se solicitan y acepta expresamente el envío de comunicaciones comerciales, con el uso de los distintos productos o servicios que se ofrecen en esta página web, o al mandar un mensaje electrónico con datos personales, autoriza y da su consentimiento de forma expresa a GRANDES VIVIENDAS, a tratar e incorporar a  esos datos en nuestros registros de actividad. (www.agpd.es) del que es responsable la citada empresa, con la finalidad de  facilitar una mayor información de la empresa, informar sobre productos, informar sobre servicios ofrecidos.</p>
             <p>      8. <b>Conservación de datos</b></p>
             <p>En virtud de la normativa de conservación de datos, se mantendrán durante la prestación del servicio y un año tras la contratación del mismo, como norma general.</p>
+
+            <img className='logoemails' src={logopng} alt='logo'></img>
         </div>
     </div>
   )
