@@ -345,7 +345,7 @@ const ResidentialItem = () => {
                             {state.quality.others.tennisCourt === true ? <p> <img src={check} alt='check'/> Pista de tenis</p> : null}
                             {state.quality.others.terrace === true ? <p> <img src={check} alt='check'/> Terraza</p> : null}
                             {state.quality.others.well === true ? <p> <img src={check} alt='check'/> Pozo</p> : null}
-                            {state.quality.others.raisedFloor === true ? <p> <img src={check} alt='check'/> Tarima flotante</p> : null}
+                            {state.quality.others.raisedFloor === true ? <p> <img src={check} alt='check'/> Suelo técnico</p> : null}
                         </div>
                         <div className='residentialItem__wrapper'>
                             <div className='residentialItem__description__owner'>
