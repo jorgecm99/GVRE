@@ -11,7 +11,6 @@ import check from '../../../assets/SVG/mobile/comun/check.svg';
 import { getConsultants } from '../../../api-requests/requests';
 import Header from '../../common/Header/Header';
 import send from '../../../assets/SVG/mobile/comun/flechaEnviar.svg';
-import MapItem from '../../common/MapItem/MapItem';
 import Geocode from "react-geocode";
 import googleKey from '../../../Keys.js';
 import emailjs from 'emailjs-com';
@@ -443,7 +442,14 @@ const PatrimonioItem = () => {
                         </div>
                     </div>
                     <div className='patrimonialItem__description__locationMap'>
-                        <MapItem/>
+                        <iframe
+                          title='map'
+                          width="450"
+                          height="400"
+                          frameBorder="0" 
+                          src={googleKey.mapURL}
+                        >
+                        </iframe>
                     </div>
                 </div>
             </div>:null}
