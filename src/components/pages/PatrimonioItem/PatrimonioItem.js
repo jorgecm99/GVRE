@@ -15,6 +15,7 @@ import Geocode from "react-geocode";
 import googleKey from '../../../Keys.js';
 import emailjs from 'emailjs-com';
 import { getResidential } from '../../../api-requests/requests';
+import MapItem from '../../common/MapItem/MapItem'
 
 Geocode.setApiKey(googleKey.googleKey);
 Geocode.setLanguage("es");
@@ -30,25 +31,8 @@ const PatrimonioItem = () => {
     const form = useRef();
     const [viewForm, setViewForm] = useState(true)
     const [list, setList] = useState([])
-
-    useState(() => {
-        setState(state)
-        Geocode.fromAddress("Eiffel Tower").then(
-            (response) => {
-              const { lat, lng } = response.results[0].geometry.location;
-              console.log(lat, lng);
-            },
-            (error) => {
-              console.error(error);
-            }
-          )
-    },[])
-
-    useEffect(() => {
-        window.scroll({
-            top:0
-        })
-    },[])
+    const [latitude, setLatitude] = useState();
+    const [longitude, setLongitude] = useState();
 
     useEffect(() => {
         getResidential().then(items=> {
@@ -56,15 +40,31 @@ const PatrimonioItem = () => {
         })        
     },[])
 
-    useEffect(()=> {
+    useEffect(() => {
         let id = window.location.href.split('/')[4]
         list.map(item => {
             if(item._id === id){
                 setState(item)
+                Geocode.fromAddress(`${item.adDirection.address.street}${item.adDirection.address.directionNumber}, ${item.adDirection.city}`).then(
+                    (response) => {
+                        const { lat, lng } = response.results[0].geometry.location;
+                        setLatitude(lat)
+                        setLongitude(lng)
+                    },
+                    (error) => {
+                        console.error(error);
+                    }
+                )
             }
             return item
         })
     },[list, setState])
+
+    useEffect(() => {
+        window.scroll({
+            top:0
+        })
+    },[])
 
     useEffect (() => {
         getConsultants().then(itemConsultants => {
@@ -123,7 +123,7 @@ const PatrimonioItem = () => {
 
     return (
         <div className='patrimonialItem'>
-            {state.images?
+            {state.images ?
             <div>
                 <Header/>
                 <Carousel 
@@ -442,14 +442,7 @@ const PatrimonioItem = () => {
                         </div>
                     </div>
                     <div className='patrimonialItem__description__locationMap'>
-                        <iframe
-                          title='map'
-                          width="450"
-                          height="400"
-                          frameBorder="0" 
-                          src={googleKey.mapURL}
-                        >
-                        </iframe>
+                        <MapItem long={longitude} lati={latitude}/>
                     </div>
                 </div>
             </div>:null}

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Circle } from 'google-maps-react';
 import googleKey from '../../../Keys.js';
 
 class MapItem extends Component {
@@ -10,9 +10,20 @@ class MapItem extends Component {
             google={this.props.google}
             style={{height:'400px',width:'100%'}}
             zoom={15}
-            initialCenter={{lat: 28.704060, lng: 77.102493}}
+            center={{lat:this.props.lati, lng:this.props.long}}
+            initialCenter={{lat:this.props.lati, lng:this.props.long}}
             containerStyle={{height:'400px'}}
-          />
+          >
+            <Circle
+              radius={120}
+              center={{lat:this.props.lati, lng:this.props.long}}
+              strokeColor='transparent'
+              strokeOpacity={0}
+              strokeWeight={5}
+              fillColor='#2B363D'
+              fillOpacity={0.3}
+            />
+          </Map>
       </div>
   )
   }
