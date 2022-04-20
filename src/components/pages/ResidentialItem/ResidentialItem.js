@@ -31,41 +31,43 @@ const ResidentialItem = () => {
     const [viewMap, setViewMap] = useState(false);
     const form = useRef();
     const [viewForm, setViewForm] = useState(true);
-    const [list, setList] = useState([])
+    const [list, setList] = useState([]);
+    const [latitude, setLatitude] = useState();
+    const [longitude, setLongitude] = useState();
     
-    useState(() => {
-        Geocode.fromAddress("Eiffel Tower").then(
-            (response) => {
-              const { lat, lng } = response.results[0].geometry.location;
-              console.log(lat, lng);
-            },
-            (error) => {
-              console.error(error);
-            }
-          )
-    },[])
-
-    useEffect(() => {
-        window.scroll({
-            top:0
-        })
-    },[])
-
     useEffect(() => {
         getResidential().then(items=> {
             setList(items)
         })        
     },[])
 
-    useEffect(()=> {
+    useEffect(() => {
         let id = window.location.href.split('/')[4]
         list.map(item => {
             if(item._id === id){
                 setState(item)
+                setTimeout(
+                    Geocode.fromAddress(`${item.adDirection.address.street}${item.adDirection.address.directionNumber}, ${item.adDirection.city}`).then(
+                        (response) => {
+                            const { lat, lng } = response.results[0].geometry.location;
+                            setLatitude(lat)
+                            setLongitude(lng)
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    ),10000
+                )
             }
             return item
         })
     },[list, setState])
+
+    useEffect(() => {
+        window.scroll({
+            top:0
+        })
+    },[])
 
     useEffect (() => {
         getConsultants().then(itemConsultants => {
@@ -424,8 +426,9 @@ const ResidentialItem = () => {
                                 }
                             </div>
                         </div>
+                        <div className='residentialItem__description__filter'></div>
                         <div className='residentialItem__description__locationMap'>
-                            <MapItem/>
+                            <MapItem long={longitude} lati={latitude}/>
                         </div>
                     </div>
                 </div>

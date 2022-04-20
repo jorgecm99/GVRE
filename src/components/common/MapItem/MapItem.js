@@ -15,7 +15,7 @@ class MapItem extends Component {
             containerStyle={{height:'400px'}}
           >
             <Circle
-              radius={120}
+              radius={400}
               center={{lat:this.props.lati, lng:this.props.long}}
               strokeColor='transparent'
               strokeOpacity={0}

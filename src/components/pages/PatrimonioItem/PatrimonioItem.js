@@ -45,15 +45,17 @@ const PatrimonioItem = () => {
         list.map(item => {
             if(item._id === id){
                 setState(item)
-                Geocode.fromAddress(`${item.adDirection.address.street}${item.adDirection.address.directionNumber}, ${item.adDirection.city}`).then(
-                    (response) => {
-                        const { lat, lng } = response.results[0].geometry.location;
-                        setLatitude(lat)
-                        setLongitude(lng)
-                    },
-                    (error) => {
-                        console.error(error);
-                    }
+                setTimeout(
+                    Geocode.fromAddress(`${item.adDirection.address.street}${item.adDirection.address.directionNumber}, ${item.adDirection.city}`).then(
+                        (response) => {
+                            const { lat, lng } = response.results[0].geometry.location;
+                            setLatitude(lat)
+                            setLongitude(lng)
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    ),10000
                 )
             }
             return item
@@ -441,6 +443,7 @@ const PatrimonioItem = () => {
                             }
                         </div>
                     </div>
+                    <div className='patrimonialItem__description__filter'></div>
                     <div className='patrimonialItem__description__locationMap'>
                         <MapItem long={longitude} lati={latitude}/>
                     </div>
