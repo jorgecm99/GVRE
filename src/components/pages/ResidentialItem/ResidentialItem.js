@@ -50,8 +50,8 @@ const ResidentialItem = () => {
                     Geocode.fromAddress(`${item.adDirection.address.street}${item.adDirection.address.directionNumber}, ${item.adDirection.city}`).then(
                         (response) => {
                             const { lat, lng } = response.results[0].geometry.location;
-                            setLatitude(lat)
-                            setLongitude(lng)
+                            setLatitude(lat+0.0013)
+                            setLongitude(lng+0.0013)
                         },
                         (error) => {
                             console.error(error);
