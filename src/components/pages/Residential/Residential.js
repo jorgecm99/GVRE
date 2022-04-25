@@ -235,6 +235,7 @@ const Residential = () => {
             )
             window.localStorage.setItem(
                 'storedState', JSON.stringify(reducedState)
+
             )
         }
     },[state])
@@ -437,7 +438,7 @@ const Residential = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state2.map(item => {
-                        if (item.showOnWeb === true) {
+                        if (item.showOnWeb === true && item.department === 'Residencial') {
                             priceArray.push(item.sale.saleValue);
                             surfaceArray.push(item.buildSurface);
                         }
@@ -458,10 +459,10 @@ const Residential = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state2.map(item => {
-                        if(item.showOnWeb === true){
-                            priceArray.push(item.rent.rentValue);
+                        if(item.showOnWeb === true && item.department === 'Residencial'){
                             item.adType.map(itemType => {
                                 if (itemType === 'Alquiler'){
+                                    priceArray.push(item.rent.rentValue);
                                     surfaceArray.push(item.buildSurface);
                                     return(itemType)
                                 }
@@ -542,7 +543,7 @@ const Residential = () => {
             state2.map(itemState => 
                 saleOrRent.map(itemSale => 
                     itemState.adType.map(itemAd => 
-                        itemSale===itemAd? actualizeState.push(itemState) : null
+                        itemSale===itemAd && itemState.department === 'Residencial' && itemState.showOnWeb === true ? actualizeState.push(itemState) : null
                     )
                 )
             )
@@ -552,7 +553,7 @@ const Residential = () => {
             state2.map(itemState => 
                 typeHouse.map(itemType => 
                     itemState.adBuildingType.map(itemAd => 
-                        itemType === itemAd ? actualizeState2.push(itemState): null
+                        itemType === itemAd && itemState.department === 'Residencial' && itemState.showOnWeb === true ? actualizeState2.push(itemState): null
                     )
                 )
             )
@@ -563,11 +564,11 @@ const Residential = () => {
                 selected.map(itemType => 
                     itemState.zone.map(itemAd => {
                         if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
-                            if (itemType === itemAd.zone) {
+                            if (itemType === itemAd.zone && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
                                 actualizeState3.push(itemState)
                             }
                         }else {
-                            if (itemType === itemAd.name) {
+                            if (itemType === itemAd.name && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
                                 actualizeState3.push(itemState)
                             }
                         }
@@ -587,11 +588,11 @@ const Residential = () => {
             let terr = [];
             state2.map(itemState => 
                 extras.map(extraItem => {
-                    if (itemState.quality.others.swimmingPool === true && extraItem === 'swimmingPool') {
+                    if (itemState.quality.others.swimmingPool === true && extraItem === 'swimmingPool' && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
                         pool.push(itemState)
-                    }else if (itemState.quality.others.garage === true && extraItem === 'garage') {
+                    }else if (itemState.quality.others.garage === true && extraItem === 'garage' && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
                         park.push(itemState)
-                    }else if (itemState.quality.others.terrace === true && extraItem === 'terrace') {
+                    }else if (itemState.quality.others.terrace === true && extraItem === 'terrace' && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
                         terr.push(itemState)
                     }
                     return(extraItem)
@@ -716,9 +717,9 @@ const Residential = () => {
             let slidersFilter = []
             finalState.map(item => {
                 item.adType.map(type => {
-                    if (type !== 'Alquiler' ){
+                    if (type === 'Venta' ){
                         saleOrRent.map(itemSR => {
-                            if (itemSR !== 'Alquiler'){
+                            if (itemSR === 'Venta'){
                                 if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
                                     slidersFilter.push(item)
                                 }
@@ -751,8 +752,12 @@ const Residential = () => {
         if (finalState.length===0) {
             setOrderedItems([])
         }
-        if (refItem.length>0){
-            setOrderedItems(refItem)
+        if (ref !== ''){
+            let references = []
+            state2.map(item => 
+                item.adReference===ref ? references.push(item) : null
+            )
+            setState(references)
         }
         setFilter(!filter)
 

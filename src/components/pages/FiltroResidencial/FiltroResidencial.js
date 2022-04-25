@@ -352,9 +352,11 @@ const FiltroResidencial = () => {
             setState([])
         }
         if (ref !== ''){
+            let references = []
             state.map(item => 
-                item.adReference===ref ? setState([item]) : null
+                item.adReference===ref ? references.push(item) : null
             )
+            setState(references)
         }
         if (saleOrRent.length === 1){
             saleOrRent.map(item => {

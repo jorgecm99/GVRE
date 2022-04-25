@@ -420,7 +420,7 @@ const Patrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state2.map(item => {
-                        if (item.showOnWeb === true) {
+                        if (item.showOnWeb === true && item.department === 'Patrimonio') {
                             priceArray.push(item.sale.saleValue);
                             surfaceArray.push(item.buildSurface);
                         }
@@ -441,10 +441,10 @@ const Patrimonio = () => {
                     let priceArray = [];
                     let surfaceArray = [];
                     state2.map(item => {
-                        if(item.showOnWeb === true){
-                            priceArray.push(item.rent.rentValue);
+                        if(item.showOnWeb === true && item.department === 'Patrimonio'){
                             item.adType.map(itemType => {
                                 if (itemType === 'Alquiler'){
+                                    priceArray.push(item.rent.rentValue);
                                     surfaceArray.push(item.buildSurface);
                                     return(itemType)
                                 }
@@ -507,7 +507,7 @@ const Patrimonio = () => {
             state2.map(itemState => 
                 saleOrRent.map(itemSale => 
                     itemState.adType.map(itemAd => 
-                        itemSale===itemAd? actualizeState.push(itemState) : null
+                        itemSale===itemAd && itemState.department === 'Patrimonial' && itemState.showOnWeb === true ? actualizeState.push(itemState) : null
                     )
                 )
             )
@@ -517,7 +517,7 @@ const Patrimonio = () => {
             state2.map(itemState => 
                 typeHouse.map(itemType => 
                     itemState.adBuildingType.map(itemAd => 
-                        itemType === itemAd ? actualizeState2.push(itemState): null
+                        itemType === itemAd  && itemState.department === 'Patrimonial' && itemState.showOnWeb === true ? actualizeState2.push(itemState): null
                     )
                 )
             )
@@ -528,11 +528,11 @@ const Patrimonio = () => {
                 selected.map(itemType => 
                     itemState.zone.map(itemAd => {
                         if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
-                            if (itemType === itemAd.zone) {
+                            if (itemType === itemAd.zone  && itemState.department === 'Patrimonial' && itemState.showOnWeb === true) {
                                 actualizeState3.push(itemState)
                             }
                         }else {
-                            if (itemType === itemAd.name) {
+                            if (itemType === itemAd.name  && itemState.department === 'Patrimonial' && itemState.showOnWeb === true) {
                                 actualizeState3.push(itemState)
                             }
                         }
@@ -588,7 +588,7 @@ const Patrimonio = () => {
             let slidersFilter = []
             finalState.map(item => {
                 item.adType.map(type => {
-                    if (type === 'Venta' ){
+                    if (type === 'Venta'){
                         saleOrRent.map(itemSR => {
                             if (itemSR === 'Venta'){
                                 if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
@@ -623,8 +623,12 @@ const Patrimonio = () => {
         if (finalState.length===0) {
             setOrderedItems([])
         }
-        if (refItem.length>0){
-            setOrderedItems(refItem)
+        if (ref !== ''){
+            let references = []
+            state2.map(item => 
+                item.adReference===ref ? references.push(item) : null
+            )
+            setState(references)
         }
         setFilter(!filter)
 

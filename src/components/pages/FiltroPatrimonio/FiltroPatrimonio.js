@@ -373,9 +373,11 @@ const FiltroPatrimonio = () => {
             setState([])
         }
         if (ref !== ''){
+            let references = []
             state.map(item => 
-                item.adReference===ref ? setState([item]) : null
+                item.adReference===ref ? references.push(item) : null
             )
+            setState(references)
         }
         if (saleOrRent.length === 1){
             saleOrRent.map(item => {
@@ -483,11 +485,11 @@ const FiltroPatrimonio = () => {
                             <input type='image' src={arso} alt='componente mapa' />
                             <p>Arturo <br/> Soria</p>
                         </button>
-                        <button onClick={toggleActive} name='Campo de las Naciones' id='cana' className='cana'>
+                        <button onClick={toggleActive} name='Campos de las Naciones' id='cana' className='cana'>
                             <input type='image' src={cana} alt='componente mapa' />
                             <p>Campo de las <br/> Naciones</p>
                         </button>
-                        <button onClick={toggleActive} name='Las Tablas San Chinarro' id='sanchi' className='sanchi'>
+                        <button onClick={toggleActive} name='Las Tablas - San Chinarro' id='sanchi' className='sanchi'>
                             <input type='image' src={sanchi} alt='componente mapa' className='sanchi__1'/>
                             <input type='image' src={sanchi2} alt='componente mapa' className='sanchi__2'/>
                             <input type='image' src={sanchi3} alt='componente mapa' className='sanchi__3'/>
