@@ -61,7 +61,7 @@ import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
 
 const Residential = () => {
     const [orderedItems, setOrderedItems] = useState([])
-    const [refItem, setRefItem] = useState([])
+    const [/* refItem */, setRefItem] = useState([])
     const [perPage] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
