@@ -747,7 +747,7 @@ const Residential = () => {
             let filtered = finalState.filter ((item, index) => {
                 return finalState.indexOf(item) === index
             })
-            setOrderedItems(filtered)    
+            setOrderedItems(filtered)
         }
         if (finalState.length===0) {
             setOrderedItems([])
@@ -784,6 +784,12 @@ const Residential = () => {
         }
         let orderedArrayPrice = array.sort(sortArray);
         setOrderedItems(orderedArrayPrice)
+
+        window.localStorage.removeItem('storedState')
+
+        window.localStorage.setItem(
+            'storedState', JSON.stringify(orderedArrayPrice)
+        )
 
         window.scroll(
             {top:0}

@@ -656,6 +656,12 @@ const Patrimonio = () => {
         let orderedArrayPrice = array.sort(sortArray);
         setOrderedItems(orderedArrayPrice)
 
+        window.localStorage.removeItem('storedState')
+
+        window.localStorage.setItem(
+            'storedState', JSON.stringify(orderedArrayPrice)
+        )
+
         window.scroll(
             {top:0}
         )
