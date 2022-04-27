@@ -507,7 +507,7 @@ const Patrimonio = () => {
             state2.map(itemState => 
                 saleOrRent.map(itemSale => 
                     itemState.adType.map(itemAd => 
-                        itemSale===itemAd && itemState.department === 'Patrimonial' && itemState.showOnWeb === true ? actualizeState.push(itemState) : null
+                        itemSale===itemAd && itemState.department === 'Patrimonio' && itemState.showOnWeb === true ? actualizeState.push(itemState) : null
                     )
                 )
             )
@@ -517,7 +517,7 @@ const Patrimonio = () => {
             state2.map(itemState => 
                 typeHouse.map(itemType => 
                     itemState.adBuildingType.map(itemAd => 
-                        itemType === itemAd  && itemState.department === 'Patrimonial' && itemState.showOnWeb === true ? actualizeState2.push(itemState): null
+                        itemType === itemAd  && itemState.department === 'Patrimonio' && itemState.showOnWeb === true ? actualizeState2.push(itemState): null
                     )
                 )
             )
@@ -528,11 +528,11 @@ const Patrimonio = () => {
                 selected.map(itemType => 
                     itemState.zone.map(itemAd => {
                         if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
-                            if (itemType === itemAd.zone  && itemState.department === 'Patrimonial' && itemState.showOnWeb === true) {
+                            if (itemType === itemAd.zone  && itemState.department === 'Patrimonio' && itemState.showOnWeb === true) {
                                 actualizeState3.push(itemState)
                             }
                         }else {
-                            if (itemType === itemAd.name  && itemState.department === 'Patrimonial' && itemState.showOnWeb === true) {
+                            if (itemType === itemAd.name  && itemState.department === 'Patrimonio' && itemState.showOnWeb === true) {
                                 actualizeState3.push(itemState)
                             }
                         }
