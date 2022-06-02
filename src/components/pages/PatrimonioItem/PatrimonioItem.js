@@ -137,7 +137,7 @@ const PatrimonioItem = () => {
                     useKeyboardArrows={true}
                     autoFocus={true}
                 >
-                    <img className='patrimonialItem__carousel__images' src={state.images.main} alt={state.title}/>
+                    <img className='patrimonialItem__carousel__images custom-objetc-fit' src={state.images.main} alt={state.title}/>
                     {state.images.others.map((image)=> (
                         <img className='patrimonialItem__carousel__images' key={state._id} src={image} alt={state.title}/>
                     ))}
