@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { getConsultants } from '../../../api-requests/requests';
 import './equipo.scss';
 import Header from '../../common/Header/Header';
-import ContactIndex from '../../common/ContactInfo/ContactIndex'
+import ContactIndex from '../../common/ContactInfo/ContactIndex';
 
-const Equipo = () => {
+const Equipo = ({ email, subject, body, ...props}) => {
 
     const [owners, setOwners] = useState ([])
 
@@ -33,7 +33,7 @@ const Equipo = () => {
                     <div className='equipo__owners__owner'>
                         <img src={owner.avatar} alt={owner.fullName}/>
                         <h3>{owner.fullName}</h3>
-                        <h4>{owner.consultantEmail}</h4>
+                        <a href={`mailto:${owner.consultantEmail}?subject=${subject || ""}&body=${body || ""}`}><h4 >{owner.consultantEmail}</h4></a>
                     </div>:null
                         
                 )}
