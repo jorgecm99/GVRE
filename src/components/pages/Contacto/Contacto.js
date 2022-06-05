@@ -125,7 +125,7 @@ const Contacto = () => {
                                 <div className='contact__form__wrapper__position'>
                                     <label className='contact__form__label'>MENSAJE</label>
                                     <Field placeholder="Escriba aquí" name="mensaje"/>
-                                    <p>Al compartir sus datos, está aceptando nuestros términos de uso y privacidad.</p>
+                                    <p>Al compartir sus datos, está aceptando nuestros <a className='custom-contact-link' href={`https://gvre.es/aviso-legal`}>términos de uso</a> y <a className='custom-contact-link' href={`https://gvre.es/politica-privacidad`}>privacidad</a>.</p>
                                 </div>
                                 <button className='contact__form__button' type='submit'>Enviar <span><img src={send} alt='enviar'/></span></button>
                             </Form>
