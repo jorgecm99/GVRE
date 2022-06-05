@@ -175,7 +175,7 @@ const PatrimonioItem = () => {
                             autoFocus={true}
                         >
                             {state.images.blueprint.map((image)=> (
-                                <img className='carouselImages' key={state.name} src={image} alt={state.title}/>
+                                <img className='carouselImages custom-map-size' key={state.name} src={image} alt={state.title}/>
                             ))}
                         </Carousel>
                     </div>
