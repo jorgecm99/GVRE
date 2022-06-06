@@ -37,8 +37,17 @@
         }
     }
     &__center{
+        a{
+            display: flex;
+            text-decoration: none;
+            color: white;        
+        }
+        p{
+            font-size: 10px;
+            margin-right: 5px;
+        }
         img{
-            width: 120%;
+            width: 50px;
         }
     }
     &__right{
@@ -135,11 +144,12 @@
             display: flex;
             justify-content: center;
             a{
-                position: relative;
+                display: flex;
+                align-items: center;
                 img{
-                    width: 120%;
+            
                     height: 15px;
-                    position: relative;
+            
                     right: 100%;
                 }
             }

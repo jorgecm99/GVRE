@@ -1,9 +1,9 @@
 import React from 'react'
 import './footer.scss'
-import footer_attomo from '../../../assets/SVG/mobile/comun/footer_attomo.svg'
 /* import footer_email from '../../../assets/SVG/mobile/comun/footer_email.svg' */
 import footer_instagram from '../../../assets/SVG/mobile/comun/footer_instagram.svg'
 import footer_linkedin from '../../../assets/SVG/mobile/comun/footer_linkedin.svg'
+import logo_attomo from '../../../assets/SVG/web/comunes/logo-attomo.svg';
 import logo from '../../../assets/logo.svg'
 import routes from '../../../config/routes.js'
 import { Link } from 'react-router-dom'
@@ -19,7 +19,8 @@ const Footer = () => {
                 </div>
                 <div className='footer__center'>
                     <a target='blank' href='https://attomo.digital/'>
-                        <img src={footer_attomo} alt='Attomo'/>
+                        <p>Powered by</p>
+                        <img src={logo_attomo} alt='Attomo'/>
                     </a>
                 </div>
                 <div className='footer__right'>
