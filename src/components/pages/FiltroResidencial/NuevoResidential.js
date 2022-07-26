@@ -137,12 +137,9 @@ const FiltroResidencial = () => {
                 activeFilters = { ...activeFilters, terrace: true}
             }
         }
+        const ads = getResidential(activeFilters)
+        console.log(ads)
 
-
-            const filterQueryParams = new URLSearchParams(activeFilters);
-            const urlWithFilters = filterQueryParams ? `/residential/${filterQueryParams}` : `/residential/`;
-  
-            window.location.href = urlWithFilters
     }
 
     useEffect(()=> {
