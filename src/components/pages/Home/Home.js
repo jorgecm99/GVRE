@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, /*useContext,*/ useState } from 'react'
 import './home.scss'
 import flechaEnviar from '../../../assets/SVG/mobile/comun/flechaEnviar.svg'
 import flechaAbajo from '../../../assets/SVG/mobile/comun/flechaAbajo.svg'
@@ -6,7 +6,7 @@ import flechaCategoriasWeb from '../../../assets/SVG/web/comunes/flechaCategoria
 import routes from '../../../config/routes.js';
 import Header from '../../common/HeaderHome/HeaderHome';
 import { getResidential } from '../../../api-requests/requests';
-import { generalContext } from '../../../providers/generalProvider';
+/*import { generalContext } from '../../../providers/generalProvider';*/
 import { Link, generatePath, NavLink } from 'react-router-dom';
 import banera from '../../../assets/SVG/mobile/anuncios/anuncios_banos.svg';
 import habit from '../../../assets/SVG/mobile/anuncios/anuncios_habitaciones.svg';
@@ -22,14 +22,20 @@ import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg';
 import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
 
 const Home = () => {
-    const [state, setState] = useContext(generalContext);    
-    const [destacado] = useState([]);
+    /*const [state, setState] = useContext(generalContext);*/
+    const [destacado, setDestacado] = useState([]);
 
     useEffect (() => {
-        getResidential().then(items=> {
-            setState(items)
-        })
-    },[setState])
+        getResidential().then(items => {
+            let destacados = [];
+
+            items.forEach(item => {
+                if (item.featuredOnMain === true) destacados.push(item)
+            })
+
+            setDestacado(destacados)
+        });
+    },[])
 
     useEffect(() => {
         window.scroll(
@@ -38,16 +44,6 @@ const Home = () => {
         window.localStorage.removeItem('storedPosition')
         window.localStorage.removeItem('storedPosition2')
     },[])
-    
-    const pushDestacados = () => {
-        getResidential().then(items=> {
-            items.map(item => 
-                item.featuredOnMain === true ? destacado.push(item) : null
-            )
-        })
-        return(state)
-    }
-    pushDestacados()
 
     const next = () => {
         let container = document.getElementById('carrusel');
@@ -183,8 +179,8 @@ const Home = () => {
             <div className='home__outstanding'>
                 <h2 className='home__outstanding__title'>Nuestros destacados</h2>
                     <div id='carrusel' className='home__outstanding__position'>
-                        {destacado.length > 0 ? destacado.map(item => 
-                            <Link key={item.title} to={generatePath(routes.ItemResidential, {id:item._id})} className='home__outstanding__position__images'>
+                        {destacado.length > 0 ? destacado.map(item =>
+                            <Link key={item._id} to={generatePath(routes.ItemResidential, {id:item._id})} className='home__outstanding__position__images'>
                                 <p className='home__outstanding__position__images__destacado'>DESTACADO</p>
                                 <img className='home__outstanding__position__images__image' key={item._id} src={item.images.main} alt={item.title}/>
                                 <div>
@@ -193,7 +189,7 @@ const Home = () => {
                                         <h2 className='home__outstanding__position__images__text__title'>{item.title}</h2>
                                         <h3 className='home__outstanding__position__images__text__street'>{item.webSubtitle}</h3>
                                         <ul className='home__outstanding__position__images__item__text__characteristics'>
-                                            {item.buildSurface !== 0 ? 
+                                            {item.buildSurface !== 0 ?
                                             <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
                                             :null}
                                             {item.plotSurface !== 0 ?
@@ -211,7 +207,7 @@ const Home = () => {
                                             {item.quality.outdoorPool !== 0 ?
                                                 <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
                                                 :null}
-                                            {item.adReference !== 0 ? 
+                                            {item.adReference !== 0 ?
                                                 <li><span><img src={ref} alt='referencia'/></span><p>Ref {item.adReference}</p></li>
                                             :null}
                                         </ul>

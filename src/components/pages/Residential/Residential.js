@@ -58,11 +58,14 @@ import cerrarFiltro from '../../../assets/SVG/mobile/comun/cerrarCompleta.svg';
 import ContactIndex from '../../common/ContactInfo/ContactIndex';
 import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg';
 import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
+import { Navigate} from 'react-router'
+
+
 
 const Residential = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [/* refItem */, setRefItem] = useState([])
-    const [perPage] = useState(30);
+    const [perPage] = useState(8);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
 
@@ -88,8 +91,16 @@ const Residential = () => {
     const [orderItems, setOrderItems] = useState(false);
     const [state2, setState2] = useState([])
     const [state, setState] = useContext(generalContext);
-
     const [coord, setCoord] = useState(0)
+    const [param, setParam] = useState('')
+    const [redirect, setRedirect] = useState(false)
+
+    const getTypeHouse = () => {
+        setParam('')
+        setRedirect(false)
+
+    }
+
 
     const setPosition = () => {
         if (coord !== 0) {
@@ -166,7 +177,7 @@ const Residential = () => {
                         </div>
                     </div>
                     :
-                    <div>
+                    <div >
                         <Carousel 
                             className='residential__list__item__images'
                             showArrows={true}
@@ -268,6 +279,8 @@ const Residential = () => {
             let orderedArrayPrice = array.sort(sortArray);
             residentialItems=orderedArrayPrice
         }
+
+        console.log({ residentialItems })
         setOrderedItems(residentialItems)
     },[])
 
@@ -277,14 +290,18 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
+                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
     },[pageCount])
 
     useEffect(() => {
-        getResidential().then(items=>{
+        const queryParams = window.location.search.substring(1)
+        const activeFilters = new URLSearchParams(queryParams)
+        console.log({activeFilters})
+
+        getResidential(activeFilters).then(items=>{
             setState2(items)
         })
     },[])
@@ -536,271 +553,7 @@ const Residential = () => {
         setRef (e.currentTarget.value)
     }
 
-    const compareStates = () => {
-
-        let actualizeState = []
-        if (saleOrRent.length > 0) {
-            state2.map(itemState => 
-                saleOrRent.map(itemSale => 
-                    itemState.adType.map(itemAd => 
-                        itemSale===itemAd && itemState.department === 'Residencial' && itemState.showOnWeb === true ? actualizeState.push(itemState) : null
-                    )
-                )
-            )
-        }
-        let actualizeState2 = []
-        if (typeHouse.length>0){
-            state2.map(itemState => 
-                typeHouse.map(itemType => 
-                    itemState.adBuildingType.map(itemAd => 
-                        itemType === itemAd && itemState.department === 'Residencial' && itemState.showOnWeb === true ? actualizeState2.push(itemState): null
-                    )
-                )
-            )
-        }
-        let actualizeState3 = []
-        if (selected.length>0){
-            state2.map(itemState => 
-                selected.map(itemType => 
-                    itemState.zone.map(itemAd => {
-                        if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
-                            if (itemType === itemAd.zone && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
-                                actualizeState3.push(itemState)
-                            }
-                        }else {
-                            if (itemType === itemAd.name && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
-                                actualizeState3.push(itemState)
-                            }
-                        }
-                        return(itemAd)
-                    })
-                )
-            )
-            let filtered = actualizeState3.filter ((item, index) => {
-                return actualizeState3.indexOf(item) === index
-            })
-            actualizeState3=filtered  
-        }
-        let actualizeState4 = []
-        if (extras.length>0){
-            let pool = [];
-            let park = [];
-            let terr = [];
-            state2.map(itemState => 
-                extras.map(extraItem => {
-                    if (itemState.quality.others.swimmingPool === true && extraItem === 'swimmingPool' && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
-                        pool.push(itemState)
-                    }else if (itemState.quality.others.garage === true && extraItem === 'garage' && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
-                        park.push(itemState)
-                    }else if (itemState.quality.others.terrace === true && extraItem === 'terrace' && itemState.department === 'Residencial' && itemState.showOnWeb === true) {
-                        terr.push(itemState)
-                    }
-                    return(extraItem)
-                })
-            )
-            if (pool.length>0 && park.length===0 && terr.length===0){
-                actualizeState4=pool
-            }
-            if (pool.length===0 && park.length>0 && terr.length===0){
-                actualizeState4=park
-            }
-            if (pool.length===0 && park.length===0 && terr.length>0){
-                actualizeState4=terr
-            }
-            if (pool.length>0 && park.length>0 && terr.length===0){
-                pool.map(itemPool=> 
-                    park.map(itemPark=> itemPool._id === itemPark._id ? actualizeState4.push(itemPool) : null))
-            }
-            if (pool.length>0 && park.length===0 && terr.length>0){
-                pool.map(itemPool=> 
-                    terr.map(itemTerr=> itemPool._id === itemTerr._id ? actualizeState4.push(itemPool) : null))
-            }
-            if (pool.length===0 && park.length>0 && terr.length>0){
-                park.map(itemPark=> 
-                    terr.map(itemTerr=> itemPark._id === itemTerr._id ? actualizeState4.push(itemPark) : null))
-            }
-            if (pool.length>0 && park.length>0 && terr.length>0){
-                let AB = []
-                pool.map(itemPool=> 
-                    park.map(itemPark=> itemPool._id === itemPark._id ? AB.push(itemPool) : null))
-                AB.map(itemAB => 
-                    terr.map(itemTerr => itemAB._id === itemTerr._id ? actualizeState4.push(itemAB) : null))
-            }
-        }
-
-        let finalState = [];
-        ///////////////////////////4///////////////////////
-        if (actualizeState.length>0 && actualizeState2.length>0 && actualizeState3.length>0 && actualizeState4.length>0){
-            let AB = [];
-            let CD = [];
-            actualizeState.map(itemA => 
-                actualizeState2.map(itemB => itemA._id === itemB._id ? AB.push(itemA) : null));
-            actualizeState3.map(itemC => 
-                actualizeState4.map(itemD => itemC._id === itemD._id ? CD.push(itemC) : null));
-            AB.map(itemAB=>
-                CD.map(itemCD=> itemAB._id === itemCD._id ? finalState.push(itemAB) : null));
-        }
-        /////////////////////////3/////////////////////////
-        if (actualizeState.length>0 && actualizeState2.length>0 && actualizeState3.length>0 && actualizeState4.length===0){
-            let AB = []
-            actualizeState.map(itemA => 
-                actualizeState2.map(itemB => itemA._id === itemB._id ? AB.push(itemA) : null))
-            AB.map(itemAB => 
-                actualizeState3.map(itemC => itemAB._id === itemC._id ? finalState.push(itemAB) : null))
-        }
-        if (actualizeState.length>0 && actualizeState2.length>0 && actualizeState3.length===0 && actualizeState4.length>0){
-            let AB = []
-            actualizeState.map(itemA => 
-                actualizeState2.map(itemB => itemA._id === itemB._id ? AB.push(itemA) : null))
-            AB.map(itemAB => 
-                actualizeState4.map(itemC => itemAB._id === itemC._id ? finalState.push(itemAB) : null))
-        }
-        if (actualizeState.length>0 && actualizeState2.length===0 && actualizeState3.length>0 && actualizeState4.length>0){
-            let AB = []
-            actualizeState.map(itemA => 
-                actualizeState3.map(itemB => itemA._id === itemB._id ? AB.push(itemA) : null))
-            AB.map(itemAB => 
-                actualizeState4.map(itemC => itemAB._id === itemC._id ? finalState.push(itemAB) : null))
-        }
-        if (actualizeState.length===0 && actualizeState2.length>0 && actualizeState3.length>0 && actualizeState4.length>0){
-            let AB = []
-            actualizeState.map(itemA => 
-                actualizeState2.map(itemB => itemA._id === itemB._id ? AB.push(itemA) : null))
-            AB.map(itemAB => 
-                actualizeState4.map(itemC => itemAB._id === itemC._id ? finalState.push(itemAB) : null))
-        }
-        //////////////////////2////////////////////////////
-        if (actualizeState.length>0 && actualizeState2.length>0 && actualizeState3.length===0 && actualizeState4.length===0){
-            actualizeState.map(itemA => 
-                actualizeState2.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length>0 && actualizeState2.length===0 && actualizeState3.length>0 && actualizeState4.length===0){
-            actualizeState.map(itemA => 
-                actualizeState3.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length===0 && actualizeState2.length>0 && actualizeState3.length>0 && actualizeState4.length===0){
-            actualizeState2.map(itemA => 
-                actualizeState3.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length>0 && actualizeState2.length===0 && actualizeState3.length===0 && actualizeState4.length>0){
-            actualizeState.map(itemA => 
-                actualizeState4.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length===0 && actualizeState2.length>0 && actualizeState3.length===0 && actualizeState4.length>0){
-            actualizeState2.map(itemA => 
-                actualizeState4.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length===0 && actualizeState2.length===0 && actualizeState3.length>0 && actualizeState4.length>0){
-            actualizeState3.map(itemA => 
-                actualizeState4.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        ////////////////1///////////////////////
-        if (actualizeState.length>0 && actualizeState2.length===0 && actualizeState3.length===0 && actualizeState4.length===0){
-            finalState = actualizeState
-        }
-        if (actualizeState.length===0 && actualizeState2.length>0 && actualizeState3.length===0 && actualizeState4.length===0){
-            finalState = actualizeState2
-        }
-        if (actualizeState.length===0 && actualizeState2.length===0 && actualizeState3.length>0 && actualizeState4.length===0){
-            finalState = actualizeState3
-        }
-        if (actualizeState.length===0 && actualizeState2.length===0 && actualizeState3.length===0 && actualizeState4.length>0){
-            finalState = actualizeState4
-        }
-
-        ////////////////////////control////////////////////
-        if (selected.length>0 && actualizeState3.length === 0){
-            finalState=[]
-        }
-
-        if (finalState.length>0) {
-            let slidersFilter = []
-            finalState.map(item => {
-                item.adType.map(type => {
-                    if (type === 'Venta' ){
-                        saleOrRent.map(itemSR => {
-                            if (itemSR === 'Venta'){
-                                if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                                    slidersFilter.push(item)
-                                }
-                            }
-                            return(itemSR)
-                        })
-                    }
-                    else if(type === 'Alquiler'){
-                        saleOrRent.map(itemSR => {
-                            if(itemSR ==='Alquiler') {
-                                if (item.rent.rentValue >= price[0] && item.rent.rentValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                                    slidersFilter.push(item)
-                                }
-                            }
-                            return(itemSR)
-                        })
-                    }
-                    return(type)
-                })
-                return(item)
-            })
-            if (slidersFilter.length>0){
-                finalState = slidersFilter
-            }
-            let filtered = finalState.filter ((item, index) => {
-                return finalState.indexOf(item) === index
-            })
-            setOrderedItems(filtered)
-        }
-        if (finalState.length===0) {
-            setOrderedItems([])
-        }
-        if (ref !== ''){
-            let references = []
-            state2.map(item => 
-                item.adReference===ref ? references.push(item) : null
-            )
-            setState(references)
-        }
-        setFilter(!filter)
-
-        if (saleOrRent.length === 1){
-            saleOrRent.map(item => {
-                window.localStorage.setItem(
-                    'saleOrRentStored', JSON.stringify(item)
-                )    
-                return(item)        
-            })
-        }
-        
-        const storedSOR = window.localStorage.getItem('saleOrRentStored')
-        const SOR = JSON.parse(storedSOR)
-        const array = Object.values(finalState)
-        const sortArray = (a, b) => {
-            if(SOR === 'Alquiler'){
-                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
-                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
-            }else {
-                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
-            }
-        }
-        let orderedArrayPrice = array.sort(sortArray);
-        setOrderedItems(orderedArrayPrice)
-
-        window.localStorage.removeItem('storedState')
-
-        window.localStorage.setItem(
-            'storedState', JSON.stringify(orderedArrayPrice)
-        )
-
-        window.scroll(
-            {top:0}
-        )
-
-        saleOrRent.length=0;
-        extras.length=0;
-        typeHouse.length=0;
-        selected.length=0;
-        setSelectedActive(false)
-    }
+    
 
     const toggleFilter = () => {
         setFilter (!filter)
@@ -1029,8 +782,8 @@ const Residential = () => {
                                         }
                                         {disableButton===true ?
                                             <NavLink className='residential__filter__selectors__buscar__search' 
-                                                onClick={compareStates} 
-                                                to={generatePath(routes.Residential, {page:1})}>Buscar
+                                                onClick={getTypeHouse} 
+                                                to={redirect && (<Navigate to={`/residential=${param}`}/>)}>Buscar
                                             </NavLink>
                                             :
                                             <button className='residential__filter__selectors__buscar__searchDisabled' >Buscar</button>
@@ -1082,4 +835,4 @@ const Residential = () => {
     )
 }
 
-export default Residential
+export default Residential 

@@ -1,4 +1,4 @@
-/*import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import './filtroResidencial.scss'
 import carretera1 from '../../../assets/maps/mapaR/carreteras/carretera1.svg';
 import carretera2 from '../../../assets/maps/mapaR/carreteras/carretera2.svg';
@@ -61,45 +61,9 @@ const FiltroResidencial = () => {
     const [verLupa, setVerLupa] = useState(true);
     const [state, setState] = useContext(generalContext);
     const [itemPage] = useState([]);
+    const [filter, setFilter] = useState({});
+    console.log({typeHouse})
 
-    useEffect(() => {
-        window.scroll(
-            {top:0}
-        )
-        window.localStorage.removeItem('storedState')
-        window.localStorage.removeItem('storedPosition2')
-        window.localStorage.removeItem('saleOrRentStored')
-    },[])
-
-    useEffect(() => {
-        getResidential({}).then(items=> {
-            setState(items)
-        })
-    },[setState])
-
-    useEffect(()=> {
-        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref!==''){
-            setDisableButton(true)
-        }else{
-            setDisableButton(false)
-        }
-    },[ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
-
-    useEffect(() => {
-        if (state.length > 0) {
-            state.map(itemState => {
-                if (ref === itemState.adReference) {
-                    setItemRef(itemState.adReference)
-                }
-                return(itemState)
-            })
-        }
-        if (ref!== '') {
-            setVerLupa(false)
-        }else{
-            setVerLupa(true)
-        }   
-    },[ref, state])
 
     const toggleActive = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
@@ -112,61 +76,35 @@ const FiltroResidencial = () => {
             selected.splice(0, selected.length, ...newSelected)
         }
         if (selected.length !== 0) {
+            /*meter valor mapa en objeto*/
+            setFilter = {...filter, zone: [...filter.zone, selected ]}
             setSelectedActive(true)
         }else{
             setSelectedActive(false)
         }
     }
-    const selectSaleOrRent = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} activeButton`
-            saleOrRent.push(e.currentTarget.name)
-        } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
-            const elementName = e.currentTarget.name
-            const newSaleOrRent = saleOrRent.filter(item => item !== elementName)
-            saleOrRent.splice(0, saleOrRent.length, ...newSaleOrRent)
-        }
+    const selectSaleOrRent = () => {
         if (saleOrRent.length !== 0) {
             setSaleOrRentActive(true)
         }else{
             setSaleOrRentActive(false)
         }
     }
-    const addType = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} activeButton`
-            typeHouse.push(e.currentTarget.name)
-        } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
-            const elementName = e.currentTarget.name
-            const newType = typeHouse.filter(item => item !== elementName)
-            typeHouse.splice(0, typeHouse.length, ...newType)
-        }
+
+    const addType = () => {
         if (typeHouse.length !== 0) {
             setTypeHouseActive(true)
         }else{
             setTypeHouseActive(false)
         }
     }
-    const addExtra = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} activeButton`
-            extras.push(e.currentTarget.name)
-        } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
-            const elementName = e.currentTarget.name
-            const newExtra = extras.filter(item => item !== elementName)
-            extras.splice(0, extras.length, ...newExtra)
-        }
+
+    const addExtra = () => {
         if (extras.length !== 0) {
             setExtrasActive(true)
         }else{
             setExtrasActive(false)
         }
-    }
-    const addRef = (e) => {
-        setRef (e.currentTarget.value)
     }
 
     const filterResults = () => {
@@ -206,6 +144,14 @@ const FiltroResidencial = () => {
   
             window.location.href = urlWithFilters
     }
+
+    useEffect(()=> {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref!==''){
+            setDisableButton(true)
+        }else{
+            setDisableButton(false)
+        }
+    },[ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
 
     
 
@@ -342,24 +288,24 @@ const FiltroResidencial = () => {
                     <div className='selectors__estado'>
                         <h3>Estado</h3>
                         <div className='selectors__estado__buttons'>
-                            <button onClick={selectSaleOrRent} name='Alquiler' id='alq' className='alq'>Alquiler</button>
-                            <button onClick={selectSaleOrRent} name='Venta' id='vent' className='vent'>Venta</button>
+                            <button onClick={()=>setFilter({...filter, selectSaleOrRent: 'Venta' })} name='Venta' id='vent' className='vent'>Venta</button>
+                            <button onClick={()=>setFilter({...filter, selectSaleOrRent: 'Alquiler' })} name='Alquiler' id='alq' className='alq'>Alquiler</button>
                         </div>
                     </div>
                     <div className='selectors__tipo'>
                         <h3>Tipo</h3>
                         <div className='selectors__tipo__buttons'>
-                            <button onClick={addType} name='Casa' id='casa' className='casa'>Casa</button>
-                            <button onClick={addType} name='Piso' id='piso' className='piso'>Piso</button>
-                            <button onClick={addType} name='Parcela' id='parcela' className='parcela'>Parcela</button>
+                            <button onClick={()=>setFilter({...filter, addType: 'Casa' })} name='Casa' id='casa' className='casa'>Casa</button>
+                            <button onClick={()=>setFilter({...filter, addType: 'Piso' })} name='Piso' id='piso' className='piso'>Piso</button>
+                            <button onClick={()=>setFilter({...filter, addType: 'Parcela' })} name='Parcela' id='parcela' className='parcela'>Parcela</button>
                         </div>
                     </div>
                     <div className='selectors__extras'>
                         <h3>Extras</h3>
                         <div className='selectors__extras__buttons'>
-                            <button onClick={addExtra} name='swimmingPool' id='piscina' className='piscina'>Piscina</button>
-                            <button onClick={addExtra} name='garage' id='garaje' className='garaje'>Garaje</button>
-                            <button onClick={addExtra} name='terrace' id='terraza' className='terraza'>Terraza</button>
+                            <button onClick={()=>setFilter({...filter, addExtra: 'swimmingPool' })} name='swimmingPool' id='piscina' className='piscina'>Piscina</button>
+                            <button onClick={()=>setFilter({...filter, addExtra: 'garage' })} name='garage' id='garaje' className='garaje'>Garaje</button>
+                            <button onClick={()=>setFilter({...filter, addExtra: 'terrace' })} name='terrace' id='terraza' className='terraza'>Terraza</button>
                         </div>
                     </div>
                     <div className='selectors__buscar'>
@@ -389,4 +335,5 @@ const FiltroResidencial = () => {
     )
 }
 
-export default FiltroResidencial*/
+
+export default FiltroResidencial
