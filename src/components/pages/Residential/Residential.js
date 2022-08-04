@@ -65,7 +65,7 @@ import { Navigate} from 'react-router'
 const Residential = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [/* refItem */, setRefItem] = useState([])
-    const [perPage] = useState(8);
+    const [perPage] = useState(10);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
 
@@ -85,6 +85,7 @@ const Residential = () => {
     const [surface, setSurface] = useState([0.1,maxSurface]);
 
     const [filter, setFilter] = useState (false);
+    const [filters, setFilters] = useState (window.localStorage.getItem('residentialFilters'));
     const [disableButton, setDisableButton] = useState(false);
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
@@ -95,12 +96,12 @@ const Residential = () => {
     const [param, setParam] = useState('')
     const [redirect, setRedirect] = useState(false)
 
-    const getTypeHouse = () => {
+    const getTypeHouse = async () => {
         setParam('')
         setRedirect(false)
-
+        const searchFilters = filterResults()
+        setFilters(searchFilters)
     }
-
 
     const setPosition = () => {
         if (coord !== 0) {
@@ -253,6 +254,8 @@ const Residential = () => {
 
     useEffect(() => {
         window.localStorage.removeItem('storedState2')
+        const ads = getResidential()
+        setFilter(ads)
     },[])
 
     useEffect (() => {
@@ -290,21 +293,20 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
+                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`http://localhost:3000/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
     },[pageCount])
 
     useEffect(() => {
-        const queryParams = window.location.search.substring(1)
-        const activeFilters = new URLSearchParams(queryParams)
-        console.log({activeFilters})
+        const activeFilters = window.localStorage.getItem('residentialFilters')
+        console.log(activeFilters)
 
         getResidential(activeFilters).then(items=>{
-            setState2(items)
+            setState(items.ads)
         })
-    },[])
+    },[filters])
 
     useEffect(()=> {
         if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref!==''){
@@ -510,6 +512,34 @@ const Residential = () => {
             setSurface([0.1,99999999.9]);
         }
     }
+    
+    const filterResults = () => {
+        let activeFilters = {}
+
+        if (saleOrRent.length) {
+            activeFilters = { ...activeFilters, adType: saleOrRent }
+        }
+
+        if (typeHouse.length) {
+            activeFilters = { ...activeFilters, adBuildingType: typeHouse }
+        }
+
+        if (extras.length) {
+            if (extras.includes('garage')) {
+                activeFilters = { ...activeFilters, garage: true }
+            }
+
+            if (extras.includes('swimmingPool')) {
+                activeFilters = { ...activeFilters, swimmingPool: true }
+            }
+
+            if (extras.includes('terrace')) {
+                activeFilters = { ...activeFilters, terrace: true }
+            }
+        }
+        window.localStorage.setItem('residentialFilters', JSON.stringify(activeFilters))
+    }
+
     const addType = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
             e.currentTarget.className =`${e.currentTarget.className} activeButton`
