@@ -59,6 +59,7 @@ import ContactIndex from '../../common/ContactInfo/ContactIndex';
 import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg';
 import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
 import { Navigate} from 'react-router'
+import { BarLoader } from 'react-spinners';
 
 
 
@@ -95,6 +96,7 @@ const Residential = () => {
     const [coord, setCoord] = useState(0)
     const [param, setParam] = useState('')
     const [redirect, setRedirect] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const getTypeHouse = async () => {
         setParam('')
@@ -128,10 +130,10 @@ const Residential = () => {
                             infiniteLoop={true}
                             showStatus={false}
                         >
-                            <img src={item.images.main} alt={item.title}/>
-                            {item.images.others.map((image)=> (
-                                <img key={image} src={image} alt={item.title}/>
-                            ))}
+                            <img src={item.images.main} alt={item.title} loading="lazy"/>
+                            {/*{item.images.others.map((image)=> (
+                                <img key={image} src={image} alt={item.title} loading="lazy"/>
+                            ))}*/}
                         </Carousel>
                         <div>
                             <div className='residential__list__item__text'>
@@ -179,6 +181,8 @@ const Residential = () => {
                     </div>
                     :
                     <div >
+                        {/*{item.images.main > 0 && item.images.others > 0 ? OPCION 1*/} 
+                        {isLoading ?
                         <Carousel 
                             className='residential__list__item__images'
                             showArrows={true}
@@ -186,11 +190,15 @@ const Residential = () => {
                             infiniteLoop={true}
                             showStatus={false}
                         >
-                            <img src={item.images.main} alt={item.title}/>
-                            {item.images.others.map((image)=> (
-                                <img key={image} src={image} alt={item.title}/>
-                            ))}
+                            <img src={item.images.main} alt={item.title} loading="lazy"/>
+                            {/*{item.images.others.map((image)=> (
+                                <img key={image} src={image} alt={item.title} loading="lazy"/>
+                            ))}*/}
                         </Carousel>
+                        :<div className='spinnerBar'>  
+                            <BarLoader color="#000000" width='80px' height='2px' className='barloader'/>
+                        </div>
+                        }
                         <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemResidential, {id:item._id})}>
                             <div className='residential__list__item__text'>
                                 {item.adType.length === 1 ? 
@@ -252,11 +260,11 @@ const Residential = () => {
         }
     },[state])
 
-    useEffect(() => {
+    /*useEffect(() => {
         window.localStorage.removeItem('storedState2')
         const ads = getResidential()
         setFilter(ads)
-    },[])
+    },[])*/
 
     useEffect (() => {
         const localState = window.localStorage.getItem('storedState')
@@ -285,7 +293,7 @@ const Residential = () => {
 
         console.log({ residentialItems })
         setOrderedItems(residentialItems)
-    },[])
+    },[state])
 
     useEffect(() => {
         let splitedLocation = window.location.href.split('/');
@@ -305,6 +313,8 @@ const Residential = () => {
 
         getResidential(activeFilters).then(items=>{
             setState(items.ads)
+            window.localStorage.setItem('storedState', items.ads)
+            setIsLoading(true)
         })
     },[filters])
 

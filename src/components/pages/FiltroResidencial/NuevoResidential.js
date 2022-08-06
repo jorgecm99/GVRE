@@ -44,6 +44,7 @@ import { NavLink, generatePath } from 'react-router-dom';
 import routes from '../../../config/routes';
 import { getResidential } from '../../../api-requests/requests';
 import './filtroResidencial.scss'
+import { getZoneId } from '../../common/MapZones/MapZones';
 
 const FiltroResidencial = () => {
 
@@ -137,6 +138,12 @@ const FiltroResidencial = () => {
 
     const filterResults = () => {
         let activeFilters = {}
+
+        if (selected.length > 0) {
+            const selectedIds = getZoneId(selected)
+            activeFilters = { ...activeFilters, zone: selectedIds }
+            console.log(selectedIds)
+        }
 
         if (itemPage.length) {
             activeFilters = { ...activeFilters, showOnWeb: itemPage[0] }

@@ -12,9 +12,12 @@ const requestBaseParams = {
 }
 
 export const getResidential = async (filters) => {
-    const filterParams = new URLSearchParams(filters)
+    console.log(filters)
+    const filterParams = new URLSearchParams(JSON.parse(filters))
     const urlWithFilters = !!filterParams ? `${newBaseUrlResidential}&${filterParams.toString()}` : `${newBaseUrlResidential}`;
+    console.log(urlWithFilters)
     const newUrl = new URL(urlWithFilters)
+    console.log(newUrl)
 
     const response = await fetch(newUrl, requestBaseParams)
     const adsInfo = await response.json()
