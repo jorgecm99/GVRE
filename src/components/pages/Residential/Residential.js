@@ -66,7 +66,7 @@ import { BarLoader } from 'react-spinners';
 const Residential = () => {
     const [orderedItems, setOrderedItems] = useState([])
     const [/* refItem */, setRefItem] = useState([])
-    const [perPage] = useState(10);
+    const [perPage] = useState(30);
     const [pageNumber, setPageNumber] = useState(0);
     const [pagElements, setPagElements] = useState();
 
