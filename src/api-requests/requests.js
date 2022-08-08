@@ -1,4 +1,5 @@
-const baseUrlResidential = 'https://www.gvrecrm.com/';
+const baseUrlResidential = 'https://www.gvrecrm.es/residentialItem/';
+const baseUrlConsultants = 'https://www.gvrecrm.com/';
 // const newBaseUrlResidential = 'http://localhost:3500/ads/web/department=Residencial&page=1';
 const newBaseUrlResidential = 'https://api.vamosaporello.com/ads/web/department=Residencial&showOnWeb=true&page=1';
 const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true';
@@ -45,14 +46,14 @@ export const getPatrimonial = (filters) => {
 }*/
 
 export const getResidentialItem = (id) => {
-    return fetch(`${baseUrlResidential}?id=${id}`, {
+    return fetch(`${baseUrlResidential}${id}`, {
         method: 'GET',
         cors: true
     }).then((response) => response.json())
 }
 
 export const getConsultants = () => {
-    return fetch(`${baseUrlResidential}consultants`, {
+    return fetch(`${baseUrlConsultants}consultants`, {
         method: 'GET',
         cors: true
     }).then((response) => response.json())

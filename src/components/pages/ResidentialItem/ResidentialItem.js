@@ -15,7 +15,7 @@ import Geocode from "react-geocode";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import googleKey from '../../../Keys.js';
 import emailjs from 'emailjs-com';
-import { getResidential } from '../../../api-requests/requests';
+import { getResidentialItem } from '../../../api-requests/requests';
 
 
 Geocode.setApiKey(googleKey.googleKey);
@@ -36,7 +36,7 @@ const ResidentialItem = () => {
     const [longitude, setLongitude] = useState();
     
     useEffect(() => {
-        getResidential().then(items=> {
+        getResidentialItem().then(items=> {
             setList(items)
         })        
     },[])

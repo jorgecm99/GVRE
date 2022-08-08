@@ -182,7 +182,7 @@ const Home = () => {
                         {destacado.length > 0 ? destacado.map(item =>
                             <Link key={item._id} to={generatePath(routes.ItemResidential, {id:item._id})} className='home__outstanding__position__images'>
                                 <p className='home__outstanding__position__images__destacado'>DESTACADO</p>
-                                <img className='home__outstanding__position__images__image' key={item._id} src={item.images.main} alt={item.title}loading="lazy"/>
+                                <img className='home__outstanding__position__images__image' key={item._id} src={item.images.main} alt={item.title}/>
                                 <div>
                                     <div className='home__outstanding__position__images__text'>
                                         <h2 className='home__outstanding__position__images__text__price'>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</h2>
