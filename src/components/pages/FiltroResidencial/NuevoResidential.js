@@ -358,7 +358,7 @@ const FiltroResidencial = () => {
                                 to={generatePath(routes.Residential, { page: 1 })}>Buscar
                             </NavLink>
                             :
-                            <button className='selectors__buscar__searchDisabled' >Buscar 2</button>
+                            <button className='selectors__buscar__searchDisabled' >Buscar</button>
                         }
                     </div>
                     <div className='selectors__ref'>
