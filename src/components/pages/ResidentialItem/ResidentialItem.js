@@ -36,7 +36,8 @@ const ResidentialItem = () => {
     const [longitude, setLongitude] = useState();
     
     useEffect(() => {
-        getResidentialItem().then(items=> {
+        let id = window.location.href.split('/')[4]
+        getResidentialItem(id).then(items=> {
             setList(items)
         })        
     },[])

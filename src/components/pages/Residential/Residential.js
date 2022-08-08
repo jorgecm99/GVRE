@@ -301,7 +301,7 @@ const Residential = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`http://localhost:3000/residential/${i+1}`}>{i+1}</a></li>
+                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
@@ -867,8 +867,9 @@ const Residential = () => {
                 </div>
             :
             <div className='residential__empty'>
-                <h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
-                <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>            
+                <BarLoader color="#000000" width='150px' height='2px'/>
+                {/*<h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
+                <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>*/}            
             </div>
             }
         </div>

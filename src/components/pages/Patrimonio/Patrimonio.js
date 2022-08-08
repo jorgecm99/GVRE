@@ -14,7 +14,7 @@ import zoneMap from '../../../assets/SVG/mobile/anuncios/anuncios_mapa.svg';
 import { generalContext } from '../../../providers/generalProvider';
 import Header from '../../common/Header/Header';
 import { Slider } from '@mui/material';
-import { getResidential } from '../../../api-requests/requests';
+import { getPatrimonial } from '../../../api-requests/requests';
 import lupa from '../../../assets/SVG/mobile/comun/filtros_lupa.svg'
 import carretera1 from '../../../assets/maps/mapaR/carreteras/carretera1.svg';
 import carretera2 from '../../../assets/maps/mapaR/carreteras/carretera2.svg';
@@ -60,7 +60,9 @@ import sala from '../../../assets/maps/mapaR/barrios/sala.svg';
 import viso from '../../../assets/maps/mapaR/barrios/viso.svg';
 import mayor from '../../../assets/SVG/web/comunes/mayor.svg'
 import cerrarFiltro from '../../../assets/SVG/mobile/comun/cerrarCompleta.svg';
-import ContactIndex from '../../common/ContactInfo/ContactIndex'
+import ContactIndex from '../../common/ContactInfo/ContactIndex';
+import { Navigate} from 'react-router'
+import { BarLoader } from 'react-spinners';
 
 const Patrimonio = () => {
     const [orderedItems, setOrderedItems] = useState([])
@@ -83,6 +85,7 @@ const Patrimonio = () => {
     const [surface, setSurface] = useState([0.1,maxSurface]);
 
     const [filter, setFilter] = useState (false);
+    const [filters, setFilters] = useState (window.localStorage.getItem('residentialFilters'));
     const [disableButton, setDisableButton] = useState(false);
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
@@ -91,6 +94,16 @@ const Patrimonio = () => {
     const [state, setState] = useContext(generalContext);
 
     const [coord, setCoord] = useState(0)
+    const [param, setParam] = useState('')
+    const [redirect, setRedirect] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getTypeHouse = async () => {
+        setParam('')
+        setRedirect(false)
+        const searchFilters = filterResults()
+        setFilters(searchFilters)
+    }
 
     const setPosition = () => {
         if (coord !== 0) {
@@ -100,11 +113,12 @@ const Patrimonio = () => {
         }
     }
     const pagesVisited = pageNumber * perPage;
-    const pageCount = Math.ceil(orderedItems.length/perPage);
+    const totalAds = window.localStorage.getItem('patrimonialTotalAds')
+    const pageCount = Math.ceil(totalAds/perPage);
     const getPostItems = orderedItems.slice(pagesVisited, pagesVisited + perPage)
-    .map(item => {
+    .map((item, index) => {
             return item.department === "Patrimonio" && item.showOnWeb === true? 
-            <div onClick={setPosition} className='patrimonial__list__item' key={item._id}>
+            <div onClick={setPosition} className='patrimonial__list__item' key={`${item._id}-${index}`}>
                 {item.gvOperationClose === 'Alquilado' || item.gvOperationClose === 'Vendido' ? 
                     <div className='wrapper'>
                         <div className='patrimonial__list__item__status'>
@@ -117,10 +131,10 @@ const Patrimonio = () => {
                             infiniteLoop={true}
                             showStatus={false}
                         >
-                            <img src={item.images.main} alt={item.title}/>
-                            {item.images.others.map((image)=> (
+                            <img src={item.images.main} alt={item.title} loading="lazy"/>
+                            {/*{item.images.others.map((image)=> (
                                 <img key={item.title} src={image} alt={item.title}/>
-                            ))}
+                            ))}*/}
                         </Carousel>
                         <div>
                             <div className='patrimonial__list__item__text'>
@@ -159,6 +173,7 @@ const Patrimonio = () => {
                     </div> 
                     :
                     <div>
+                        {isLoading ?
                         <Carousel 
                             className='patrimonial__list__item__images'
                             showArrows={true}
@@ -166,11 +181,15 @@ const Patrimonio = () => {
                             infiniteLoop={true}
                             showStatus={false}
                         >
-                            <img src={item.images.main} alt={item.title}/>
-                            {item.images.others.map((image)=> (
+                            <img src={item.images.main} alt={item.title} loading="lazy"/>
+                            {/*{item.images.others.map((image)=> (
                                 <img key={item.title} src={image} alt={item.title}/>
-                            ))}
+                            ))}*/}
                         </Carousel>
+                        :<div className='spinnerBar'>  
+                            <BarLoader color="#000000" width='80px' height='2px' className='barloader'/>
+                        </div>
+                        }
                         <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemPatrimonial, {id:item._id})}>
                             <div className='patrimonial__list__item__text'>
                                 {item.adType.length === 1 ? 
@@ -266,10 +285,15 @@ const Patrimonio = () => {
     },[pageCount])
 
     useEffect(() => {
-        getResidential().then(items=>{
-            setState2(items)
+        const activeFilters = window.localStorage.getItem('patrimonialFilters')
+
+        getPatrimonial(activeFilters).then(items=>{
+            setState(items.ads)
+            window.localStorage.setItem('storedState', items.ads)
+            window.localStorage.setItem('patrimonialTotalAds', items.totalAds)
+            setIsLoading(true)
         })
-    },[])
+    },[filters])
 
     useEffect(()=> {
         if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || ref!==''){
@@ -491,6 +515,33 @@ const Patrimonio = () => {
             setTypeHouseActive(false)
         }
     }
+
+    const filterResults = () => {
+        let activeFilters = {}
+
+        if (saleOrRent.length) {
+            activeFilters = { ...activeFilters, adType: saleOrRent }
+        }
+
+        if (typeHouse.length) {
+            activeFilters = { ...activeFilters, adBuildingType: typeHouse }
+        }
+
+        /*if (extras.length) {
+            if (extras.includes('garage')) {
+                activeFilters = { ...activeFilters, garage: true }
+            }
+
+            if (extras.includes('swimmingPool')) {
+                activeFilters = { ...activeFilters, swimmingPool: true }
+            }
+
+            if (extras.includes('terrace')) {
+                activeFilters = { ...activeFilters, terrace: true }
+            }
+        }*/
+        window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))
+    }
     const handlePriceInput = (e, data1) => {
         setPrice(data1);
     };
@@ -499,177 +550,6 @@ const Patrimonio = () => {
     };
     const addRef = (e) => {
         setRef (e.currentTarget.value)
-    }
-    const compareStates = () => {
-
-        let actualizeState = []
-        if (saleOrRent.length > 0) {
-            state2.map(itemState => 
-                saleOrRent.map(itemSale => 
-                    itemState.adType.map(itemAd => 
-                        itemSale===itemAd && itemState.department === 'Patrimonio' && itemState.showOnWeb === true ? actualizeState.push(itemState) : null
-                    )
-                )
-            )
-        }
-        let actualizeState2 = []
-        if (typeHouse.length>0){
-            state2.map(itemState => 
-                typeHouse.map(itemType => 
-                    itemState.adBuildingType.map(itemAd => 
-                        itemType === itemAd  && itemState.department === 'Patrimonio' && itemState.showOnWeb === true ? actualizeState2.push(itemState): null
-                    )
-                )
-            )
-        }
-        let actualizeState3 = []
-        if (selected.length>0){
-            state2.map(itemState => 
-                selected.map(itemType => 
-                    itemState.zone.map(itemAd => {
-                        if (itemAd.zone !== 'Residencial' && itemAd.zone !== 'Patrimonial'){
-                            if (itemType === itemAd.zone  && itemState.department === 'Patrimonio' && itemState.showOnWeb === true) {
-                                actualizeState3.push(itemState)
-                            }
-                        }else {
-                            if (itemType === itemAd.name  && itemState.department === 'Patrimonio' && itemState.showOnWeb === true) {
-                                actualizeState3.push(itemState)
-                            }
-                        }
-                        return (itemAd)
-                    })
-                )
-            )
-            let filtered = actualizeState3.filter ((item, index) => {
-                return actualizeState3.indexOf(item) === index
-            })
-            actualizeState3=filtered  
-        }
-
-        let finalState = [];
-        ///////////////////3////////////////////////////////
-        if (actualizeState.length>0 && actualizeState2.length>0 && actualizeState3.length>0){
-            let AB = []
-            actualizeState.map(itemA => 
-                actualizeState2.map(itemB => itemA._id === itemB._id ? AB.push(itemA) : null))
-            AB.map(itemAB => 
-                actualizeState3.map(itemC => itemAB._id === itemC._id ? finalState.push(itemAB) : null))
-        }
-        ////////////////////2////////////////////////////////
-        if (actualizeState.length>0 && actualizeState2.length>0 && actualizeState3.length===0){
-            actualizeState.map(itemA => 
-                actualizeState2.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length>0 && actualizeState2.length===0 && actualizeState3.length>0){
-            actualizeState.map(itemA => 
-                actualizeState3.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        if (actualizeState.length===0 && actualizeState2.length>0 && actualizeState3.length>0){
-            actualizeState2.map(itemA => 
-                actualizeState3.map (itemB => itemA._id === itemB._id ? finalState.push(itemA) : null))
-        }
-        ///////////////////1////////////////////////////////////
-        if (actualizeState.length>0 && actualizeState2.length===0 && actualizeState3.length===0){
-            finalState = actualizeState
-        }
-        if (actualizeState.length===0 && actualizeState2.length>0 && actualizeState3.length===0){
-            finalState = actualizeState2
-        }
-        if (actualizeState.length===0 && actualizeState2.length===0 && actualizeState3.length>0){
-            finalState = actualizeState3
-        }
-
-        ////////////////////////control////////////////////
-        if (selected.length>0 && actualizeState3.length === 0){
-            finalState=[]
-        }
-
-        if (finalState.length>0) {
-            let slidersFilter = []
-            finalState.map(item => {
-                item.adType.map(type => {
-                    if (type === 'Venta'){
-                        saleOrRent.map(itemSR => {
-                            if (itemSR === 'Venta'){
-                                if (item.sale.saleValue >= price[0] && item.sale.saleValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                                    slidersFilter.push(item)
-                                }
-                            }
-                            return(itemSR)
-                        })
-                    }
-                    else if(type === 'Alquiler'){
-                        saleOrRent.map(itemSR => {
-                            if(itemSR ==='Alquiler') {
-                                if (item.rent.rentValue >= price[0] && item.rent.rentValue <= price[1] && item.buildSurface >= surface[0] && item.buildSurface <= surface[1]) {
-                                    slidersFilter.push(item)
-                                }
-                            }
-                            return(itemSR)
-                        })
-                    }
-                    return(type)
-                })
-                return(item)
-            })
-            if (slidersFilter.length>0){
-                finalState = slidersFilter
-            }
-            let filtered = finalState.filter ((item, index) => {
-                return finalState.indexOf(item) === index
-            })
-            setOrderedItems(filtered)    
-        }
-        if (finalState.length===0) {
-            setOrderedItems([])
-        }
-        if (ref !== ''){
-            let references = []
-            state2.map(item => 
-                item.adReference===ref ? references.push(item) : null
-            )
-            setState(references)
-        }
-        setFilter(!filter)
-
-        if (saleOrRent.length === 1){
-            saleOrRent.map(item => {
-                window.localStorage.setItem(
-                    'saleOrRentStored', JSON.stringify(item)
-                )    
-                return(item)        
-            })
-        }
-
-        const storedSOR = window.localStorage.getItem('saleOrRentStored')
-        const SOR = JSON.parse(storedSOR)
-        const array = Object.values(finalState)
-        const sortArray = (a, b) => {
-            if(SOR === 'Alquiler'){
-                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
-                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
-            }else {
-                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
-            }
-        }
-        let orderedArrayPrice = array.sort(sortArray);
-        setOrderedItems(orderedArrayPrice)
-
-        window.localStorage.removeItem('storedState')
-
-        window.localStorage.setItem(
-            'storedState', JSON.stringify(orderedArrayPrice)
-        )
-
-        window.scroll(
-            {top:0}
-        )
-
-        saleOrRent.length=0;
-        typeHouse.length=0;
-        selected.length=0;
-        setSelectedActive(false)
     }
 
     const toggleFilter = () => {
@@ -884,8 +764,8 @@ const Patrimonio = () => {
                                         }
                                         {disableButton===true ?
                                             <NavLink className='patrimonial__filter__selectors__buscar__search' 
-                                                onClick={compareStates} 
-                                                to={generatePath(routes.Patrimonial, {page:1})}>Buscar
+                                                onClick={getTypeHouse} 
+                                                to={redirect && (<Navigate to={`/Patrimonial=${param}`}/>)}>Buscar
                                             </NavLink>
                                             :
                                             <button className='patrimonial__filter__selectors__buscar__searchDisabled' >Buscar</button>
@@ -929,9 +809,10 @@ const Patrimonio = () => {
                 </div>
             :
             <div>
-            <div className='patrimonial__empty'>
-                <h2 className='patrimonial__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
-                <Link className='patrimonial__empty__button' to={routes.FilterPatrimonial}>Volver al mapa</Link>            
+            <div className='residential__empty'>
+                <BarLoader color="#000000" width='150px' height='2px'/>
+                {/*<h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
+                <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>*/}            
             </div>
             </div>
             }

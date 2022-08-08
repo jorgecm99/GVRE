@@ -1,8 +1,8 @@
-const baseUrlResidential = 'https://www.gvrecrm.es/residentialItem/';
+const baseUrlResidential = 'https://api.vamosaporello.com/ads/';
 const baseUrlConsultants = 'https://www.gvrecrm.com/';
 // const newBaseUrlResidential = 'http://localhost:3500/ads/web/department=Residencial&page=1';
 const newBaseUrlResidential = 'https://api.vamosaporello.com/ads/web/department=Residencial&showOnWeb=true&page=1';
-const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true';
+const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true&page=1';
 
 const requestBaseParams = {
     method: 'GET',
@@ -26,16 +26,19 @@ export const getResidential = async (filters) => {
     return adsInfo
 }
 
-export const getPatrimonial = (filters) => {
-    let filterParams = ''
-    new URLSearchParams(filters).forEach((value, key) => {
-        filterParams = `${filterParams}&${key}=${value}`
-    })
+export const getPatrimonial = async (filters) => {
+    console.log(filters)
+    const filterParams = new URLSearchParams(JSON.parse(filters))
+    const urlWithFilters = !!filterParams ? `${newBaseUrlPatrimonial}&${filterParams.toString()}` : `${newBaseUrlPatrimonial}`;
+    console.log(urlWithFilters)
+    const newUrl = new URL(urlWithFilters)
+    console.log(newUrl)
 
-    const urlWithFilters = filterParams ? `${newBaseUrlPatrimonial}${filterParams}` : `${newBaseUrlPatrimonial}`;
-
-    return fetch(urlWithFilters, requestBaseParams).then(response => response.json())
-}
+    const response = await fetch(newUrl, requestBaseParams)
+    const adsInfo = await response.json()
+    console.log(adsInfo)
+    return adsInfo
+    }
 
 
 /*export const getResidential = () => {
@@ -45,11 +48,12 @@ export const getPatrimonial = (filters) => {
     }).then((response)=> response.json())
 }*/
 
-export const getResidentialItem = (id) => {
-    return fetch(`${baseUrlResidential}${id}`, {
-        method: 'GET',
-        cors: true
-    }).then((response) => response.json())
+export const getResidentialItem = async(id) => {
+    const response = await fetch(`${baseUrlResidential}${id}`, requestBaseParams )
+    console.log(response)
+    const adInfo = await response.json()
+    console.log(adInfo)
+    return [adInfo]
 }
 
 export const getConsultants = () => {

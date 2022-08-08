@@ -18,7 +18,7 @@ const ResidentialItem = lazy (() => import ('../components/pages/ResidentialItem
 const Equipo = lazy (() => import ('../components/pages/Equipo'));
 const Contextual = lazy (() => import ('../components/pages/Contextuales'));
 const FilterResidential = lazy(() => import ('../components/pages/FiltroResidencial/NuevoResidential'));
-const FilterPatrimonial = lazy(() => import ('../components/pages/FiltroPatrimonio'));
+const FilterPatrimonial = lazy(() => import ('../components/pages/FiltroPatrimonio/NuevoPatrimonio'));
 const Costa = lazy(() => import ('../components/pages/Costa'));
 const CampoRustico = lazy(() => import ('../components/pages/CampoRustico'));
 const ActivosSingulares = lazy(() => import ('../components/pages/ActivosSingulares'));

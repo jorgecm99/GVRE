@@ -26,15 +26,7 @@ const Home = () => {
     const [destacado, setDestacado] = useState([]);
 
     useEffect (() => {
-        getResidential().then(items => {
-            let destacados = [];
-
-            items.forEach(item => {
-                if (item.featuredOnMain === true) destacados.push(item)
-            })
-
-            setDestacado(destacados)
-        });
+        getResidential(JSON.stringify({featuredOnMain: true})).then(items => setDestacado(items.ads))
     },[])
 
     useEffect(() => {
@@ -179,10 +171,11 @@ const Home = () => {
             <div className='home__outstanding'>
                 <h2 className='home__outstanding__title'>Nuestros destacados</h2>
                     <div id='carrusel' className='home__outstanding__position'>
-                        {destacado.length > 0 ? destacado.map(item =>
-                            <Link key={item._id} to={generatePath(routes.ItemResidential, {id:item._id})} className='home__outstanding__position__images'>
+                        {destacado.length > 0 ? destacado.map((item, index) =>
+                        
+                            <Link key={`${item._id}-${index}`} to={generatePath(routes.ItemResidential, {id:item._id})} className='home__outstanding__position__images'>
                                 <p className='home__outstanding__position__images__destacado'>DESTACADO</p>
-                                <img className='home__outstanding__position__images__image' key={item._id} src={item.images.main} alt={item.title}/>
+                                <img className='home__outstanding__position__images__image' key={`${item._id}-${index}`} src={item.images.main} alt={item.title} loading="lazy"/>
                                 <div>
                                     <div className='home__outstanding__position__images__text'>
                                         <h2 className='home__outstanding__position__images__text__price'>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</h2>
