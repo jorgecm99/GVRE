@@ -97,6 +97,7 @@ const Patrimonio = () => {
     const [param, setParam] = useState('')
     const [redirect, setRedirect] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
+    const [isFound, setIsFound] = useState(false);
 
     const getTypeHouse = async () => {
         setParam('')
@@ -292,6 +293,7 @@ const Patrimonio = () => {
             window.localStorage.setItem('storedState', items.ads)
             window.localStorage.setItem('patrimonialTotalAds', items.totalAds)
             setIsLoading(true)
+            setIsFound(true)
         })
     },[filters])
 
@@ -808,12 +810,20 @@ const Patrimonio = () => {
                     <ContactIndex/>
                 </div>
             :
-            <div>
             <div className='residential__empty'>
+                {
+                    isFound ?
+                    (
+                        <div className='residential__empty'>
+                            <h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
+                            <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>            
+                        </div>
+                    )
+                    :
                 <BarLoader color="#000000" width='150px' height='2px'/>
-                {/*<h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
-                <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>*/}            
-            </div>
+
+                }
+            
             </div>
             }
         </div>

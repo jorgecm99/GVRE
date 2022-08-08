@@ -97,6 +97,8 @@ const Residential = () => {
     const [param, setParam] = useState('')
     const [redirect, setRedirect] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
+    const [isFound, setIsFound] = useState(false);
+
 
     const getTypeHouse = async () => {
         setParam('')
@@ -315,6 +317,7 @@ const Residential = () => {
             setState(items.ads)
             window.localStorage.setItem('storedState', items.ads)
             setIsLoading(true)
+            setIsFound(true)
         })
     },[filters])
 
@@ -867,9 +870,17 @@ const Residential = () => {
                 </div>
             :
             <div className='residential__empty'>
-                <BarLoader color="#000000" width='150px' height='2px'/>
-                {/*<h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
-                <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>*/}            
+                {
+                    isFound ?
+                    (
+                        <div className='residential__empty'>
+                        <h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
+                        <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>
+                        </div>
+                    )
+                    :
+                    <BarLoader color="#000000" width='150px' height='2px'/>
+                }                      
             </div>
             }
         </div>
@@ -877,3 +888,5 @@ const Residential = () => {
 }
 
 export default Residential 
+
+

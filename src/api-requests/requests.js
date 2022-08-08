@@ -40,15 +40,15 @@ export const getPatrimonial = async (filters) => {
     return adsInfo
     }
 
-
-/*export const getResidential = () => {
-    return fetch(`${newBaseUrlResidential}ads`, {
-        method:'GET',
-        cors: true
-    }).then((response)=> response.json())
-}*/
-
 export const getResidentialItem = async(id) => {
+    const response = await fetch(`${baseUrlResidential}${id}`, requestBaseParams )
+    console.log(response)
+    const adInfo = await response.json()
+    console.log(adInfo)
+    return [adInfo]
+}
+
+export const getPatrimonialItem = async(id) => {
     const response = await fetch(`${baseUrlResidential}${id}`, requestBaseParams )
     console.log(response)
     const adInfo = await response.json()

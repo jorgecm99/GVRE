@@ -16,6 +16,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import googleKey from '../../../Keys.js';
 import emailjs from 'emailjs-com';
 import { getResidentialItem } from '../../../api-requests/requests';
+import { BarLoader } from 'react-spinners';
 
 
 Geocode.setApiKey(googleKey.googleKey);
@@ -34,11 +35,13 @@ const ResidentialItem = () => {
     const [list, setList] = useState([]);
     const [latitude, setLatitude] = useState();
     const [longitude, setLongitude] = useState();
+    const [isLoading, setIsLoading] = useState(false);
     
     useEffect(() => {
         let id = window.location.href.split('/')[4]
         getResidentialItem(id).then(items=> {
             setList(items)
+            setIsLoading(true)
         })        
     },[])
 
@@ -131,6 +134,7 @@ const ResidentialItem = () => {
             {state.images? 
                 <div>
                     <Header/>
+                    {isLoading ?
                     <Carousel 
                         className='residentialItem__carousel'
                         showArrows={true}
@@ -140,11 +144,15 @@ const ResidentialItem = () => {
                         useKeyboardArrows={true}
                         autoFocus={true}
                     >
-                        <img className='residentialItem__carousel__images custom-objetc-fit' src={state.images.main} alt={state.title}/>
+                        <img className='residentialItem__carousel__images custom-objetc-fit' src={state.images.main} alt={state.title} loading="lazy"/>
                         {state.images.others.map((image)=> (
-                            <img className='residentialItem__carousel__images' key={state._id} src={image} alt={state.title}/>
+                            <img className='residentialItem__carousel__images' key={state._id} src={image} alt={state.title} loading="lazy"/>
                         ))}
                     </Carousel>
+                    :<div className='spinnerBar'>  
+                            <BarLoader color="#000000" width='80px' height='2px' className='barloader'/>
+                        </div>
+                        }
                     {viewFullScreen === true ? 
                         <div className='residentialItem__fullScreen'>
                             <button onClick={toggleFullScreen} className='residentialItem__fullScreen__close'><img src={closeFullScreen} alt='close full screen'/></button>
@@ -157,9 +165,9 @@ const ResidentialItem = () => {
                                 useKeyboardArrows={true}
                                 autoFocus={true}
                             >
-                                <img className='carouselImages' src={state.images.main} alt={state.title}/>
+                                <img className='carouselImages' src={state.images.main} alt={state.title} loading="lazy"/>
                                 {state.images.others.map((image)=> (
-                                    <img className='carouselImages' key={state._id} src={image} alt={state.title}/>
+                                    <img className='carouselImages' key={state._id} src={image} alt={state.title} loading="lazy"/>
                                 ))}
                             </Carousel>
                         </div>

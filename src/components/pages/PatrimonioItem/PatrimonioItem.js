@@ -14,7 +14,7 @@ import send from '../../../assets/SVG/mobile/comun/flechaEnviar.svg';
 import Geocode from "react-geocode";
 import googleKey from '../../../Keys.js';
 import emailjs from 'emailjs-com';
-import { getResidential } from '../../../api-requests/requests';
+import { getPatrimonialItem } from '../../../api-requests/requests';
 import MapItem from '../../common/MapItem/MapItem'
 
 Geocode.setApiKey(googleKey.googleKey);
@@ -35,7 +35,8 @@ const PatrimonioItem = () => {
     const [longitude, setLongitude] = useState();
 
     useEffect(() => {
-        getResidential().then(items=> {
+        let id = window.location.href.split('/')[4]
+        getPatrimonialItem(id).then(items=> {
             setList(items)
         })        
     },[])
@@ -137,9 +138,9 @@ const PatrimonioItem = () => {
                     useKeyboardArrows={true}
                     autoFocus={true}
                 >
-                    <img className='patrimonialItem__carousel__images custom-objetc-fit' src={state.images.main} alt={state.title}/>
+                    <img className='patrimonialItem__carousel__images custom-objetc-fit' src={state.images.main} alt={state.title} loading="lazy"/>
                     {state.images.others.map((image)=> (
-                        <img className='patrimonialItem__carousel__images' key={state._id} src={image} alt={state.title}/>
+                        <img className='patrimonialItem__carousel__images' key={state._id} src={image} alt={state.title} loading="lazy"/>
                     ))}
                 </Carousel>
                 {viewFullScreen === true ? 
@@ -154,9 +155,9 @@ const PatrimonioItem = () => {
                             useKeyboardArrows={true}
                             autoFocus={true}
                         >
-                            <img className='carouselImages' src={state.images.main} alt={state.title}/>
+                            <img className='carouselImages' src={state.images.main} alt={state.title} loading="lazy"/>
                             {state.images.others.map((image)=> (
-                                <img className='carouselImages' key={state._id} src={image} alt={state.title}/>
+                                <img className='carouselImages' key={state._id} src={image} alt={state.title} loading="lazy"/>
                             ))}
                         </Carousel>
                     </div>
