@@ -1,4 +1,4 @@
-import React, { useEffect,useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./residential.scss"
 import routes from '../../../config/routes';
@@ -58,7 +58,7 @@ import cerrarFiltro from '../../../assets/SVG/mobile/comun/cerrarCompleta.svg';
 import ContactIndex from '../../common/ContactInfo/ContactIndex';
 import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg';
 import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
-import { Navigate} from 'react-router'
+import { Navigate } from 'react-router'
 import { BarLoader } from 'react-spinners';
 
 
@@ -79,14 +79,14 @@ const Residential = () => {
     const [extras] = useState([]);
     const [extrasActive, setExtrasActive] = useState(false);
     const [ref, setRef] = useState('');
-    const [itemRef, setItemRef] = useState ('initial');
+    const [itemRef, setItemRef] = useState('initial');
     const [maxPrice, setMaxPrice] = useState(99999999.9)
-    const [price, setPrice] = useState([0.1,maxPrice]);
+    const [price, setPrice] = useState([0.1, maxPrice]);
     const [maxSurface, setMaxSurface] = useState(99999999.9);
-    const [surface, setSurface] = useState([0.1,maxSurface]);
+    const [surface, setSurface] = useState([0.1, maxSurface]);
 
-    const [filter, setFilter] = useState (false);
-    const [filters, setFilters] = useState (window.localStorage.getItem('residentialFilters'));
+    const [filter, setFilter] = useState(false);
+    const [filters, setFilters] = useState(window.localStorage.getItem('residentialFilters'));
     const [disableButton, setDisableButton] = useState(false);
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
@@ -114,145 +114,145 @@ const Residential = () => {
             )
         }
     }
-    const pagesVisited = pageNumber * perPage;
-    const pageCount = Math.ceil(orderedItems.length/perPage);
-    const getPostItems = orderedItems.slice(pagesVisited, pagesVisited + perPage)
-    .map(item => {
-        return item.department === "Residencial" && item.showOnWeb === true? 
-            <div onClick={setPosition} className='residential__list__item' key={item._id} >
-                {item.gvOperationClose === 'Alquilado' || item.gvOperationClose === 'Vendido' ?
-                    <div className='wrapper'>
-                        <div className='residential__list__item__status'>
-                            <p>{item.gvOperationClose}</p>
-                        </div>
-                        <Carousel 
-                            className='residential__list__item__images'
-                            showArrows={true}
-                            showThumbs={false}
-                            infiniteLoop={true}
-                            showStatus={false}
-                        >
-                            <img src={item.images.main} alt={item.title} loading="lazy"/>
-                            {/*{item.images.others.map((image)=> (
+    window.localStorage.getItem('totalAds')
+    const pageCount = Math.ceil(parseInt(window.localStorage.getItem('totalAds')) / perPage);
+    const getPostItems = orderedItems
+        .map(item => {
+            return item.department === "Residencial" && item.showOnWeb === true ?
+                <div onClick={setPosition} className='residential__list__item' key={item._id} >
+                    {item.gvOperationClose === 'Alquilado' || item.gvOperationClose === 'Vendido' ?
+                        <div className='wrapper'>
+                            <div className='residential__list__item__status'>
+                                <p>{item.gvOperationClose}</p>
+                            </div>
+                            <Carousel
+                                className='residential__list__item__images'
+                                showArrows={true}
+                                showThumbs={false}
+                                infiniteLoop={true}
+                                showStatus={false}
+                            >
+                                <img src={item.images.main} alt={item.title} loading="lazy" />
+                                {/*{item.images.others.map((image)=> (
                                 <img key={image} src={image} alt={item.title} loading="lazy"/>
                             ))}*/}
-                        </Carousel>
-                        <div>
-                            <div className='residential__list__item__text'>
-                                {item.adType.length === 1 ? 
-                                    <h2 className='residential__list__item__text__price'>{item.adType.map(type => 
-                                        type==='Venta' && item.sale.saleShowOnWeb ? 
-                                        `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`:
-                                        type==='Alquiler' && item.rent.rentShowOnWeb ?
-                                        `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
-                                    </h2>
-                                    :
-                                    <h2 className='residential__list__item__text__prices'>
-                                        {item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
-                                        {item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
-                                    </h2>
-                                }                        
-                                <h2 className='residential__list__item__text__title'>{item.title}</h2>
-                                <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
-                                <ul className='residential__list__item__text__characteristics'>
-                                    {item.buildSurface !== 0 ? 
-                                        <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
-                                    :null}
-                                    {item.plotSurface !== 0 ?
-                                        <li><span><img src={supP} alt='superficie'/></span>{item.plotSurface}m<sup>2</sup></li>
-                                    :null}
-                                    {item.quality.bedrooms !== 0 ?
-                                        <li><span><img src={habit} alt='habitaciones'/></span>{item.quality.bedrooms}</li>
-                                        :null}
-                                    {item.quality.bathrooms !== 0 ?
-                                        <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
-                                    :null}
-                                    {item.quality.parking !== 0 ?
-                                        <li className='residential__list__item__text__characteristics__car'><span><img src={parking} alt='plazas parking'/></span>{item.quality.parking}</li>
-                                    :null}
-                                    {item.quality.outdoorPool !== 0 ?
-                                        <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
-                                    :null}
-                                    {item.adReference !== 0 ? 
-                                        <li><span><img src={refer} alt='referencia'/></span><p>Ref {item.adReference}</p></li>
-                                    :null}
-                                </ul>
-                                <div className='residential__list__item__text__blocker'></div>
+                            </Carousel>
+                            <div>
+                                <div className='residential__list__item__text'>
+                                    {item.adType.length === 1 ?
+                                        <h2 className='residential__list__item__text__price'>{item.adType.map(type =>
+                                            type === 'Venta' && item.sale.saleShowOnWeb ?
+                                                `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €` :
+                                                type === 'Alquiler' && item.rent.rentShowOnWeb ?
+                                                    `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
+                                        </h2>
+                                        :
+                                        <h2 className='residential__list__item__text__prices'>
+                                            {item.sale.saleShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p> : null}
+                                            {item.rent.rentShowOnWeb ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p> : null}
+                                        </h2>
+                                    }
+                                    <h2 className='residential__list__item__text__title'>{item.title}</h2>
+                                    <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
+                                    <ul className='residential__list__item__text__characteristics'>
+                                        {item.buildSurface !== 0 ?
+                                            <li><span><img src={sup} alt='superficie' /></span>{item.buildSurface}m<sup>2</sup></li>
+                                            : null}
+                                        {item.plotSurface !== 0 ?
+                                            <li><span><img src={supP} alt='superficie' /></span>{item.plotSurface}m<sup>2</sup></li>
+                                            : null}
+                                        {item.quality.bedrooms !== 0 ?
+                                            <li><span><img src={habit} alt='habitaciones' /></span>{item.quality.bedrooms}</li>
+                                            : null}
+                                        {item.quality.bathrooms !== 0 ?
+                                            <li><span><img src={banera} alt='baños' /></span>{item.quality.bathrooms}</li>
+                                            : null}
+                                        {item.quality.parking !== 0 ?
+                                            <li className='residential__list__item__text__characteristics__car'><span><img src={parking} alt='plazas parking' /></span>{item.quality.parking}</li>
+                                            : null}
+                                        {item.quality.outdoorPool !== 0 ?
+                                            <li><span><img src={piscina} alt='piscina' /></span>{item.quality.outdoorPool}</li>
+                                            : null}
+                                        {item.adReference !== 0 ?
+                                            <li><span><img src={refer} alt='referencia' /></span><p>Ref {item.adReference}</p></li>
+                                            : null}
+                                    </ul>
+                                    <div className='residential__list__item__text__blocker'></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    :
-                    <div >
-                        {/*{item.images.main > 0 && item.images.others > 0 ? OPCION 1*/} 
-                        {isLoading ?
-                        <Carousel 
-                            className='residential__list__item__images'
-                            showArrows={true}
-                            showThumbs={false}
-                            infiniteLoop={true}
-                            showStatus={false}
-                        >
-                            <img src={item.images.main} alt={item.title} loading="lazy"/>
-                            {/*{item.images.others.map((image)=> (
+                        :
+                        <div >
+                            {/*{item.images.main > 0 && item.images.others > 0 ? OPCION 1*/}
+                            {isLoading ?
+                                <Carousel
+                                    className='residential__list__item__images'
+                                    showArrows={true}
+                                    showThumbs={false}
+                                    infiniteLoop={true}
+                                    showStatus={false}
+                                >
+                                    <img src={item.images.main} alt={item.title} loading="lazy" />
+                                    {/*{item.images.others.map((image)=> (
                                 <img key={image} src={image} alt={item.title} loading="lazy"/>
                             ))}*/}
-                        </Carousel>
-                        :<div className='spinnerBar'>  
-                            <BarLoader color="#000000" width='80px' height='2px' className='barloader'/>
+                                </Carousel>
+                                : <div className='spinnerBar'>
+                                    <BarLoader color="#000000" width='80px' height='2px' className='barloader' />
+                                </div>
+                            }
+                            <Link onClick={() => { setState({ item: item }) }} to={generatePath(routes.ItemResidential, { id: item._id })}>
+                                <div className='residential__list__item__text'>
+                                    {item.adType.length === 1 ?
+                                        <h2 className='residential__list__item__text__price'>{item.adType.map(type =>
+                                            type === 'Venta' && item.sale.saleShowOnWeb === true && item.sale.saleValue !== 0 ?
+                                                `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €` :
+                                                type === 'Alquiler' && item.rent.rentShowOnWeb === true && item.rent.rentValue !== 0 ?
+                                                    `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
+                                        </h2>
+                                        :
+                                        <h2 className='residential__list__item__text__prices'>
+                                            {item.sale.saleShowOnWeb && item.sale.saleValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p> : null}
+                                            {item.rent.rentShowOnWeb && item.rent.rentValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p> : null}
+                                        </h2>
+                                    }
+                                    <h2 className='residential__list__item__text__title'>{item.title}</h2>
+                                    <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
+                                    <ul className='residential__list__item__text__characteristics'>
+                                        {item.buildSurface !== 0 ?
+                                            <li><span><img src={sup} alt='superficie' /></span>{item.buildSurface}m<sup>2</sup></li>
+                                            : null}
+                                        {item.plotSurface !== 0 ?
+                                            <li><span><img src={supP} alt='superficie' /></span>{item.plotSurface}m<sup>2</sup></li>
+                                            : null}
+                                        {item.quality.bedrooms !== 0 ?
+                                            <li><span><img src={habit} alt='habitaciones' /></span>{item.quality.bedrooms}</li>
+                                            : null}
+                                        {item.quality.bathrooms !== 0 ?
+                                            <li><span><img src={banera} alt='baños' /></span>{item.quality.bathrooms}</li>
+                                            : null}
+                                        {item.quality.outdoorPool !== 0 ?
+                                            <li><span><img src={piscina} alt='piscina' /></span>{item.quality.outdoorPool}</li>
+                                            : null}
+                                        {item.quality.parking !== 0 ?
+                                            <li className='residential__list__item__text__characteristics__car'><span><img src={parking} alt='plazas parking' /></span>{item.quality.parking}</li>
+                                            : null}
+                                        {item.adReference !== 0 ?
+                                            <li><span><img src={refer} alt='referencia' /></span><p> Ref {item.adReference}</p></li>
+                                            : null}
+                                    </ul>
+                                    <div className='residential__list__item__text__clickable'></div>
+                                </div>
+                            </Link>
                         </div>
-                        }
-                        <Link onClick={() => {setState({item:item})}}  to={generatePath(routes.ItemResidential, {id:item._id})}>
-                            <div className='residential__list__item__text'>
-                                {item.adType.length === 1 ? 
-                                    <h2 className='residential__list__item__text__price'>{item.adType.map(type => 
-                                        type==='Venta' && item.sale.saleShowOnWeb===true && item.sale.saleValue !== 0 ? 
-                                        `${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`:
-                                        type==='Alquiler' && item.rent.rentShowOnWeb===true && item.rent.rentValue !== 0 ?
-                                        `${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes` : null)}
-                                    </h2>
-                                    :
-                                    <h2 className='residential__list__item__text__prices'>
-                                        {item.sale.saleShowOnWeb && item.sale.saleValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.sale.saleValue)} €`}</p>:null}
-                                        {item.rent.rentShowOnWeb && item.rent.rentValue !== 0 ? <p>{`${new Intl.NumberFormat('de-DE').format(item.rent.rentValue)} € mes`}</p>:null}
-                                    </h2>
-                                }                        
-                                <h2 className='residential__list__item__text__title'>{item.title}</h2>
-                                <h3 className='residential__list__item__text__street'>{item.webSubtitle}</h3>
-                                <ul className='residential__list__item__text__characteristics'>
-                                    {item.buildSurface !== 0 ? 
-                                    <li><span><img src={sup} alt='superficie'/></span>{item.buildSurface}m<sup>2</sup></li>
-                                    :null}
-                                    {item.plotSurface !== 0 ?
-                                    <li><span><img src={supP} alt='superficie'/></span>{item.plotSurface}m<sup>2</sup></li>
-                                    :null}
-                                    {item.quality.bedrooms !== 0 ?
-                                        <li><span><img src={habit} alt='habitaciones'/></span>{item.quality.bedrooms}</li>
-                                    :null}
-                                    {item.quality.bathrooms !== 0 ?
-                                        <li><span><img src={banera} alt='baños'/></span>{item.quality.bathrooms}</li>
-                                    :null}
-                                    {item.quality.outdoorPool !== 0 ?
-                                        <li><span><img src={piscina} alt='piscina'/></span>{item.quality.outdoorPool}</li>
-                                    :null}
-                                    {item.quality.parking !== 0 ?
-                                        <li className='residential__list__item__text__characteristics__car'><span><img src={parking} alt='plazas parking'/></span>{item.quality.parking}</li>
-                                    :null}
-                                    {item.adReference !== 0 ? 
-                                        <li><span><img src={refer} alt='referencia'/></span><p> Ref {item.adReference}</p></li>
-                                    :null}
-                                </ul>
-                                <div className='residential__list__item__text__clickable'></div>
-                            </div>
-                        </Link>
-                    </div>
-                }
-            </div> : null
-    })
-    
+                    }
+                </div> : null
+        })
+
     useEffect(() => {
-        if (state.length>=1) {
+        if (state.length >= 1) {
             let reducedState = []
-            state.map(item => 
+            state.map(item =>
                 item.department === 'Residencial' && item.showOnWeb === true ? reducedState.push(item) : null
             )
             window.localStorage.setItem(
@@ -260,7 +260,7 @@ const Residential = () => {
 
             )
         }
-    },[state])
+    }, [state])
 
     /*useEffect(() => {
         window.localStorage.removeItem('storedState2')
@@ -268,66 +268,66 @@ const Residential = () => {
         setFilter(ads)
     },[])*/
 
-    useEffect (() => {
+    useEffect(() => {
         const localState = window.localStorage.getItem('storedState')
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
         let residentialItems = []
         if (localState) {
             const itemList = JSON.parse(localState)
             const SOR = JSON.parse(storedSOR)
-            itemList.map(item => 
-                item.department === 'Residencial' && item.showOnWeb === true ? residentialItems.push(item) : null
+            itemList.map(item =>
+                residentialItems.push(item)
             )
             const array = Object.values(residentialItems)
             const sortArray = (a, b) => {
-                if(SOR === 'Alquiler'){
-                    if (a.rent.rentValue < b.rent.rentValue) {return 1;}
-                    if (a.rent.rentValue > b.rent.rentValue) {return -1;}
-                }else {
-                    if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                    if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+                if (SOR === 'Alquiler') {
+                    if (a.rent.rentValue < b.rent.rentValue) { return 1; }
+                    if (a.rent.rentValue > b.rent.rentValue) { return -1; }
+                } else {
+                    if (a.sale.saleValue < b.sale.saleValue) { return 1; }
+                    if (a.sale.saleValue > b.sale.saleValue) { return -1; }
                 }
                 return 0
             }
             let orderedArrayPrice = array.sort(sortArray);
-            residentialItems=orderedArrayPrice
+            residentialItems = orderedArrayPrice
         }
-
-        console.log({ residentialItems })
         setOrderedItems(residentialItems)
-    },[state])
+    }, [state])
 
     useEffect(() => {
         let splitedLocation = window.location.href.split('/');
         let elements = []
-        setPageNumber(parseInt(splitedLocation[4])-1)
-        for(let i = 0; i<pageCount; i++){
+        setPageNumber(parseInt(splitedLocation[4]) - 1)
+        for (let i = 0; i < pageCount; i++) {
             elements.push(
-                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`https://gvre.es/residential/${i+1}`}>{i+1}</a></li>
+                <li key={i} className={i + 1 === parseInt(splitedLocation[4]) ? 'residential__pagination__list__item currentPage' : 'residential__pagination__list__item'}><a href={`${window.location.origin}/residential/${i + 1}`}>{i + 1}</a></li>
             )
         }
         setPagElements(elements)
-    },[pageCount])
+    }, [pageCount])
 
     useEffect(() => {
-        const activeFilters = window.localStorage.getItem('residentialFilters')
-        console.log(activeFilters)
+        const activeFilters = JSON.parse(window.localStorage.getItem('residentialFilters'))
+        let splitedLocation = window.location.href.split('/');
+        activeFilters.page = parseInt(splitedLocation[4])
 
-        getResidential(activeFilters).then(items=>{
+        getResidential(activeFilters).then(items => {
             setState(items.ads)
-            window.localStorage.setItem('storedState', items.ads)
+            window.localStorage.setItem('storedState', JSON.stringify(items.ads))
+            window.localStorage.setItem('totalAds', items.totalAds)
             setIsLoading(true)
             setIsFound(true)
         })
-    },[filters])
+    }, [filters])
 
-    useEffect(()=> {
-        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref!==''){
+    useEffect(() => {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref !== '') {
             setDisableButton(true)
-        }else{
+        } else {
             setDisableButton(false)
         }
-    },[ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
+    }, [ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
 
     useEffect(() => {
         if (state2.length > 0) {
@@ -336,134 +336,134 @@ const Residential = () => {
                     setItemRef(itemState.adReference)
                     setRefItem([itemState])
                 }
-                return(itemState)
+                return (itemState)
             })
         }
-        if (ref!== '') {
+        if (ref !== '') {
             setVerLupa(false)
-        }else{
+        } else {
             setVerLupa(true)
-        }    
-    },[ref, state2])
+        }
+    }, [ref, state2])
 
     useEffect(() => {
-        if(filter===true){
+        if (filter === true) {
             let label = document.getElementsByClassName('MuiSlider-valueLabelLabel')
-            if (saleOrRent[0]==='Alquiler'){
-                if (label[0].innerHTML==='0,1 €/mes'){
-                    label[0].innerHTML='min'
+            if (saleOrRent[0] === 'Alquiler') {
+                if (label[0].innerHTML === '0,1 €/mes') {
+                    label[0].innerHTML = 'min'
                 }
-                if (label[1].innerHTML==='99.999.999,9 €/mes'){
-                    label[1].innerHTML='max'
-                }
-            }
-            if (saleOrRent[0]==='Venta'){
-                if (label[0].innerHTML==='0,1 €'){
-                    label[0].innerHTML='min'
-                }
-                if (label[1].innerHTML==='99.999.999,9 €'){
-                    label[1].innerHTML='max'
+                if (label[1].innerHTML === '99.999.999,9 €/mes') {
+                    label[1].innerHTML = 'max'
                 }
             }
-            if(saleOrRent.length===0){
+            if (saleOrRent[0] === 'Venta') {
+                if (label[0].innerHTML === '0,1 €') {
+                    label[0].innerHTML = 'min'
+                }
+                if (label[1].innerHTML === '99.999.999,9 €') {
+                    label[1].innerHTML = 'max'
+                }
+            }
+            if (saleOrRent.length === 0) {
                 setMaxPrice(99999999.9)
                 setMaxSurface(99999999.9)
                 setPrice([0.1, 99999999.9])
                 setSurface([0.1, 99999999.9])
                 setDisableSliders(false)
             }
-            if (label[0].innerHTML==='0,1 €/mes'){
-                label[0].innerHTML='min'
+            if (label[0].innerHTML === '0,1 €/mes') {
+                label[0].innerHTML = 'min'
             }
-            if (label[1].innerHTML==='99.999.999,9 €/mes'){
-                label[1].innerHTML='max'
+            if (label[1].innerHTML === '99.999.999,9 €/mes') {
+                label[1].innerHTML = 'max'
             }
-            if (label[3].innerHTML==='99.999.999,9 m2'){
-                label[3].innerHTML='max'
+            if (label[3].innerHTML === '99.999.999,9 m2') {
+                label[3].innerHTML = 'max'
             }
-            if (label[2].innerHTML==='0,1 m2'){
-                label[2].innerHTML='min'
+            if (label[2].innerHTML === '0,1 m2') {
+                label[2].innerHTML = 'min'
             }
         }
-    },[saleOrRent, filter, disableSliders])
+    }, [saleOrRent, filter, disableSliders])
 
     useEffect(() => {
-        setTimeout(function(){
+        setTimeout(function () {
             const localPosition = window.localStorage.getItem('storedPosition2')
             if (localPosition !== 0) {
-                window.scroll( {
-                    top:localPosition-700
+                window.scroll({
+                    top: localPosition - 700
                 })
-            }else{
+            } else {
                 window.scroll(
-                    {top:0}
+                    { top: 0 }
                 )
             }
-        },1)
-    },[])
+        }, 1)
+    }, [])
 
     const onPrice = () => {
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
         const SOR = JSON.parse(storedSOR)
         const array = Object.values(orderedItems)
         const sortArray = (a, b) => {
-            if(SOR === 'Alquiler'){
-                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
-                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
-            }else {
-                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+            if (SOR === 'Alquiler') {
+                if (a.rent.rentValue < b.rent.rentValue) { return 1; }
+                if (a.rent.rentValue > b.rent.rentValue) { return -1; }
+            } else {
+                if (a.sale.saleValue < b.sale.saleValue) { return 1; }
+                if (a.sale.saleValue > b.sale.saleValue) { return -1; }
             }
         }
         let orderedArrayPrice = array.sort(sortArray);
         setOrderedItems(orderedArrayPrice)
-        setOrderItems (!orderItems);
+        setOrderItems(!orderItems);
     }
 
     const onDate = () => {
         const array = Object.values(orderedItems)
         const sortArray = (a, b) => {
-            if (a.createdAt < b.createdAt) {return 1;}
-            if (a.createdAt > b.createdAt) {return -1;}
+            if (a.createdAt < b.createdAt) { return 1; }
+            if (a.createdAt > b.createdAt) { return -1; }
             return 0
         }
         let orderedArrayDate = array.sort(sortArray);
         setOrderedItems(orderedArrayDate)
-        setOrderItems (!orderItems);
+        setOrderItems(!orderItems);
     }
 
     const toggleActive = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} active`
+        if (e.currentTarget.className === e.currentTarget.id) {
+            e.currentTarget.className = `${e.currentTarget.className} active`
             selected.push(e.currentTarget.name)
         } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
+            e.currentTarget.className = `${e.currentTarget.id}`
             const elementName = e.currentTarget.name
             const newSelected = selected.filter(item => item !== elementName)
             selected.splice(0, selected.length, ...newSelected)
         }
         if (selected.length !== 0) {
             setSelectedActive(true)
-        }else{
+        } else {
             setSelectedActive(false)
         }
     }
     const selectSaleOrRent = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} activeButton`
+        if (e.currentTarget.className === e.currentTarget.id) {
+            e.currentTarget.className = `${e.currentTarget.className} activeButton`
             saleOrRent.push(e.currentTarget.name)
         } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
+            e.currentTarget.className = `${e.currentTarget.id}`
             const elementName = e.currentTarget.name
             const newSaleOrRent = saleOrRent.filter(item => item !== elementName)
             saleOrRent.splice(0, saleOrRent.length, ...newSaleOrRent)
         }
         if (saleOrRent.length !== 0) {
             setSaleOrRentActive(true)
-        }else{
+        } else {
             setSaleOrRentActive(false)
         }
-        if (saleOrRent.length>0) {
+        if (saleOrRent.length > 0) {
             saleOrRent.map(item => {
                 if (item === 'Venta') {
                     setDisableSliders(true)
@@ -483,25 +483,25 @@ const Residential = () => {
                         return b - a
                     })
                     setMaxPrice(priceArray[0])
-                    setPrice([0,priceArray[0]])
+                    setPrice([0, priceArray[0]])
                     setMaxSurface(surfaceArray[0])
-                    setSurface([0,surfaceArray[0]])
-                }else if (item ==='Alquiler'){
+                    setSurface([0, surfaceArray[0]])
+                } else if (item === 'Alquiler') {
                     setDisableSliders(true)
                     let priceArray = [];
                     let surfaceArray = [];
                     state2.map(item => {
-                        if(item.showOnWeb === true && item.department === 'Residencial'){
+                        if (item.showOnWeb === true && item.department === 'Residencial') {
                             item.adType.map(itemType => {
-                                if (itemType === 'Alquiler'){
+                                if (itemType === 'Alquiler') {
                                     priceArray.push(item.rent.rentValue);
                                     surfaceArray.push(item.buildSurface);
-                                    return(itemType)
+                                    return (itemType)
                                 }
-                                return(item)
+                                return (item)
                             })
                         }
-                        return(item)
+                        return (item)
                     })
                     priceArray.sort(function (a, b) {
                         return b - a
@@ -510,25 +510,26 @@ const Residential = () => {
                         return b - a
                     })
                     setMaxPrice(priceArray[0])
-                    setPrice([0,priceArray[0]])
+                    setPrice([0, priceArray[0]])
                     setMaxSurface(surfaceArray[0])
-                    setSurface([0,surfaceArray[0]])
+                    setSurface([0, surfaceArray[0]])
                 }
                 return (item)
             })
         }
-        if (saleOrRent.length===2 || saleOrRent.length===0){
+        if (saleOrRent.length === 2 || saleOrRent.length === 0) {
             setDisableSliders(!disableSliders)
             setMaxPrice(99999999.9)
             setPrice([0.1, 99999999.9]);
             setMaxSurface(99999999.9)
-            setSurface([0.1,99999999.9]);
+            setSurface([0.1, 99999999.9]);
         }
     }
-    
+
     const filterResults = () => {
         let activeFilters = {}
-
+        let splitedLocation = window.location.href.split('/');
+        activeFilters.page = parseInt(splitedLocation[4])
         if (saleOrRent.length) {
             activeFilters = { ...activeFilters, adType: saleOrRent }
         }
@@ -554,34 +555,34 @@ const Residential = () => {
     }
 
     const addType = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} activeButton`
+        if (e.currentTarget.className === e.currentTarget.id) {
+            e.currentTarget.className = `${e.currentTarget.className} activeButton`
             typeHouse.push(e.currentTarget.name)
         } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
+            e.currentTarget.className = `${e.currentTarget.id}`
             const elementName = e.currentTarget.name
             const newType = typeHouse.filter(item => item !== elementName)
             typeHouse.splice(0, typeHouse.length, ...newType)
         }
         if (typeHouse.length !== 0) {
             setTypeHouseActive(true)
-        }else{
+        } else {
             setTypeHouseActive(false)
         }
     }
     const addExtra = (e) => {
-        if (e.currentTarget.className === e.currentTarget.id){
-            e.currentTarget.className =`${e.currentTarget.className} activeButton`
+        if (e.currentTarget.className === e.currentTarget.id) {
+            e.currentTarget.className = `${e.currentTarget.className} activeButton`
             extras.push(e.currentTarget.name)
         } else {
-            e.currentTarget.className =`${e.currentTarget.id}`
+            e.currentTarget.className = `${e.currentTarget.id}`
             const elementName = e.currentTarget.name
             const newExtra = extras.filter(item => item !== elementName)
             extras.splice(0, extras.length, ...newExtra)
         }
         if (extras.length !== 0) {
             setExtrasActive(true)
-        }else{
+        } else {
             setExtrasActive(false)
         }
     }
@@ -593,20 +594,20 @@ const Residential = () => {
         setSurface(data2);
     };
     const addRef = (e) => {
-        setRef (e.currentTarget.value)
+        setRef(e.currentTarget.value)
     }
 
-    
+
 
     const toggleFilter = () => {
-        setFilter (!filter)
+        setFilter(!filter)
     }
 
     const toggleOrderItems = () => {
-        setOrderItems (!orderItems)
+        setOrderItems(!orderItems)
     }
 
-    window.onmousemove = function (e){
+    window.onmousemove = function (e) {
         var y = e.pageY
         setCoord(y)
     }
@@ -620,34 +621,34 @@ const Residential = () => {
         const SOR = JSON.parse(storedSOR)
         const array = Object.values(state2)
         const sortArray = (a, b) => {
-            if(SOR === 'Alquiler'){
-                if (a.rent.rentValue < b.rent.rentValue) {return 1;}
-                if (a.rent.rentValue > b.rent.rentValue) {return -1;}
-            }else {
-                if (a.sale.saleValue < b.sale.saleValue) {return 1;}
-                if (a.sale.saleValue > b.sale.saleValue) {return -1;}
+            if (SOR === 'Alquiler') {
+                if (a.rent.rentValue < b.rent.rentValue) { return 1; }
+                if (a.rent.rentValue > b.rent.rentValue) { return -1; }
+            } else {
+                if (a.sale.saleValue < b.sale.saleValue) { return 1; }
+                if (a.sale.saleValue > b.sale.saleValue) { return -1; }
             }
         }
         let finalArray = []
-        array.sort(sortArray).map(item=>
+        array.sort(sortArray).map(item =>
             item.department === 'Residencial' ? finalArray.push(item) : null
         );
         setOrderedItems(finalArray)
-        setFilter (!filter)
+        setFilter(!filter)
         window.scroll(
-            {top:0}
+            { top: 0 }
         )
     }
 
     return (
         <div className='residential'>
-            <Header/>
+            <Header />
             {orderedItems.length > 0 ?
                 <div>
-                    {filter === true ? 
+                    {filter === true ?
                         <div className='residential__filter'>
                             <div className='residential__filter__position'>
-                                <h2 className='residential__filter__position__title'>Zonas <span onClick={toggleFilter}><img src={cerrarFiltro} alt='cerrar'/></span></h2>
+                                <h2 className='residential__filter__position__title'>Zonas <span onClick={toggleFilter}><img src={cerrarFiltro} alt='cerrar' /></span></h2>
                                 <h3 className='residential__filter__position__subTitle'>Seleccione una o varias zonas</h3>
                                 <div className='residential__filter__position__mapContainer'>
                                     <div className='residential__filter__position__mapContainer__mapa'>
@@ -662,24 +663,24 @@ const Residential = () => {
                                         <input type='image' className='c8' src={carretera8} alt='componente mapa' />
                                         <button name='Monteclaro' onClick={toggleActive} id='mocl' className='mocl'>
                                             <input type='image' src={mocl} alt='componente mapa' />
-                                            <p>Monte <br/> Claro</p>
+                                            <p>Monte <br /> Claro</p>
                                             <div></div>
                                         </button>
                                         <button type='image' onClick={toggleActive} name='Montealina' id='moal' className='moal'>
                                             <input type='image' src={moal} alt='componente mapa' />
-                                            <p>Monte<br/>Alina</p>
+                                            <p>Monte<br />Alina</p>
                                         </button>
                                         <button onClick={toggleActive} name='Prado Largo' id='prla' className='prla'>
                                             <input type='image' src={prla} alt='componente mapa' />
-                                            <p>Prado<br/>Largo</p>
+                                            <p>Prado<br />Largo</p>
                                         </button>
                                         <button onClick={toggleActive} name='Las Encinas' id='enci' className='enci'>
-                                            <input type='image'src={enci} alt='componente mapa' />
+                                            <input type='image' src={enci} alt='componente mapa' />
                                             <p>Las Encinas</p>
                                         </button>
                                         <button onClick={toggleActive} name='Alamo de Bulanas' id='alam' className='alam'>
                                             <input type='image' src={alam} alt='componente mapa' />
-                                            <p>Alamos de<br/>Bularas</p>
+                                            <p>Alamos de<br />Bularas</p>
                                         </button>
                                         <button onClick={toggleActive} name='La Florida' id='flori' className='flori'>
                                             <input type='image' src={flori} alt='componente mapa' />
@@ -698,8 +699,8 @@ const Residential = () => {
                                             <p>Aravaca</p>
                                         </button>
                                         <button onClick={toggleActive} name='Valdemarín' id='vald1' className='vald1'>
-                                            <input type='image' src={vald1} alt='componente mapa'/>
-                                            <input type='image' className='vald2' src={vald2} alt='componente mapa'/>
+                                            <input type='image' src={vald1} alt='componente mapa' />
+                                            <input type='image' className='vald2' src={vald2} alt='componente mapa' />
                                             <p>Valdemarín</p>
                                         </button>
                                         <button onClick={toggleActive} name='Colonia Fuentelarreyna' id='fuen1' className='fuen1'>
@@ -709,7 +710,7 @@ const Residential = () => {
                                         </button>
                                         <button onClick={toggleActive} name='Puerta de Hierro' id='puer' className='puer' >
                                             <input type='image' src={puer} alt='componente mapa' />
-                                            <p>Puerta de <br/>Hierro</p>
+                                            <p>Puerta de <br />Hierro</p>
                                         </button>
                                         <button onClick={toggleActive} name='Rosales' id='rosa' className='rosa'>
                                             <input type='image' src={rosa} alt='componente mapa' />
@@ -741,7 +742,7 @@ const Residential = () => {
                                         </button>
                                         <button onClick={toggleActive} name='Nueva España - Hispanoamérica' id='hisp' className='hisp'>
                                             <input type='image' src={hisp} alt='componente mapa' />
-                                            <p>Hispano <br/> América</p>
+                                            <p>Hispano <br /> América</p>
                                         </button>
                                         <button onClick={toggleActive} name='El Viso' id='viso' className='viso'>
                                             <input type='image' src={viso} alt='componente mapa' />
@@ -761,7 +762,7 @@ const Residential = () => {
                                         </button>
                                         <button onClick={toggleActive} name='Conde de Orgaz' id='cond' className='cond'>
                                             <input type='image' src={cond} alt='componente mapa' />
-                                            <p>Conde<br/>Orgaz</p>
+                                            <p>Conde<br />Orgaz</p>
                                         </button>
                                     </div>
                                 </div>
@@ -800,7 +801,7 @@ const Residential = () => {
                                             disableSwap
                                             min={0}
                                             max={maxPrice}
-                                            step={saleOrRent[0]==='Venta' ? 500000 : 500}
+                                            step={saleOrRent[0] === 'Venta' ? 500000 : 500}
                                             valueLabelFormat={saleOrRent[0] === 'Venta' ? value => `${new Intl.NumberFormat('de-DE').format(value)} €` : value => `${new Intl.NumberFormat('de-DE').format(value)} €/mes`}
                                         />
                                         <p className={disableSliders === true ? 'residential__filter__selectors__sliders__surface' : 'residential__filter__selectors__sliders__surfaceDisabled'}>Superficie m<sup>2</sup></p>
@@ -818,25 +819,25 @@ const Residential = () => {
                                         />
                                     </div>
                                     <div className='residential__filter__selectors__buscar'>
-                                        {disableButton=== false ?
+                                        {disableButton === false ?
                                             <button className='residential__filter__selectors__buscar__all' onClick={seeAll}>Ver todos</button>
                                             :
                                             <button className='residential__filter__selectors__buscar__allDisabled'>Ver todos</button>
                                         }
-                                        {disableButton===true ?
-                                            <NavLink className='residential__filter__selectors__buscar__search' 
-                                                onClick={getTypeHouse} 
-                                                to={redirect && (<Navigate to={`/residential=${param}`}/>)}>Buscar
+                                        {disableButton === true ?
+                                            <NavLink className='residential__filter__selectors__buscar__search'
+                                                onClick={getTypeHouse}
+                                                to={redirect && (<Navigate to={`/residential=${param}`} />)}>Buscar
                                             </NavLink>
                                             :
                                             <button className='residential__filter__selectors__buscar__searchDisabled' >Buscar</button>
-                                        }  
+                                        }
                                     </div>
                                     <div className='residential__filter__selectors__ref'>
-                                    <h4>Búsqueda por referencia</h4>
-                                        <input onChangeCapture={addRef} type='text'/>
-                                        <img className={verLupa === true ? 'residential__filter__selectors__ref__lupa' : 'residential__filter__selectors__ref__lupaOculta'} src={lupa} alt='lupa'/>
-                                        {itemRef!==ref && ref!=='' ?<p className='residential__filter__selectors__ref__existe'>La referencia no existe</p> : null }
+                                        <h4>Búsqueda por referencia</h4>
+                                        <input onChangeCapture={addRef} type='text' />
+                                        <img className={verLupa === true ? 'residential__filter__selectors__ref__lupa' : 'residential__filter__selectors__ref__lupaOculta'} src={lupa} alt='lupa' />
+                                        {itemRef !== ref && ref !== '' ? <p className='residential__filter__selectors__ref__existe'>La referencia no existe</p> : null}
                                     </div>
                                 </div>
                             </div>
@@ -844,9 +845,9 @@ const Residential = () => {
                     }
                     <h1 className='residential__title'>Residencial</h1>
                     <div className='residential__buttons'>
-                        <button onClick={toggleFilter} className='residential__buttons__filter'><img src={filterImg} alt='boton filtro'/> Filtros</button>
+                        <button onClick={toggleFilter} className='residential__buttons__filter'><img src={filterImg} alt='boton filtro' /> Filtros</button>
                         <div className='residential__buttons__order'>
-                            <button onClick={toggleOrderItems} className='residential__buttons__order__title'>Ordenar por <img src={order} alt='boton ordenar por'/></button>
+                            <button onClick={toggleOrderItems} className='residential__buttons__order__title'>Ordenar por <img src={order} alt='boton ordenar por' /></button>
                             <ul className={orderItems === false ? 'residential__buttons__order__listDisabled' : 'residential__buttons__order__list'}>
                                 <li onClick={onPrice} className='residential__buttons__order__list__first'>Precio más alto</li>
                                 <li onClick={onDate}>Más reciente</li>
@@ -858,35 +859,35 @@ const Residential = () => {
                     </div>
                     <div onClick={deletePosition} className='residential__pagination'>
                         <ul className='residential__pagination__list'>
-                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`https://gvre.es/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__back' href={`${window.location.origin}/residential/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}
-                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__next' href={`https://gvre.es/residential/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                            <li className='residential__pagination__list__item'><a className='residential__pagination__list__item__next' href={`${window.location.origin}/residential/${pageNumber + 2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                         </ul>
                     </div>
                     <div className='residential__zoneMap'>
-                        <NavLink to={routes.FilterResidential} className='residential__zoneMap__button'><span><img src={zoneMap} alt='boton mapa'/></span> Abrir el mapa de zonas</NavLink>
+                        <NavLink to={routes.FilterResidential} className='residential__zoneMap__button'><span><img src={zoneMap} alt='boton mapa' /></span> Abrir el mapa de zonas</NavLink>
                     </div>
-                    <ContactIndex/>
+                    <ContactIndex />
                 </div>
-            :
-            <div className='residential__empty'>
-                {
-                    isFound ?
-                    (
-                        <div className='residential__empty'>
-                        <h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
-                        <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>
-                        </div>
-                    )
-                    :
-                    <BarLoader color="#000000" width='150px' height='2px'/>
-                }                      
-            </div>
+                :
+                <div className='residential__empty'>
+                    {
+                        isFound ?
+                            (
+                                <div className='residential__empty'>
+                                    <h2 className='residential__empty__text'>Lamentablemente no existen anuncios bajo sus criterios de búsqueda</h2>
+                                    <Link className='residential__empty__button' to={routes.FilterResidential}>Volver al mapa</Link>
+                                </div>
+                            )
+                            :
+                            <BarLoader color="#000000" width='150px' height='2px' />
+                    }
+                </div>
             }
         </div>
     )
 }
 
-export default Residential 
+export default Residential
 
 
