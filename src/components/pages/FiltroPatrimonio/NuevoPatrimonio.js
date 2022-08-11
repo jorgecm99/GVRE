@@ -50,7 +50,6 @@ import { generalContext } from '../../../providers/generalProvider';
 import { NavLink, generatePath } from 'react-router-dom';
 import routes from '../../../config/routes';
 import { Slider } from '@mui/material';
-import { getResidential } from '../../../api-requests/requests';
 import { getZoneId } from '../../common/MapZones/MapZones';
 
 const FiltroPatrimonio = () => {
@@ -71,6 +70,7 @@ const FiltroPatrimonio = () => {
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
     const [state, setState] = useContext(generalContext);
+    const [itemPage] = useState([]);
 
     const toggleActive = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
@@ -144,6 +144,10 @@ const FiltroPatrimonio = () => {
             console.log(selectedIds)
         }
 
+        if (itemPage.length) {
+            activeFilters = { ...activeFilters, showOnWeb: itemPage[0] }
+            console.log(itemPage)
+        }
 
         if (saleOrRent.length) {
             activeFilters = { ...activeFilters, adType: saleOrRent }
@@ -154,19 +158,6 @@ const FiltroPatrimonio = () => {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
         }
 
-        /*if (extras.length) {
-            if (extras.includes('garage')) {
-                activeFilters = { ...activeFilters, garage: true }
-            }
-
-            if (extras.includes('swimmingPool')) {
-                activeFilters = { ...activeFilters, swimmingPool: true }
-            }
-
-            if (extras.includes('terrace')) {
-                activeFilters = { ...activeFilters, terrace: true }
-            }
-        }*/
         window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))
     }
 
@@ -383,7 +374,7 @@ const FiltroPatrimonio = () => {
                             </div>
                             <div className='filtroPatrimonio__filterPosition__selectors__buscar'>
                                 {disableButton=== false ?
-                                    <NavLink className='filtroPatrimonio__filterPosition__selectors__buscar__all' to={generatePath(routes.Patrimonial, {page:1})}>Ver todos</NavLink>
+                                    <NavLink onClick={filterResults}className='filtroPatrimonio__filterPosition__selectors__buscar__all' to={generatePath(routes.Patrimonial, {page:1})}>Ver todos</NavLink>
                                     :
                                     <button className='filtroPatrimonio__filterPosition__selectors__buscar__allDisabled'>Ver todos</button>
                                 }

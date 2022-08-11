@@ -2,7 +2,7 @@ const baseUrlResidential = 'https://api.vamosaporello.com/ads/';
 const baseUrlConsultants = 'https://www.gvrecrm.com/';
 // const newBaseUrlResidential = 'http://localhost:3500/ads/web/department=Residencial&page=1';
 const newBaseUrlResidential = 'https://api.vamosaporello.com/ads/web/department=Residencial&showOnWeb=true';
-const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true&page=1';
+const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true';
 
 const requestBaseParams = {
     method: 'GET',
@@ -28,7 +28,7 @@ export const getResidential = async (filters) => {
 
 export const getPatrimonial = async (filters) => {
     console.log(filters)
-    const filterParams = new URLSearchParams(JSON.parse(filters))
+    const filterParams = new URLSearchParams(filters)
     const urlWithFilters = !!filterParams ? `${newBaseUrlPatrimonial}&${filterParams.toString()}` : `${newBaseUrlPatrimonial}`;
     console.log(urlWithFilters)
     const newUrl = new URL(urlWithFilters)

@@ -262,12 +262,6 @@ const Residential = () => {
         }
     }, [state])
 
-    /*useEffect(() => {
-        window.localStorage.removeItem('storedState2')
-        const ads = getResidential()
-        setFilter(ads)
-    },[])*/
-
     useEffect(() => {
         const localState = window.localStorage.getItem('storedState')
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
@@ -448,6 +442,7 @@ const Residential = () => {
             setSelectedActive(false)
         }
     }
+    
     const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
             e.currentTarget.className = `${e.currentTarget.className} activeButton`
@@ -530,6 +525,7 @@ const Residential = () => {
         let activeFilters = {}
         let splitedLocation = window.location.href.split('/');
         activeFilters.page = parseInt(splitedLocation[4])
+
         if (saleOrRent.length) {
             activeFilters = { ...activeFilters, adType: saleOrRent }
         }
@@ -590,14 +586,14 @@ const Residential = () => {
     const handlePriceInput = (e, data1) => {
         setPrice(data1);
     };
+
     const handleSurfaceInput = (e, data2) => {
         setSurface(data2);
     };
+
     const addRef = (e) => {
         setRef(e.currentTarget.value)
     }
-
-
 
     const toggleFilter = () => {
         setFilter(!filter)

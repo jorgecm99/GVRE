@@ -42,7 +42,6 @@ import Header from '../../common/Header/Header';
 import { generalContext } from '../../../providers/generalProvider';
 import { NavLink, generatePath } from 'react-router-dom';
 import routes from '../../../config/routes';
-/*import { getResidential } from '../../../api-requests/requests';*/
 import './filtroResidencial.scss'
 import { getZoneId } from '../../common/MapZones/MapZones';
 

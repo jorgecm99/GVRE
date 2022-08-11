@@ -85,7 +85,7 @@ const Patrimonio = () => {
     const [surface, setSurface] = useState([0.1,maxSurface]);
 
     const [filter, setFilter] = useState (false);
-    const [filters, setFilters] = useState (window.localStorage.getItem('residentialFilters'));
+    const [filters, setFilters] = useState (window.localStorage.getItem('patrimonialFilters'));
     const [disableButton, setDisableButton] = useState(false);
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
@@ -113,13 +113,15 @@ const Patrimonio = () => {
             )
         }
     }
-    const pagesVisited = pageNumber * perPage;
-    const totalAds = window.localStorage.getItem('patrimonialTotalAds')
-    const pageCount = Math.ceil(totalAds/perPage);
-    const getPostItems = orderedItems.slice(pagesVisited, pagesVisited + perPage)
-    .map((item, index) => {
+
+    window.localStorage.getItem('totalAds')
+    /*const pagesVisited = pageNumber * perPage;
+    const totalAds = window.localStorage.getItem('patrimonialTotalAds')*/
+    const pageCount = Math.ceil(parseInt(window.localStorage.getItem('totalAds')) / perPage);
+    const getPostItems = orderedItems
+    .map(item => {
             return item.department === "Patrimonio" && item.showOnWeb === true? 
-            <div onClick={setPosition} className='patrimonial__list__item' key={`${item._id}-${index}`}>
+            <div onClick={setPosition} className='patrimonial__list__item' key={item._id}>
                 {item.gvOperationClose === 'Alquilado' || item.gvOperationClose === 'Vendido' ? 
                     <div className='wrapper'>
                         <div className='patrimonial__list__item__status'>
@@ -242,10 +244,6 @@ const Patrimonio = () => {
         }
     },[state])
 
-    useEffect(() => {
-        window.localStorage.removeItem('storedState2')
-    },[])
-
     useEffect (() => {
         const localState = window.localStorage.getItem('storedState')
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
@@ -254,7 +252,7 @@ const Patrimonio = () => {
             const itemList = JSON.parse(localState)
             const SOR = JSON.parse(storedSOR)
             itemList.map(item => 
-                item.department === 'Patrimonio' && item.showOnWeb === true ? patrimonialItems.push(item) : null
+                patrimonialItems.push(item)
             )
             const array = Object.values(patrimonialItems)
             const sortArray = (a, b) => {
@@ -271,7 +269,7 @@ const Patrimonio = () => {
             patrimonialItems=orderedArrayPrice
         }
         setOrderedItems(patrimonialItems)
-    },[])
+    },[state])
 
     useEffect(() => {
         let splitedLocation = window.location.href.split('/');
@@ -279,19 +277,21 @@ const Patrimonio = () => {
         setPageNumber(parseInt(splitedLocation[4])-1)
         for(let i = 0; i<pageCount; i++){
             elements.push(
-                <li className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`https://gvre.es/patrimonial/${i+1}`}>{i+1}</a></li>
+                <li key={i} className={i+1 === parseInt(splitedLocation[4]) ? 'patrimonial__pagination__list__item currentPage' : 'patrimonial__pagination__list__item'}><a href={`${window.location.origin}/patrimonial/${i+1}`}>{i+1}</a></li>
             )
         }
         setPagElements(elements)
     },[pageCount])
 
     useEffect(() => {
-        const activeFilters = window.localStorage.getItem('patrimonialFilters')
+        const activeFilters = JSON.parse(window.localStorage.getItem('patrimonialFilters'))
+        let splitedLocation = window.location.href.split('/');
+        activeFilters.page = parseInt(splitedLocation[4])
 
         getPatrimonial(activeFilters).then(items=>{
             setState(items.ads)
-            window.localStorage.setItem('storedState', items.ads)
-            window.localStorage.setItem('patrimonialTotalAds', items.totalAds)
+            window.localStorage.setItem('storedState', JSON.stringify(items.ads))
+            window.localStorage.setItem('totalAds', items.totalAds)
             setIsLoading(true)
             setIsFound(true)
         })
@@ -408,6 +408,7 @@ const Patrimonio = () => {
         setOrderedItems(orderedArrayDate);
         setOrderItems (!orderItems);
     }
+
     const toggleActive = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
             e.currentTarget.className =`${e.currentTarget.className} active`
@@ -424,6 +425,7 @@ const Patrimonio = () => {
             setSelectedActive(false)
         }
     }
+
     const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
             e.currentTarget.className =`${e.currentTarget.className} activeButton`
@@ -520,6 +522,12 @@ const Patrimonio = () => {
 
     const filterResults = () => {
         let activeFilters = {}
+        let splitedLocation = window.location.href.split('/');
+        activeFilters.page = parseInt(splitedLocation[4])
+
+        if (saleOrRent.length) {
+            activeFilters = { ...activeFilters, adType: saleOrRent }
+        }
 
         if (saleOrRent.length) {
             activeFilters = { ...activeFilters, adType: saleOrRent }
@@ -529,19 +537,6 @@ const Patrimonio = () => {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
         }
 
-        /*if (extras.length) {
-            if (extras.includes('garage')) {
-                activeFilters = { ...activeFilters, garage: true }
-            }
-
-            if (extras.includes('swimmingPool')) {
-                activeFilters = { ...activeFilters, swimmingPool: true }
-            }
-
-            if (extras.includes('terrace')) {
-                activeFilters = { ...activeFilters, terrace: true }
-            }
-        }*/
         window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))
     }
     const handlePriceInput = (e, data1) => {
@@ -799,9 +794,9 @@ const Patrimonio = () => {
                     </div>
                     <div onClick={deletePosition} className='patrimonial__pagination'>
                         <ul className='patrimonial__pagination__list'>
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`https://gvre.es/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
+                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__back' href={`${window.location.origin}/patrimonial/${pageNumber}`}> <img src={mayor} alt='simbolo mayor' /> </a></li>
                             {pagElements}
-                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`https://gvre.es/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
+                            <li className='patrimonial__pagination__list__item'><a className='patrimonial__pagination__list__item__next' href={`${window.location.origin}/patrimonial/${pageNumber+2}`}> <img src={mayor} alt='simbolo menor' /> </a></li>
                         </ul>
                     </div>
                     <div className='patrimonial__zoneMap'>
