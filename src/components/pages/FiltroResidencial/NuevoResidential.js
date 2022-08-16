@@ -59,7 +59,7 @@ const FiltroResidencial = () => {
     //const [ref, setRef] = useState('');
     const [disableButton, setDisableButton] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
-    const [state, setState] = useContext(generalContext);
+    const [state] = useContext(generalContext);
     const [itemPage] = useState([]);
     const [reference, setReference] = useState('');
     /*const [filter, setFilter] = useState({});*/

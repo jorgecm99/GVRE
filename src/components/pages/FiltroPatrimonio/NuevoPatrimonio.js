@@ -69,7 +69,7 @@ const FiltroPatrimonio = () => {
     const [disableButton, setDisableButton] = useState(false);
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
-    const [state, setState] = useContext(generalContext);
+    const [state] = useContext(generalContext);
     const [itemPage] = useState([]);
     const [reference, setReference] = useState('');
 
@@ -90,7 +90,7 @@ const FiltroPatrimonio = () => {
         }
     }
     
-    const selectSaleOrRent = (e) => {
+    /*const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
             e.currentTarget.className = `${e.currentTarget.className} activeButton`
             saleOrRent.push(e.currentTarget.name)
@@ -106,9 +106,9 @@ const FiltroPatrimonio = () => {
             setSaleOrRentActive(false)
         }
         
-    }
+    }*/
 
-    /*const selectSaleOrRent = (e) => {
+    const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
             e.currentTarget.className =`${e.currentTarget.className} activeButton`
             saleOrRent.push(e.currentTarget.name)
@@ -184,7 +184,7 @@ const FiltroPatrimonio = () => {
             setMaxSurface(99999999.9)
             setSurface([0.1,99999999.9]);
         }
-    }*/
+    }
 
     const addType = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {

@@ -91,7 +91,7 @@ const Residential = () => {
     const [disableSliders, setDisableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
     const [orderItems, setOrderItems] = useState(false);
-    const [state2, setState2] = useState([])
+    const [state2] = useState([])
     const [state, setState] = useContext(generalContext);
     const [coord, setCoord] = useState(0)
     const [param, setParam] = useState('')
