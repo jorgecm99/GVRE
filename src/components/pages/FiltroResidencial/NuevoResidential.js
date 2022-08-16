@@ -61,7 +61,7 @@ const FiltroResidencial = () => {
     const [verLupa, setVerLupa] = useState(true);
     const [state] = useContext(generalContext);
     const [itemPage] = useState([]);
-    const [reference, setReference] = useState('');
+    const [elementId, setElementId] = useState('');
     /*const [filter, setFilter] = useState({});*/
 
     const toggleActive = (e) => {
@@ -132,7 +132,7 @@ const FiltroResidencial = () => {
     }
 
     const addRef = (e) => {
-        setReference(e.currentTarget.value)
+        setElementId(e.currentTarget.value)
     }
 
 
@@ -151,7 +151,7 @@ const FiltroResidencial = () => {
         }
 
         if (saleOrRent.length) {
-            activeFilters = { ...activeFilters, adType: saleOrRent }
+            activeFilters = { ...activeFilters, type: saleOrRent }
             console.log(saleOrRent)
         }
 
@@ -159,8 +159,8 @@ const FiltroResidencial = () => {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
         }
 
-        if (reference) {
-            activeFilters = { ...activeFilters, adReference: reference }           
+        if (elementId) {
+            activeFilters = { ...activeFilters, reference: elementId }           
         }
 
         if (extras.length) {
@@ -180,28 +180,28 @@ const FiltroResidencial = () => {
     }
 
     useEffect(() => {
-        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || reference !== '') {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || elementId !== '') {
             setDisableButton(true)
         } else {
             setDisableButton(false)
         }
-    }, [reference, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
+    }, [elementId, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
 
     useEffect(() => {
         if (state.length > 0) {
             state.map(itemState => {
-                if (reference === itemState.adReference) {
+                if (elementId === itemState.adReference) {
                     setItemRef(itemState.adReference)
                 }
                 return(itemState)
             })
         }
-        if (reference!== '') {
+        if (elementId!== '') {
             setVerLupa(false)
         }else{
             setVerLupa(true)
         }   
-    },[reference, state])
+    },[elementId, state])
 
 
 
@@ -385,7 +385,7 @@ const FiltroResidencial = () => {
                         <h4>Búsqueda por referencia</h4>
                         <input onChangeCapture={addRef} type='text' />
                         <img className={verLupa === true ? 'selectors__ref__lupa' : 'selectors__ref__lupaOculta'} src={lupa} alt='lupa' />
-                        {itemRef !== reference && reference !== '' ? <p className='selectors__ref__existe'>La referencia no existe</p> : null}
+                        {itemRef !== elementId && elementId !== '' ? <p className='selectors__ref__existe'>La referencia no existe</p> : null}
                     </div>
                 </div>
             </div>

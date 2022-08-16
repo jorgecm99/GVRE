@@ -98,7 +98,7 @@ const Residential = () => {
     const [redirect, setRedirect] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [isFound, setIsFound] = useState(false);
-    const [reference] = useState([]);
+    const [elementId] = useState([]);
 
 
     const getTypeHouse = async () => {
@@ -528,16 +528,16 @@ const Residential = () => {
         activeFilters.page = parseInt(splitedLocation[4])
 
         if (saleOrRent.length) {
-            activeFilters = { ...activeFilters, adType: saleOrRent }
+            activeFilters = { ...activeFilters, type: saleOrRent }
         }
 
         if (typeHouse.length) {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
         }
 
-        if (reference.length === itemRef) {
-            activeFilters = { ...activeFilters, adReference: reference }
-            console.log(reference)
+        if (elementId.length === itemRef) {
+            activeFilters = { ...activeFilters, reference: elementId }
+            console.log(elementId)
         }
 
         if (extras.length) {

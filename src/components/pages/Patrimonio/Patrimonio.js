@@ -530,7 +530,7 @@ const Patrimonio = () => {
         }
 
         if (saleOrRent.length) {
-            activeFilters = { ...activeFilters, adType: saleOrRent }
+            activeFilters = { ...activeFilters, type: saleOrRent }
         }
 
         if (typeHouse.length) {
