@@ -60,7 +60,7 @@ const FiltroPatrimonio = () => {
     const [saleOrRentActive, setSaleOrRentActive] = useState(false);
     const [typeHouse] = useState([]);
     const [typeHouseActive, setTypeHouseActive] = useState(false);
-    const [ref, setRef] = useState('');
+    //const [ref, setRef] = useState('');
     const [itemRef, setItemRef] = useState ('initial');
     const [maxPrice, setMaxPrice] = useState(99999999.9)
     const [price, setPrice] = useState([0.1,maxPrice]);
@@ -71,6 +71,7 @@ const FiltroPatrimonio = () => {
     const [verLupa, setVerLupa] = useState(true);
     const [state, setState] = useContext(generalContext);
     const [itemPage] = useState([]);
+    const [reference, setReference] = useState('');
 
     const toggleActive = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
@@ -88,6 +89,7 @@ const FiltroPatrimonio = () => {
             setSelectedActive(false)
         }
     }
+    
     const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
             e.currentTarget.className = `${e.currentTarget.className} activeButton`
@@ -103,7 +105,86 @@ const FiltroPatrimonio = () => {
         } else {
             setSaleOrRentActive(false)
         }
+        
     }
+
+    /*const selectSaleOrRent = (e) => {
+        if (e.currentTarget.className === e.currentTarget.id){
+            e.currentTarget.className =`${e.currentTarget.className} activeButton`
+            saleOrRent.push(e.currentTarget.name)
+        } else {
+            e.currentTarget.className =`${e.currentTarget.id}`
+            const elementName = e.currentTarget.name
+            const newSaleOrRent = saleOrRent.filter(item => item !== elementName)
+            saleOrRent.splice(0, saleOrRent.length, ...newSaleOrRent)
+        }
+        if (saleOrRent.length===1) {
+            saleOrRent.map(item => {
+                if (item === 'Venta' ) {
+                    setDisableSliders(true)
+                    let priceArray = [];
+                    let surfaceArray = [];
+                    state.map(item => {
+                        if (item.showOnWeb === true && item.department === 'Patrimonio') {
+                            priceArray.push(item.sale.saleValue);
+                            surfaceArray.push(item.buildSurface);
+                        }
+                        return(item)
+                    })
+                    priceArray.sort(function (a, b) {
+                        return b - a
+                    })
+                    surfaceArray.sort(function (a, b) {
+                        return b - a
+                    })
+                    setMaxPrice(priceArray[0])
+                    setPrice([0,priceArray[0]])
+                    setMaxSurface(surfaceArray[0])
+                    setSurface([0,surfaceArray[0]])
+                }else if (item ==='Alquiler'){
+                    setDisableSliders(true)
+                    let priceArray = [];
+                    let surfaceArray = [];
+                    state.map(item => {
+                        if(item.showOnWeb === true && item.department === 'Patrimonio'){
+                            priceArray.push(item.rent.rentValue);
+                            item.adType.map(itemType => {
+                                if (itemType === 'Alquiler'){
+                                    surfaceArray.push(item.buildSurface);
+                                    return(itemType)
+                                }
+                                return(item)
+                            })
+                        }
+                        return(item)
+                    })
+                    priceArray.sort(function (a, b) {
+                        return b - a
+                    })
+                    surfaceArray.sort(function (a, b) {
+                        return b - a
+                    })
+                    setMaxPrice(priceArray[0])
+                    setPrice([0,priceArray[0]])
+                    setMaxSurface(surfaceArray[0])
+                    setSurface([0,surfaceArray[0]])
+                }
+                return(item)
+            })
+        }
+        if (saleOrRent.length !== 0) {
+            setSaleOrRentActive(true)
+        }else{
+            setSaleOrRentActive(false)
+        }
+        if (saleOrRent.length===2 || saleOrRent.length===0){
+            setDisableSliders(!disableSliders)
+            setMaxPrice(99999999.9)
+            setPrice([0.1, 99999999.9]);
+            setMaxSurface(99999999.9)
+            setSurface([0.1,99999999.9]);
+        }
+    }*/
 
     const addType = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
@@ -124,7 +205,7 @@ const FiltroPatrimonio = () => {
 
 
     const addRef = (e) => {
-        setRef(e.currentTarget.value)
+        setReference(e.currentTarget.value)
     }
 
     const handlePriceInput = (e, data1) => {
@@ -158,16 +239,20 @@ const FiltroPatrimonio = () => {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
         }
 
+        if (reference) {
+            activeFilters = { ...activeFilters, adReference: reference }           
+        }
+
         window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))
     }
 
     useEffect(() => {
-        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true  || ref !== '') {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true  || reference !== '') {
             setDisableButton(true)
         } else {
             setDisableButton(false)
         }
-    }, [ref, selectedActive, saleOrRentActive, typeHouseActive])
+    }, [reference, selectedActive, saleOrRentActive, typeHouseActive])
 
     useEffect(() => {
         let label = document.getElementsByClassName('MuiSlider-valueLabelLabel')
@@ -201,6 +286,22 @@ const FiltroPatrimonio = () => {
         }
 
     },[price, surface, saleOrRent])
+
+    useEffect(() => {
+        if (state.length > 0) {
+            state.map(itemState => {
+                if (reference === itemState.adReference) {
+                    setItemRef(itemState.adReference)
+                }
+                return(itemState)
+            })
+        }
+        if (reference!== '') {
+            setVerLupa(false)
+        }else{
+            setVerLupa(true)
+        }   
+    },[reference, state])
 
 
     return (
@@ -391,7 +492,7 @@ const FiltroPatrimonio = () => {
                         <h4>Búsqueda por referencia</h4>
                         <input onChange={addRef} type='text'/>
                         <img className={verLupa === true ? 'filtroPatrimonio__filterPosition__selectors__ref__lupa' : 'filtroPatrimonio__filterPosition__selectors__ref__lupaOculta'} src={lupa} alt='lupa'/>
-                        {itemRef!==ref && ref!=='' ?<p className='filtroPatrimonio__filterPosition__selectors__ref__existe'>La referencia no existe</p> : null }
+                        {itemRef!==reference && reference!=='' ?<p className='filtroPatrimonio__filterPosition__selectors__ref__existe'>La referencia no existe</p> : null }
                     </div>
                 </div>
             </div>

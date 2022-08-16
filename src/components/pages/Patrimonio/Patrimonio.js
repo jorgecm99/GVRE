@@ -295,7 +295,7 @@ const Patrimonio = () => {
             setIsLoading(true)
             setIsFound(true)
         })
-    },[filters])
+    },[filters, setState])
 
     useEffect(()=> {
         if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || ref!==''){

@@ -98,6 +98,7 @@ const Residential = () => {
     const [redirect, setRedirect] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [reference] = useState([]);
 
 
     const getTypeHouse = async () => {
@@ -313,7 +314,7 @@ const Residential = () => {
             setIsLoading(true)
             setIsFound(true)
         })
-    }, [filters])
+    }, [filters, setState])
 
     useEffect(() => {
         if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref !== '') {
@@ -532,6 +533,11 @@ const Residential = () => {
 
         if (typeHouse.length) {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
+        }
+
+        if (reference.length === itemRef) {
+            activeFilters = { ...activeFilters, adReference: reference }
+            console.log(reference)
         }
 
         if (extras.length) {
