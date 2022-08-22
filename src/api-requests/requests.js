@@ -1,7 +1,7 @@
-const baseUrlResidential = 'https://api.vamosaporello.com/ads/';
+const baseUrlResidential = 'https://api.vamosaporello.com/inmuebles/';
 const baseUrlConsultants = 'https://www.gvrecrm.com/';
-const newBaseUrlResidential = 'https://api.vamosaporello.com/ads/web/department=Residencial&showOnWeb=true';
-const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true';
+const newBaseUrlResidential = 'https://api.vamosaporello.com/inmuebles/web/department=Residencial&showOnWeb=true';
+const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/inmuebles/web/department=Patrimonio&showOnWeb=true';
 
 const requestBaseParams = {
     method: 'GET',

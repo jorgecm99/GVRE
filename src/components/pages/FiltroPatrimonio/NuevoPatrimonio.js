@@ -231,7 +231,7 @@ const FiltroPatrimonio = () => {
         }
 
         if (saleOrRent.length) {
-            activeFilters = { ...activeFilters, type: saleOrRent }
+            activeFilters = { ...activeFilters, adType: saleOrRent }
             console.log(saleOrRent)
         }
 

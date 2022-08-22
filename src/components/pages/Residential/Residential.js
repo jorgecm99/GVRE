@@ -626,7 +626,7 @@ const Residential = () => {
         window.localStorage.removeItem('storedPosition2')
     }
 
-    const seeAll = () => {
+    /*const seeAll = () => {
         const storedSOR = window.localStorage.getItem('saleOrRentStored')
         const SOR = JSON.parse(storedSOR)
         const array = Object.values(state2)
@@ -648,7 +648,7 @@ const Residential = () => {
         window.scroll(
             { top: 0 }
         )
-    }
+    }*/
 
     return (
         <div className='residential'>
@@ -830,7 +830,7 @@ const Residential = () => {
                                     </div>
                                     <div className='residential__filter__selectors__buscar'>
                                         {disableButton === false ?
-                                            <button className='residential__filter__selectors__buscar__all' onClick={seeAll}>Ver todos</button>
+                                            <NavLink onClick={getTypeHouse} className='residential__filter__selectors__buscar__all' to={generatePath(routes.Residential, { page: 1 })}>Ver todos</NavLink>
                                             :
                                             <button className='residential__filter__selectors__buscar__allDisabled'>Ver todos</button>
                                         }
