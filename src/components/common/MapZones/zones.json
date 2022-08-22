@@ -251,7 +251,7 @@
     },
     {
       "_id": "61dfdd383e6cc4fe56c29831",
-      "zone": "Nueva España - Hispanoamérica",
+      "zone": "Nueva España",
       "name": "Nueva España",
       "id": "26",
       "status": false,
@@ -261,7 +261,7 @@
     },
     {
       "_id": "61dfdd3f3e6cc4fe56c29833",
-      "zone": "Nueva España - Hispanoamérica",
+      "zone": "Nueva España",
       "name": "Ciudad Jardín",
       "id": "27",
       "status": false,
@@ -282,7 +282,7 @@
     {
       "_id": "61dfdd4b3e6cc4fe56c29837",
       "zone": "Puerta de Hierro",
-      "name": "Colonia Puerta de Hierro",
+      "name": "Puerta de Hierro",
       "id": "29",
       "status": false,
       "createdAt": "2022-01-13T08:05:31.366Z",
@@ -292,7 +292,7 @@
     {
       "_id": "61dfdd513e6cc4fe56c29839",
       "zone": "Puerta de Hierro",
-      "name": "Zona Puerta de Hierro",
+      "name": "Puerta de Hierro",
       "id": "30",
       "status": false,
       "createdAt": "2022-01-13T08:05:37.257Z",

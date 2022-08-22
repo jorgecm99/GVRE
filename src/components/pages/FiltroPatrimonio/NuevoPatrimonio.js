@@ -62,12 +62,12 @@ const FiltroPatrimonio = () => {
     const [typeHouseActive, setTypeHouseActive] = useState(false);
     //const [ref, setRef] = useState('');
     const [itemRef, setItemRef] = useState ('initial');
-    const [maxPrice, setMaxPrice] = useState(99999999.9)
+    const [maxPrice] = useState(99999999.9)
     const [price, setPrice] = useState([0.1,maxPrice]);
-    const [maxSurface, setMaxSurface] = useState(99999999.9);
+    const [maxSurface] = useState(99999999.9);
     const [surface, setSurface] = useState([0.1,maxSurface]);
     const [disableButton, setDisableButton] = useState(false);
-    const [disableSliders, setDisableSliders] = useState(false);
+    const [disableSliders] = useState(false);
     const [verLupa, setVerLupa] = useState(true);
     const [state] = useContext(generalContext);
     const [itemPage] = useState([]);
@@ -90,7 +90,7 @@ const FiltroPatrimonio = () => {
         }
     }
     
-    /*const selectSaleOrRent = (e) => {
+    const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
             e.currentTarget.className = `${e.currentTarget.className} activeButton`
             saleOrRent.push(e.currentTarget.name)
@@ -106,9 +106,9 @@ const FiltroPatrimonio = () => {
             setSaleOrRentActive(false)
         }
         
-    }*/
+    }
 
-    const selectSaleOrRent = (e) => {
+    /*const selectSaleOrRent = (e) => {
         if (e.currentTarget.className === e.currentTarget.id){
             e.currentTarget.className =`${e.currentTarget.className} activeButton`
             saleOrRent.push(e.currentTarget.name)
@@ -148,7 +148,7 @@ const FiltroPatrimonio = () => {
                     state.map(item => {
                         if(item.showOnWeb === true && item.department === 'Patrimonio'){
                             priceArray.push(item.rent.rentValue);
-                            item.adType.map(itemType => {
+                            item.type.map(itemType => {
                                 if (itemType === 'Alquiler'){
                                     surfaceArray.push(item.buildSurface);
                                     return(itemType)
@@ -184,7 +184,7 @@ const FiltroPatrimonio = () => {
             setMaxSurface(99999999.9)
             setSurface([0.1,99999999.9]);
         }
-    }
+    }*/
 
     const addType = (e) => {
         if (e.currentTarget.className === e.currentTarget.id) {
@@ -290,8 +290,8 @@ const FiltroPatrimonio = () => {
     useEffect(() => {
         if (state.length > 0) {
             state.map(itemState => {
-                if (elementId === itemState.adReference) {
-                    setItemRef(itemState.adReference)
+                if (elementId === itemState.reference) {
+                    setItemRef(itemState.reference)
                 }
                 return(itemState)
             })

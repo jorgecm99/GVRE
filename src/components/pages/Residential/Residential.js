@@ -60,6 +60,7 @@ import supP from '../../../assets/SVG/web/anuncios/anuncios_superficieP.svg';
 import parking from '../../../assets/SVG/web/anuncios/anuncios_garaje.svg';
 import { Navigate } from 'react-router'
 import { BarLoader } from 'react-spinners';
+import { getZoneId } from '../../common/MapZones/MapZones';
 
 
 
@@ -101,11 +102,12 @@ const Residential = () => {
     const [elementId] = useState([]);
 
 
-    const getTypeHouse = async () => {
+    const getTypeHouse = () => {
         setParam('')
         setRedirect(false)
         const searchFilters = filterResults()
         setFilters(searchFilters)
+        window.localStorage.setItem('residentialFilters')
     }
 
     const setPosition = () => {
@@ -528,7 +530,7 @@ const Residential = () => {
         activeFilters.page = parseInt(splitedLocation[4])
 
         if (saleOrRent.length) {
-            activeFilters = { ...activeFilters, type: saleOrRent }
+            activeFilters = { ...activeFilters, adType: saleOrRent }
         }
 
         if (typeHouse.length) {
@@ -538,6 +540,12 @@ const Residential = () => {
         if (elementId.length === itemRef) {
             activeFilters = { ...activeFilters, reference: elementId }
             console.log(elementId)
+        }
+
+        if (selected.length > 0) {
+            const selectedIds = getZoneId(selected)
+            activeFilters = { ...activeFilters, zone: selectedIds }
+            console.log(selectedIds)
         }
 
         if (extras.length) {
@@ -738,11 +746,11 @@ const Residential = () => {
                                             <input type='image' src={cort} alt='componente mapa' />
                                             <p>Cortes</p>
                                         </button>
-                                        <button onClick={toggleActive} name='Nueva España - Hispanoamérica' id='nuev' className='nuev'>
+                                        <button onClick={toggleActive} name='Nueva España' id='nuev' className='nuev'>
                                             <input type='image' src={nuev} alt='componente mapa' />
                                             <p>Nueva España</p>
                                         </button>
-                                        <button onClick={toggleActive} name='Nueva España - Hispanoamérica' id='hisp' className='hisp'>
+                                        <button onClick={toggleActive} name='Hispanoamérica' id='hisp' className='hisp'>
                                             <input type='image' src={hisp} alt='componente mapa' />
                                             <p>Hispano <br /> América</p>
                                         </button>

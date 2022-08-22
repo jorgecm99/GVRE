@@ -63,6 +63,7 @@ import cerrarFiltro from '../../../assets/SVG/mobile/comun/cerrarCompleta.svg';
 import ContactIndex from '../../common/ContactInfo/ContactIndex';
 import { Navigate} from 'react-router'
 import { BarLoader } from 'react-spinners';
+import { getZoneId } from '../../common/MapZones/MapZones';
 
 const Patrimonio = () => {
     const [orderedItems, setOrderedItems] = useState([])
@@ -99,11 +100,12 @@ const Patrimonio = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isFound, setIsFound] = useState(false);
 
-    const getTypeHouse = async () => {
+    const getTypeHouse = () => {
         setParam('')
         setRedirect(false)
         const searchFilters = filterResults()
         setFilters(searchFilters)
+        window.localStorage.setItem('patrimonialFilters')
     }
 
     const setPosition = () => {
@@ -535,6 +537,12 @@ const Patrimonio = () => {
 
         if (typeHouse.length) {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
+        }
+
+        if (selected.length > 0) {
+            const selectedIds = getZoneId(selected)
+            activeFilters = { ...activeFilters, zone: selectedIds }
+            console.log(selectedIds)
         }
 
         window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))

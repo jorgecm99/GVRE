@@ -1,6 +1,5 @@
 const baseUrlResidential = 'https://api.vamosaporello.com/ads/';
 const baseUrlConsultants = 'https://www.gvrecrm.com/';
-// const newBaseUrlResidential = 'http://localhost:3500/ads/web/department=Residencial&page=1';
 const newBaseUrlResidential = 'https://api.vamosaporello.com/ads/web/department=Residencial&showOnWeb=true';
 const newBaseUrlPatrimonial = 'https://api.vamosaporello.com/ads/web/department=Patrimonio&showOnWeb=true';
 
