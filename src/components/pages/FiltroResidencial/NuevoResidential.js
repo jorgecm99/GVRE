@@ -160,7 +160,7 @@ const FiltroResidencial = () => {
         }
 
         if (elementId) {
-            activeFilters = { ...activeFilters, reference: elementId }           
+            activeFilters = { ...activeFilters, adReference: elementId }           
         }
 
         if (extras.length) {

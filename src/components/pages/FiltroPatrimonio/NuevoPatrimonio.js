@@ -67,7 +67,7 @@ const FiltroPatrimonio = () => {
     const [maxSurface] = useState(99999999.9);
     const [surface, setSurface] = useState([0.1,maxSurface]);
     const [disableButton, setDisableButton] = useState(false);
-    const [disableSliders] = useState(false);
+    const [disableSliders] = useState(true);
     const [verLupa, setVerLupa] = useState(true);
     const [state] = useContext(generalContext);
     const [itemPage] = useState([]);
@@ -240,7 +240,7 @@ const FiltroPatrimonio = () => {
         }
 
         if (elementId) {
-            activeFilters = { ...activeFilters, reference: elementId }           
+            activeFilters = { ...activeFilters, adReference: elementId }           
         }
 
         window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))

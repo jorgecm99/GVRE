@@ -79,7 +79,7 @@ const Residential = () => {
     const [typeHouseActive, setTypeHouseActive] = useState(false);
     const [extras] = useState([]);
     const [extrasActive, setExtrasActive] = useState(false);
-    const [ref, setRef] = useState('');
+    //const [ref, setRef] = useState('');
     const [itemRef, setItemRef] = useState('initial');
     const [maxPrice, setMaxPrice] = useState(99999999.9)
     const [price, setPrice] = useState([0.1, maxPrice]);
@@ -99,7 +99,7 @@ const Residential = () => {
     const [redirect, setRedirect] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [isFound, setIsFound] = useState(false);
-    const [elementId] = useState([]);
+    const [elementId, setElementId] = useState([]);
 
 
     const getTypeHouse = () => {
@@ -319,29 +319,29 @@ const Residential = () => {
     }, [filters, setState])
 
     useEffect(() => {
-        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || ref !== '') {
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || extrasActive === true || elementId !== '') {
             setDisableButton(true)
         } else {
             setDisableButton(false)
         }
-    }, [ref, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
+    }, [elementId, selectedActive, saleOrRentActive, typeHouseActive, extrasActive])
 
     useEffect(() => {
         if (state2.length > 0) {
             state2.map(itemState => {
-                if (ref === itemState.adReference) {
+                if (elementId === itemState.adReference) {
                     setItemRef(itemState.adReference)
                     setRefItem([itemState])
                 }
                 return (itemState)
             })
         }
-        if (ref !== '') {
+        if (elementId !== '') {
             setVerLupa(false)
         } else {
             setVerLupa(true)
         }
-    }, [ref, state2])
+    }, [elementId, state2])
 
     useEffect(() => {
         if (filter === true) {
@@ -537,9 +537,13 @@ const Residential = () => {
             activeFilters = { ...activeFilters, adBuildingType: typeHouse }
         }
 
-        if (elementId.length === itemRef) {
-            activeFilters = { ...activeFilters, reference: elementId }
+        /*if (elementId.length === itemRef) {
+            activeFilters = { ...activeFilters, adReference: elementId }
             console.log(elementId)
+        }*/
+
+        if (elementId) {
+            activeFilters = { ...activeFilters, adReference: elementId }           
         }
 
         if (selected.length > 0) {
@@ -547,6 +551,7 @@ const Residential = () => {
             activeFilters = { ...activeFilters, zone: selectedIds }
             console.log(selectedIds)
         }
+        
 
         if (extras.length) {
             if (extras.includes('garage')) {
@@ -606,7 +611,7 @@ const Residential = () => {
     };
 
     const addRef = (e) => {
-        setRef(e.currentTarget.value)
+        setElementId(e.currentTarget.value)
     }
 
     const toggleFilter = () => {
@@ -847,7 +852,7 @@ const Residential = () => {
                                         <h4>Búsqueda por referencia</h4>
                                         <input onChangeCapture={addRef} type='text' />
                                         <img className={verLupa === true ? 'residential__filter__selectors__ref__lupa' : 'residential__filter__selectors__ref__lupaOculta'} src={lupa} alt='lupa' />
-                                        {itemRef !== ref && ref !== '' ? <p className='residential__filter__selectors__ref__existe'>La referencia no existe</p> : null}
+                                        {itemRef !== elementId && elementId !== '' ? <p className='residential__filter__selectors__ref__existe'>La referencia no existe</p> : null}
                                     </div>
                                 </div>
                             </div>

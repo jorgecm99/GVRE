@@ -78,7 +78,7 @@ const Patrimonio = () => {
     const [saleOrRentActive, setSaleOrRentActive] = useState(false);
     const [typeHouse] = useState([]);
     const [typeHouseActive, setTypeHouseActive] = useState(false);
-    const [ref, setRef] = useState('');
+    //const [ref, setRef] = useState('');
     const [itemRef, setItemRef] = useState ('initial');
     const [maxPrice, setMaxPrice] = useState(99999999.9)
     const [price, setPrice] = useState([0.1,maxPrice]);
@@ -99,6 +99,7 @@ const Patrimonio = () => {
     const [redirect, setRedirect] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [elementId, setElementId] = useState([]);
 
     const getTypeHouse = () => {
         setParam('')
@@ -300,29 +301,29 @@ const Patrimonio = () => {
     },[filters, setState])
 
     useEffect(()=> {
-        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || ref!==''){
+        if (selectedActive === true || saleOrRentActive === true || typeHouseActive === true || elementId !== ''){
             setDisableButton(true)
         }else{
             setDisableButton(false)
         }
-    },[ref, selectedActive, saleOrRentActive, typeHouseActive])
+    },[elementId, selectedActive, saleOrRentActive, typeHouseActive])
 
     useEffect(() => {
         if (state2.length > 0) {
             state2.map(itemState => {
-                if (ref === itemState.adReference) {
+                if (elementId === itemState.adReference) {
                     setItemRef(itemState.adReference)
                     setRefItem([itemState])
                 }
                 return(itemState)
             })
         }
-        if (ref!== '') {
+        if (elementId!== '') {
             setVerLupa(false)
         }else{
             setVerLupa(true)
         }  
-    },[ref, state2])
+    },[elementId, state2])
 
     useEffect(() => {
         if(filter===true){
@@ -348,7 +349,7 @@ const Patrimonio = () => {
                 setMaxSurface(99999999.9)
                 setPrice([0.1, 99999999.9])
                 setSurface([0.1, 99999999.9])
-                setDisableSliders(false)
+                setDisableSliders(true)
             }
             if (label[0].innerHTML==='0,1 €/mes'){
                 label[0].innerHTML='min'
@@ -545,6 +546,10 @@ const Patrimonio = () => {
             console.log(selectedIds)
         }
 
+        if (elementId) {
+            activeFilters = { ...activeFilters, adReference: elementId }           
+        }
+
         window.localStorage.setItem('patrimonialFilters', JSON.stringify(activeFilters))
     }
     const handlePriceInput = (e, data1) => {
@@ -554,7 +559,7 @@ const Patrimonio = () => {
         setSurface(data2);
     };
     const addRef = (e) => {
-        setRef (e.currentTarget.value)
+        setElementId (e.currentTarget.value)
     }
 
     const toggleFilter = () => {
@@ -780,7 +785,7 @@ const Patrimonio = () => {
                                         <h4>Búsqueda por referencia</h4>
                                         <input onChangeCapture={addRef} type='text'/>
                                         <img className={verLupa === true ? 'patrimonial__filter__selectors__ref__lupa' : 'patrimonial__filter__selectors__ref__lupaOculta'} src={lupa} alt='lupa'/>
-                                        {itemRef!==ref && ref!=='' ?<p className='patrimonial__filter__selectors__ref__existe'>La referencia no existe</p> : null }
+                                        {itemRef!==elementId && elementId!=='' ?<p className='patrimonial__filter__selectors__ref__existe'>La referencia no existe</p> : null }
                                     </div>
                                 </div>
                             </div>
