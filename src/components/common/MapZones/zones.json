@@ -182,7 +182,7 @@
     {
       "_id": "61dfdd113e6cc4fe56c29823",
       "zone": "Barrio Salamanca",
-      "name": "Recoletos",
+      "name": "Barrio Salamanca",
       "id": "19",
       "status": false,
       "createdAt": "2022-01-13T08:04:33.321Z",
@@ -192,7 +192,7 @@
     {
       "_id": "61dfdd163e6cc4fe56c29825",
       "zone": "Barrio Salamanca",
-      "name": "Castellana",
+      "name": "Barrio Salamanca",
       "id": "20",
       "status": false,
       "createdAt": "2022-01-13T08:04:38.928Z",
